@@ -17,18 +17,19 @@ interface StorefrontHeroEditorialProps {
   onOpenCategoriesModal: () => void;
 }
 
-// Preset badges for the 7-card 3D perspective coverflow deck
+// Preset badges for the 3D coverflow product deck
 const CARD_BADGES = [
   'عرض محدود',
   'وصل حديثاً',
   'خصم خاص',
-  'الأكثر مبيعاً',
   'أفضل تقييم',
   'تخفيضات اليوم',
+  'الأكثر مبيعاً',
   'مختاراتنا',
 ];
 
-// 3D Coverflow geometry presets by offset from center (-3 to +3)
+// Balanced 3D Coverflow geometry by offset from center (-3 to +3)
+// Keeps cards wide enough for crisp Arabic typography & product art while stepping height & 3D tilt inward
 function getCoverflowStyle(offset: number, isHovered: boolean) {
   const abs = Math.abs(offset);
   const sign = offset < 0 ? -1 : 1;
@@ -36,55 +37,59 @@ function getCoverflowStyle(offset: number, isHovered: boolean) {
   if (offset === 0) {
     return {
       width: '248px',
-      height: '326px',
+      height: '312px',
       borderRadius: '22px',
+      marginInline: '4px',
       transform: isHovered
-        ? 'perspective(900px) rotateY(0deg) translateY(-8px) scale(1.03)'
-        : 'perspective(900px) rotateY(0deg) translateY(0px) scale(1)',
-      zIndex: 20,
+        ? 'perspective(1000px) rotateY(0deg) translateY(-10px) scale(1.03)'
+        : 'perspective(1000px) rotateY(0deg) translateY(-4px) scale(1)',
+      zIndex: 30,
       opacity: 1,
     };
   }
 
   if (abs === 1) {
-    const rotY = sign * 34; // Left (-1) -> -34deg (right edge taller), Right (+1) -> +34deg (left edge taller)
+    const rotY = sign * 20;
     return {
-      width: '154px',
-      height: '286px',
-      borderRadius: '18px',
+      width: '212px',
+      height: '282px',
+      borderRadius: '20px',
+      marginInline: '-2px',
       transform: isHovered
-        ? `perspective(750px) rotateY(${rotY * 0.75}deg) translateY(0px) scale(1.03)`
-        : `perspective(750px) rotateY(${rotY}deg) translateY(8px) scale(1)`,
-      zIndex: 15,
-      opacity: 0.98,
+        ? `perspective(950px) rotateY(${rotY * 0.65}deg) translateY(0px) scale(1.03)`
+        : `perspective(950px) rotateY(${rotY}deg) translateY(8px) scale(1)`,
+      zIndex: 20,
+      opacity: 0.99,
     };
   }
 
   if (abs === 2) {
-    const rotY = sign * 38;
+    const rotY = sign * 24;
     return {
-      width: '138px',
-      height: '248px',
-      borderRadius: '16px',
+      width: '194px',
+      height: '254px',
+      borderRadius: '18px',
+      marginInline: '-6px',
       transform: isHovered
-        ? `perspective(750px) rotateY(${rotY * 0.75}deg) translateY(10px) scale(1.03)`
-        : `perspective(750px) rotateY(${rotY}deg) translateY(18px) scale(1)`,
+        ? `perspective(950px) rotateY(${rotY * 0.65}deg) translateY(10px) scale(1.03)`
+        : `perspective(950px) rotateY(${rotY}deg) translateY(20px) scale(1)`,
       zIndex: 10,
-      opacity: 0.94,
+      opacity: 0.96,
     };
   }
 
   // abs >= 3
-  const rotY = sign * 42;
+  const rotY = sign * 28;
   return {
-    width: '124px',
-    height: '214px',
-    borderRadius: '15px',
+    width: '178px',
+    height: '228px',
+    borderRadius: '16px',
+    marginInline: '-8px',
     transform: isHovered
-      ? `perspective(750px) rotateY(${rotY * 0.75}deg) translateY(18px) scale(1.03)`
-      : `perspective(750px) rotateY(${rotY}deg) translateY(26px) scale(1)`,
+      ? `perspective(950px) rotateY(${rotY * 0.65}deg) translateY(20px) scale(1.03)`
+      : `perspective(950px) rotateY(${rotY}deg) translateY(32px) scale(1)`,
     zIndex: 5,
-    opacity: 0.9,
+    opacity: 0.92,
   };
 }
 
@@ -151,7 +156,7 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
         position: 'relative',
         background: 'radial-gradient(ellipse 90% 70% at 50% 15%, #ffffff 0%, #f4f7fb 55%, #eaeff7 100%)',
         color: '#0f172a',
-        padding: '44px 20px 52px',
+        padding: '40px 16px 48px',
         overflow: 'hidden',
         borderBottom: '1px solid #e2e8f0',
         display: 'flex',
@@ -175,7 +180,7 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
         }
 
         /* Responsive Mobile Scroll Track */
-        @media (max-width: 860px) {
+        @media (max-width: 920px) {
           .storefront-pallet-hero {
             padding: 28px 12px 36px !important;
           }
@@ -193,9 +198,10 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
           }
           .storefront-coverflow-card {
             transform: none !important;
-            width: 175px !important;
-            min-width: 175px !important;
-            height: 245px !important;
+            width: 185px !important;
+            min-width: 185px !important;
+            height: 250px !important;
+            margin-inline: 0 !important;
             opacity: 1 !important;
             flex-shrink: 0 !important;
           }
@@ -203,11 +209,11 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
       `}</style>
 
       {/* Top Main Headline */}
-      <div style={{ maxWidth: '820px', marginBottom: '20px', position: 'relative', zIndex: 5 }}>
+      <div style={{ maxWidth: '820px', marginBottom: '18px', position: 'relative', zIndex: 5 }}>
         <h1
           style={{
             margin: '0 0 8px',
-            fontSize: 'clamp(2rem, 4vw, 3.5rem)',
+            fontSize: 'clamp(2rem, 4vw, 3.4rem)',
             fontWeight: 800,
             lineHeight: 1.22,
             color: '#0f172a',
@@ -220,7 +226,7 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
         </h1>
       </div>
 
-      {/* Centerpiece: 3D Perspective Coverflow Deck (Exact match to reference image) */}
+      {/* Centerpiece: Symmetrical 3D Coverflow Deck */}
       <div
         dir="ltr"
         className="storefront-fanned-deck"
@@ -228,9 +234,9 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: '18px',
+          gap: '0px',
           position: 'relative',
-          padding: '18px 16px 34px',
+          padding: '16px 12px 42px',
           maxWidth: '100%',
           zIndex: 4,
           flexWrap: 'nowrap',
@@ -242,6 +248,7 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
           const midSlot = Math.floor(orderedDeck.length / 2);
           const offset = slotIdx - midSlot;
           const isCenter = offset === 0;
+          const isOuter = Math.abs(offset) >= 2;
           const isHovered = hoveredCardIdx === slotIdx;
           const covStyle = getCoverflowStyle(offset, isHovered);
 
@@ -268,29 +275,30 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
                 width: covStyle.width,
                 height: covStyle.height,
                 borderRadius: covStyle.borderRadius,
+                marginInline: covStyle.marginInline,
                 background: '#ffffff',
-                border: isCenter ? '1.5px solid #cbd5e1' : '1px solid #E0E3E7',
+                border: isCenter ? '1.5px solid #cbd5e1' : '1px solid #e2e8f0',
                 boxShadow: isCenter
-                  ? '0 24px 48px -12px rgba(15, 23, 42, 0.22), 0 6px 16px rgba(15, 23, 42, 0.08)'
+                  ? '0 24px 48px -12px rgba(15, 23, 42, 0.2), 0 6px 16px rgba(15, 23, 42, 0.07)'
                   : isHovered
-                    ? '0 18px 34px -8px rgba(15, 23, 42, 0.16), 0 4px 10px rgba(0, 0, 0, 0.05)'
-                    : '0 12px 26px -8px rgba(15, 23, 42, 0.11), 0 2px 6px rgba(0, 0, 0, 0.03)',
+                    ? '0 20px 36px -10px rgba(15, 23, 42, 0.16), 0 4px 10px rgba(0, 0, 0, 0.05)'
+                    : '0 14px 28px -10px rgba(15, 23, 42, 0.1), 0 2px 6px rgba(0, 0, 0, 0.03)',
                 position: 'relative',
                 transform: covStyle.transform,
-                transformOrigin: 'center 58%',
+                transformOrigin: 'center 55%',
                 cursor: 'pointer',
                 overflow: 'hidden',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
-                padding: isCenter ? '14px' : '10px',
+                padding: isCenter ? '14px' : isOuter ? '10px' : '12px',
                 boxSizing: 'border-box',
-                zIndex: isHovered ? 25 : covStyle.zIndex,
+                zIndex: isHovered ? 35 : covStyle.zIndex,
                 opacity: covStyle.opacity,
                 flexShrink: 0,
               }}
             >
-              {/* Card Header: Badge & Price Tag */}
+              {/* Card Header: Dark Badge Pill + Price Tag */}
               <div
                 style={{
                   display: 'flex',
@@ -301,42 +309,40 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
                   gap: '4px',
                 }}
               >
-                {isCenter && (
-                  <span
-                    style={{
-                      background: isOutOfStock ? '#ef4444' : '#0f172a',
-                      color: '#ffffff',
-                      fontSize: '11px',
-                      fontWeight: 800,
-                      padding: '4px 10px',
-                      borderRadius: '8px',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    {badgeText}
-                  </span>
-                )}
+                <span
+                  style={{
+                    background: isOutOfStock ? '#ef4444' : '#0f172a',
+                    color: '#ffffff',
+                    fontSize: isCenter ? '11px' : isOuter ? '9.5px' : '10px',
+                    fontWeight: 800,
+                    padding: isCenter ? '4px 10px' : '3px 8px',
+                    borderRadius: '8px',
+                    whiteSpace: 'nowrap',
+                    lineHeight: 1.2,
+                  }}
+                >
+                  {badgeText}
+                </span>
 
                 <span
                   style={{
-                    fontSize: isCenter ? '13px' : '11px',
+                    fontSize: isCenter ? '12.5px' : isOuter ? '10.5px' : '11.5px',
                     fontWeight: 800,
                     color: '#0f172a',
                     fontVariantNumeric: 'tabular-nums',
                     background: '#f8fafc',
                     border: '1px solid #e2e8f0',
-                    padding: isCenter ? '3px 9px' : '2px 7px',
+                    padding: isCenter ? '3px 8px' : '2px 6px',
                     borderRadius: '8px',
                     whiteSpace: 'nowrap',
-                    marginInlineStart: isCenter ? '0' : 'auto',
-                    marginInlineEnd: isCenter ? '0' : 'auto',
+                    lineHeight: 1.2,
                   }}
                 >
                   {product.price} <CurrencySymbol />
                 </span>
               </div>
 
-              {/* Product Artwork / Photo Container */}
+              {/* Seamless Product Artwork Container (No square drop-shadow artifact) */}
               <div
                 style={{
                   width: '100%',
@@ -345,7 +351,7 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  padding: isCenter ? '10px 6px' : '6px 2px',
+                  padding: isCenter ? '6px 4px' : '4px 2px',
                   boxSizing: 'border-box',
                   position: 'relative',
                 }}
@@ -357,41 +363,38 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
                     e.currentTarget.src = generatePremiumProductSvg(product.name, product.categoryName);
                   }}
                   style={{
-                    maxWidth: '100%',
-                    maxHeight: '100%',
+                    width: '100%',
+                    height: '100%',
                     objectFit: 'contain',
-                    filter: isCenter
-                      ? 'drop-shadow(0 10px 20px rgba(15, 23, 42, 0.16))'
-                      : 'drop-shadow(0 6px 12px rgba(15, 23, 42, 0.11))',
                     transition: 'transform 0.3s ease',
                     transform: isHovered ? 'scale(1.06)' : 'scale(1)',
                   }}
                 />
               </div>
 
-              {/* Card Footer: Product Name & Add Action */}
+              {/* Card Footer: Product Name & Quick Add Squircle Button */}
               <div
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  gap: '6px',
+                  gap: '8px',
                   borderTop: '1px solid #f1f5f9',
-                  paddingTop: isCenter ? '10px' : '7px',
+                  paddingTop: isCenter ? '10px' : '8px',
                   position: 'relative',
                   zIndex: 2,
                 }}
               >
                 <span
                   style={{
-                    fontSize: isCenter ? '13px' : '11px',
+                    fontSize: isCenter ? '13px' : isOuter ? '11px' : '12px',
                     fontWeight: 800,
                     color: '#0f172a',
-                    lineHeight: 1.3,
+                    lineHeight: 1.32,
                     textAlign: 'right',
                     flex: 1,
                     display: '-webkit-box',
-                    WebkitLineClamp: isCenter ? 2 : 1,
+                    WebkitLineClamp: 2,
                     WebkitBoxOrient: 'vertical',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
@@ -406,8 +409,8 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
                   onClick={(e) => handleInstantAdd(e, product)}
                   disabled={isOutOfStock}
                   style={{
-                    width: isCenter ? '34px' : '28px',
-                    height: isCenter ? '34px' : '28px',
+                    width: isCenter ? '34px' : '30px',
+                    height: isCenter ? '34px' : '30px',
                     borderRadius: '10px',
                     background: justAddedId === product.id ? '#16a34a' : isOutOfStock ? '#e2e8f0' : '#0f172a',
                     color: '#ffffff',
@@ -418,14 +421,14 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
                     cursor: isOutOfStock ? 'not-allowed' : 'pointer',
                     flexShrink: 0,
                     transition: 'all 0.16s cubic-bezier(0.16, 1, 0.3, 1)',
-                    boxShadow: '0 2px 6px rgba(15, 23, 42, 0.12)',
+                    boxShadow: isOutOfStock ? 'none' : '0 4px 10px rgba(15, 23, 42, 0.14)',
                   }}
-                  title={isOutOfStock ? 'غير متوفر' : 'أضف للسلة'}
+                  title="أضف للسلة"
                 >
                   {justAddedId === product.id ? (
-                    <IconCheckCircle size={isCenter ? 16 : 13} color="#ffffff" />
+                    <IconCheckCircle size={isCenter ? 16 : 14} />
                   ) : (
-                    <IconShoppingCart size={isCenter ? 15 : 12} />
+                    <IconShoppingCart size={isCenter ? 15 : 13} />
                   )}
                 </button>
               </div>
@@ -434,94 +437,88 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
         })}
       </div>
 
-      {/* Subheading Narrative Paragraph below Cards */}
-      <div style={{ maxWidth: '640px', margin: '4px auto 20px', position: 'relative', zIndex: 5 }}>
-        <p
-          style={{
-            margin: 0,
-            fontSize: 'clamp(0.92rem, 1.25vw, 1.05rem)',
-            color: '#64748b',
-            lineHeight: 1.6,
-            fontWeight: 600,
-          }}
-        >
-          {info.description || info.bio || 'تشكيلة متنوعة من المنتجات المختارة بعناية، اطلب أونلاين بسهولة واستلم طلبك في أسرع وقت.'}
-        </p>
-      </div>
-
-      {/* Action Buttons with 12px Curvature & 35px Height */}
+      {/* Bottom Subtitle & CTA Buttons */}
       <div
         style={{
+          maxWidth: '640px',
           display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
-          justifyContent: 'center',
-          gap: '10px',
-          flexWrap: 'wrap',
+          gap: '16px',
           position: 'relative',
           zIndex: 5,
         }}
       >
-        <button
-          type="button"
-          onClick={onSelectDeals}
+        <p
           style={{
-            background: '#0f172a',
-            color: '#ffffff',
-            border: '1px solid #0f172a',
-            borderRadius: '12px',
-            height: '35px',
-            padding: '0 16px',
-            fontSize: '13px',
-            fontWeight: 800,
-            cursor: 'pointer',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '8px',
-            boxShadow: '0 4px 12px rgba(15, 23, 42, 0.18)',
-            transition: 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.15s ease',
-            boxSizing: 'border-box',
+            margin: 0,
+            fontSize: 'clamp(0.95rem, 1.35vw, 1.1rem)',
+            color: '#64748b',
+            lineHeight: 1.65,
+            fontWeight: 600,
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.transform = 'translateY(-1px)')}
-          onMouseLeave={(e) => (e.currentTarget.style.transform = 'translateY(0)')}
         >
-          <span>تصفح عروض اليوم</span>
-          <span style={{ fontSize: '14px', lineHeight: 1 }}>←</span>
-        </button>
+          تشكيلة متنوعة من المنتجات المختارة بعناية، اطلب أونلاين بسهولة واستلم طلبك في أسرع وقت.
+        </p>
 
-        <button
-          type="button"
-          onClick={onOpenCategoriesModal}
+        <div
           style={{
-            background: '#ffffff',
-            color: '#0f172a',
-            border: '1px solid #E0E3E7',
-            borderRadius: '12px',
-            height: '35px',
-            padding: '0 14px',
-            fontSize: '13px',
-            fontWeight: 800,
-            cursor: 'pointer',
-            display: 'inline-flex',
+            display: 'flex',
             alignItems: 'center',
-            gap: '6px',
-            boxShadow: '0 1px 2px rgba(15, 23, 42, 0.04)',
-            transition: 'all 0.15s ease',
-            boxSizing: 'border-box',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = '#f8fafc';
-            e.currentTarget.style.borderColor = '#cbd5e1';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = '#ffffff';
-            e.currentTarget.style.borderColor = '#E0E3E7';
+            justifyContent: 'center',
+            gap: '10px',
+            flexWrap: 'wrap',
           }}
         >
-          <span>تصفح كل الأقسام</span>
-          <IconArrowUpRight size={13} strokeWidth={2.4} />
-        </button>
+          <button
+            type="button"
+            onClick={onSelectDeals}
+            style={{
+              height: '35px',
+              padding: '0 18px',
+              borderRadius: '12px',
+              background: '#0f172a',
+              color: '#ffffff',
+              border: '1px solid #0f172a',
+              fontSize: '13px',
+              fontWeight: 700,
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              boxShadow: '0 4px 12px rgba(15, 23, 42, 0.12)',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            <span>تصفح عروض اليوم</span>
+            <span style={{ fontSize: '15px', lineHeight: 1 }}>←</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={onOpenCategoriesModal}
+            style={{
+              height: '35px',
+              padding: '0 16px',
+              borderRadius: '12px',
+              background: '#ffffff',
+              color: '#0f172a',
+              border: '1px solid #E0E3E7',
+              fontSize: '13px',
+              fontWeight: 700,
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              boxShadow: '0 1px 2px rgba(15, 23, 42, 0.03)',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            <span>تصفح كل الأقسام</span>
+            <IconArrowUpRight size={14} />
+          </button>
+        </div>
       </div>
     </section>
   );
 });
-
