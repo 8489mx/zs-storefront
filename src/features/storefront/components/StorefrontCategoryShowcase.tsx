@@ -1,0 +1,299 @@
+import { useTranslation } from 'react-i18next';
+import { useRef, useEffect } from 'react';
+import { StorefrontCategory } from '../types/storefront.types';
+import { getAutoProductPhoto, generatePremiumProductSvg } from '../lib/storefront-photo-matcher';
+import { IconShoppingBag, IconFolder } from './StorefrontIcons';
+
+interface StorefrontCategoryShowcaseProps {
+  categories: StorefrontCategory[];
+  selectedCategoryId: number | 'all';
+  onSelectCategory: (id: number | 'all') => void;
+  onOpenCategoriesModal: () => void;
+  categoryCounts: Map<number | 'all', number>;
+}
+
+function formatSmartCategoryName(categoryName?: string): string {
+  if (!categoryName) return 'عام';
+  const trimmed = categoryName.trim();
+  if (trimmed.includes(' - ')) {
+    const parts = trimmed.split(' - ').map((p) => p.trim()).filter(Boolean);
+    return parts[parts.length - 1] || trimmed;
+  }
+  if (trimmed.includes(' / ')) {
+    const parts = trimmed.split(' / ').map((p) => p.trim()).filter(Boolean);
+    return parts[parts.length - 1] || trimmed;
+  }
+  if (trimmed.includes(': ')) {
+    const parts = trimmed.split(': ').map((p) => p.trim()).filter(Boolean);
+    return parts[parts.length - 1] || trimmed;
+  }
+  return trimmed;
+}
+
+export function StorefrontCategoryShowcase({
+  categories,
+  selectedCategoryId,
+  onSelectCategory,
+  onOpenCategoriesModal,
+  categoryCounts,
+}: StorefrontCategoryShowcaseProps) {
+  const { t } = useTranslation();
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const selectedItemRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (selectedCategoryId !== 'all' && selectedItemRef.current) {
+      selectedItemRef.current.scrollIntoView({
+        behavior: 'smooth',
+        inline: 'center',
+        block: 'nearest',
+      });
+    }
+  }, [selectedCategoryId]);
+
+  if (!categories || categories.length === 0) return null;
+
+  // Filter only categories that have products, and take top 10 sorted by count
+  const populatedCategories = categories
+    .filter((c) => (categoryCounts.get(c.id) || 0) > 0)
+    .sort((a, b) => (categoryCounts.get(b.id) || 0) - (categoryCounts.get(a.id) || 0));
+
+  const topCategories = populatedCategories.slice(0, 10);
+  const remainingCount = populatedCategories.length - topCategories.length;
+
+  return (
+    <div
+      ref={containerRef}
+      className="storefront-cat-showcase"
+      style={{
+        background: '#ffffff',
+        borderBottom: '1px solid #e2e8f0',
+        padding: '14px 20px',
+        overflowX: 'auto',
+        WebkitOverflowScrolling: 'touch',
+        direction: 'rtl',
+        width: '100%',
+        boxSizing: 'border-box',
+      }}
+    >
+      <style>{`
+        @media (max-width: 640px) {
+          .storefront-cat-showcase {
+            padding: 7px 8px !important;
+            width: 100% !important;
+            max-width: 100vw !important;
+            box-sizing: border-box !important;
+          }
+          .storefront-cat-showcase-inner {
+            gap: 8px !important;
+            width: max-content !important;
+          }
+          .storefront-cat-item {
+            min-width: 52px !important;
+            max-width: 68px !important;
+          }
+          .storefront-cat-avatar {
+            width: clamp(44px, 12vw, 50px) !important;
+            height: clamp(44px, 12vw, 50px) !important;
+            margin-bottom: 3px !important;
+          }
+          .storefront-cat-label {
+            font-size: clamp(9.5px, 2.7vw, 11px) !important;
+          }
+        }
+      `}</style>
+      <div
+        className="storefront-cat-showcase-inner storefront-category-showcase"
+        style={{
+          maxWidth: 'var(--storefront-container, 1440px)',
+          margin: '0 auto',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '16px',
+          width: 'max-content',
+        }}
+      >
+        {/* All Products Avatar */}
+        <div
+          className="storefront-cat-item"
+          onClick={() => onSelectCategory('all')}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            cursor: 'pointer',
+            minWidth: '76px',
+            flexShrink: 0,
+            transition: 'transform 0.15s ease',
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = 'translateY(-3px)')}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = 'translateY(0)')}
+        >
+          <div
+            className="storefront-cat-avatar"
+            style={{
+              width: '66px',
+              height: '66px',
+              borderRadius: '50%',
+              background: selectedCategoryId === 'all' ? 'var(--storefront-primary-color, #170e5e)' : '#ffffff',
+              color: selectedCategoryId === 'all' ? '#ffffff' : 'var(--storefront-primary-color, #170e5e)',
+              border: selectedCategoryId === 'all' ? '2.5px solid var(--storefront-primary-color, #170e5e)' : '1.5px solid #e2e8f0',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginBottom: '6px',
+              boxShadow: selectedCategoryId === 'all' ? '0 4px 14px var(--storefront-primary-subtle, rgba(23, 14, 94, 0.2))' : '0 2px 6px rgba(15, 23, 42, 0.04)',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            <IconShoppingBag size={24} color={selectedCategoryId === 'all' ? '#ffffff' : 'var(--storefront-primary-color, #170e5e)'} strokeWidth={2} />
+          </div>
+          <span
+            className="storefront-cat-label"
+            style={{
+              fontSize: '12px',
+              fontWeight: 800,
+              color: selectedCategoryId === 'all' ? 'var(--storefront-primary-color, #170e5e)' : '#0f172a',
+              textAlign: 'center',
+            }}
+          >
+            {t('storefront.storefront_category_showcase.s0', "الكل (")}{categoryCounts.get('all') || 0})
+          </span>
+        </div>
+
+        {/* Top 10 Curated Category Circles */}
+        {topCategories.map((cat) => {
+          const isSelected = selectedCategoryId === cat.id;
+          const photoUrl = cat.imageUrl || getAutoProductPhoto(cat.name, cat.name);
+          const count = categoryCounts.get(cat.id) || 0;
+
+          return (
+            <div
+              key={cat.id}
+              ref={isSelected ? selectedItemRef : undefined}
+              className="storefront-cat-item"
+              onClick={() => onSelectCategory(cat.id)}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                cursor: 'pointer',
+                minWidth: '76px',
+                maxWidth: '92px',
+                flexShrink: 0,
+                transition: 'transform 0.15s ease',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.transform = 'translateY(-3px)')}
+              onMouseLeave={(e) => (e.currentTarget.style.transform = 'translateY(0)')}
+            >
+              <div
+                className="storefront-cat-avatar"
+                style={{
+                  width: '66px',
+                  height: '66px',
+                  borderRadius: '50%',
+                  overflow: 'hidden',
+                  border: isSelected ? '2.5px solid var(--storefront-primary-color, #170e5e)' : '1.5px solid #e2e8f0',
+                  marginBottom: '6px',
+                  boxShadow: isSelected ? '0 4px 14px var(--storefront-primary-subtle, rgba(23, 14, 94, 0.2))' : '0 2px 6px rgba(15, 23, 42, 0.04)',
+                  position: 'relative',
+                  background: 'var(--storefront-surface-color, #f8fafc)',
+                  transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+                }}
+              >
+                <img
+                  src={photoUrl}
+                  alt={cat.name}
+                  loading="lazy"
+                  decoding="async"
+                  draggable={false}
+                  onError={(e) => {
+                    e.currentTarget.src = generatePremiumProductSvg(cat.name, cat.name);
+                  }}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    pointerEvents: 'none',
+                    transition: 'transform 0.3s ease',
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.08)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+                />
+              </div>
+              <span
+                style={{
+                  fontSize: '12px',
+                  fontWeight: 800,
+                  color: isSelected ? 'var(--storefront-primary-color, #170e5e)' : '#0f172a',
+                  textAlign: 'center',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  width: '100%',
+                }}
+                title={cat.name}
+              >
+                {formatSmartCategoryName(cat.name)}
+              </span>
+              <span className="storefront-cat-count" style={{ fontSize: '11px', fontWeight: 600, color: '#64748b', marginTop: '1px' }}>
+                {count} {t('storefront.storefront_category_showcase.s1', "صنف")}
+              </span>
+            </div>
+          );
+        })}
+
+        {/* "More Categories" Avatar */}
+        {remainingCount > 0 && (
+          <div
+            onClick={onOpenCategoriesModal}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              cursor: 'pointer',
+              minWidth: '76px',
+              flexShrink: 0,
+              transition: 'transform 0.15s ease',
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.transform = 'translateY(-3px)')}
+            onMouseLeave={(e) => (e.currentTarget.style.transform = 'translateY(0)')}
+          >
+            <div
+              className="storefront-cat-avatar"
+              style={{
+                width: '66px',
+                height: '66px',
+                borderRadius: '50%',
+                background: '#ffffff',
+                color: 'var(--storefront-primary-color, #170e5e)',
+                border: '1.5px dashed #cbd5e1',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: '6px',
+                boxShadow: '0 2px 6px rgba(15, 23, 42, 0.04)',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              <IconFolder size={22} color="var(--storefront-primary-color, #170e5e)" strokeWidth={1.8} />
+            </div>
+            <span
+              style={{
+                fontSize: '12px',
+                fontWeight: 800,
+                color: 'var(--storefront-primary-color, #170e5e)',
+                textAlign: 'center',
+              }}
+            >
+              {t('storefront.storefront_category_showcase.s2', "باقي الأقسام")}
+            </span>
+            <span className="storefront-cat-count" style={{ fontSize: '11px', fontWeight: 600, color: '#64748b', marginTop: '1px' }}>
+              +{remainingCount} {t('storefront.storefront_category_showcase.s3', "قسم")}
+            </span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

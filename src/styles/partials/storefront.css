@@ -1,0 +1,725 @@
+/* Storefront Responsive Layout Styles */
+
+/*
+ * عرض الحاوية الموحّد. كان 1280px مكرراً في أربعة مواضع inline، فكان أي تغيير
+ * يتطلب تعديل كل موضع. 1440px تعطي 6 منتجات في الصف على الشاشات الكبيرة بدل 5،
+ * وتقلّل المساحة المهدورة على جانبي الصفحة دون أن تتمدد بلا حدود.
+ */
+:root {
+  --storefront-container: 1440px;
+  /* ارتفاع بار السلة السفلي — تقرؤه شبكة المنتجات لتترك مساحة أسفلها */
+  --storefront-dock-height: 84px;
+  --storefront-primary-color: #170e5e;
+  --storefront-primary-contrast: #ffffff;
+  --storefront-primary-subtle: rgba(23, 14, 94, 0.08);
+  --storefront-secondary-color: #d97706;
+  --storefront-secondary-contrast: #ffffff;
+  --storefront-secondary-subtle: rgba(217, 119, 6, 0.12);
+  --storefront-surface-color: #f8fafc;
+  --storefront-surface-contrast: #0f172a;
+  --storefront-surface-border: #e2e8f0;
+}
+
+.storefront-container {
+  max-width: var(--storefront-container);
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.storefront-products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(225px, 1fr));
+  gap: 16px;
+}
+
+.storefront-homepage-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/*
+ * رفوف الصفحة الرئيسية (Amazon-Style Single-Row Carousel):
+ * - على أجهزة الكمبيوتر (min-width: 641px): صف واحد متزن وأنيق (Single Row)
+ *   يعرض 6 منتجات بتناسق تام مع أسهم تنقل جانبية عائمة (Floating Chevrons) بنقرة واحدة.
+ * - على الموبايل (max-width: 640px): شريط تمرير أفقي سريع بالتاتش (Touch-Swipe Shelf).
+ */
+.storefront-shelf-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.storefront-shelf {
+  display: flex;
+  align-items: stretch;
+  gap: 16px;
+  overflow-x: auto;
+  overflow-y: visible;
+  touch-action: pan-x pan-y;
+  overscroll-behavior-x: contain;
+  overscroll-behavior-y: auto;
+  scroll-padding-inline: 4px;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+}
+
+.storefront-shelf::-webkit-scrollbar {
+  height: 6px;
+}
+.storefront-shelf::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
+}
+.storefront-shelf::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.storefront-shelf-item {
+  flex: 0 0 210px;
+  max-width: 210px;
+  display: flex;
+  flex-direction: column;
+}
+
+.storefront-shelf-item > .storefront-product-card {
+  height: 100% !important;
+  width: 100% !important;
+}
+
+/* Amazon-Style Floating Navigation Chevrons */
+.storefront-shelf-floating-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 42px;
+  height: 64px;
+  border-radius: 10px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.16);
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: opacity 0.22s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+  opacity: 0.75;
+  pointer-events: auto;
+}
+
+.storefront-shelf-wrapper:hover .storefront-shelf-floating-arrow,
+.storefront-section-card:hover .storefront-shelf-floating-arrow {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.storefront-shelf-floating-arrow:hover {
+  opacity: 1 !important;
+  background: #ffffff;
+  transform: translateY(-50%) scale(1.06);
+  box-shadow: 0 6px 24px rgba(15, 23, 42, 0.25);
+  border-color: #cbd5e1;
+  color: #170e5e;
+}
+
+.storefront-shelf-floating-arrow:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.storefront-shelf-arrow-prev {
+  right: -6px;
+}
+
+.storefront-shelf-arrow-next {
+  left: -6px;
+}
+
+@media (min-width: 641px) {
+  .storefront-shelf {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    overflow-y: visible;
+    scrollbar-width: none; /* Hide scrollbar on desktop */
+    -ms-overflow-style: none;
+    padding-bottom: 2px;
+    scroll-behavior: smooth;
+  }
+  .storefront-shelf::-webkit-scrollbar {
+    display: none;
+  }
+  .storefront-shelf-arrows {
+    display: none !important;
+  }
+}
+
+/* الشاشات الكبيرة (1200px فما فوق): 5 منتجات مريحة وواسعة في الصف بدل 6 متكدسة */
+@media (min-width: 1200px) {
+  .storefront-shelf-item {
+    flex: 0 0 calc((100% - (16px * 4)) / 5);
+    min-width: 215px;
+    max-width: 270px;
+  }
+}
+
+/* الشاشات المتوسطة (900px إلى 1199px): 4 منتجات في الصف */
+@media (min-width: 900px) and (max-width: 1199px) {
+  .storefront-shelf-item {
+    flex: 0 0 calc((100% - (16px * 3)) / 4);
+    min-width: 200px;
+    max-width: 260px;
+  }
+}
+
+/* أجهزة التابلت والشاشات الصغيرة (641px إلى 899px): 3 منتجات في الصف */
+@media (min-width: 641px) and (max-width: 899px) {
+  .storefront-shelf-item {
+    flex: 0 0 calc((100% - (16px * 2)) / 3);
+    min-width: 190px;
+    max-width: 250px;
+  }
+}
+
+@media (max-width: 640px) {
+  .storefront-shelf {
+    gap: 8px;
+    scroll-snap-type: none !important;
+    cursor: default !important;
+  }
+  .storefront-shelf-item {
+    flex: 0 0 43vw;
+    max-width: 43vw;
+  }
+  .storefront-shelf-floating-arrow {
+    display: none !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .storefront-main-content {
+    padding: 8px 10px 18px !important;
+  }
+  .storefront-main-content .storefront-section-card {
+    padding: 10px !important;
+    border-radius: 12px !important;
+  }
+  .storefront-homepage-sections {
+    gap: 12px !important;
+  }
+  .storefront-products-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+  }
+  .storefront-deals-header {
+    margin-bottom: 10px !important;
+    padding-bottom: 8px !important;
+  }
+  .storefront-deals-subtitle {
+    display: none !important;
+  }
+  .storefront-cat-shelf-header {
+    margin-bottom: 10px !important;
+    padding-bottom: 8px !important;
+  }
+  .storefront-home-btn-label {
+    display: none !important;
+  }
+  .storefront-filter-header {
+    padding: 8px 10px !important;
+    gap: 8px !important;
+    margin-bottom: 12px !important;
+  }
+}
+
+/*
+ * بار السلة السفلي كان يغطي آخر صف منتجات: المحتوى ينتهي بـ`padding-bottom: 80px`
+ * ثابتة بينما البار مثبّت فوقه، فيُقص الكارت الأخير ولا يصل المستخدم لزر الإضافة.
+ * المساحة الآن مشتقّة من ارتفاع البار + المنطقة الآمنة في أجهزة iPhone.
+ */
+.storefront-main-content {
+  padding-bottom: calc(var(--storefront-dock-height) + env(safe-area-inset-bottom, 0px) + 24px) !important;
+}
+
+@media (max-width: 640px) {
+  :root {
+    /* البار أطول على الموبايل: سطر الإجمالي + زر إتمام الطلب */
+    --storefront-dock-height: 96px;
+  }
+
+  /*
+   * الهيدر كان يستهلك ثلث الشاشة قبل أول منتج (لوجو + بحث + صف فلاتر + شريط
+   * أقسام). تقليص الحشو والفجوات يرفع أول منتج فوق الطيّة.
+   */
+  .storefront-header-shell {
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+    gap: 8px !important;
+  }
+  .storefront-subnav-shell {
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+  }
+  .storefront-category-showcase {
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+  }
+
+  /*
+   * شريط الأقسام كان أطول كتلة في الترويسة (103px من 812). تصغير الدوائر
+   * وإخفاء عدّاد الأصناف يوفّر ~30px تدفع أول منتج أعلى الطيّة، والعدّاد متاح
+   * على أي حال داخل قائمة الأقسام.
+   */
+  .storefront-category-showcase .storefront-cat-avatar {
+    width: 50px !important;
+    height: 50px !important;
+  }
+  .storefront-category-showcase .storefront-cat-count {
+    display: none !important;
+  }
+
+  /*
+   * ترويسة الرفّ على الموبايل: الأسهم لا معنى لها مع التمرير باللمس، ونص
+   * «عرض كل أصناف القسم (24)» أطول من أن يتسع بجانب اسم القسم. تُخفى الأسهم
+   * ويُختصر النص إلى «عرض الكل» — فيبقى كل شيء في سطر واحد بلا كسر.
+   */
+  .storefront-shelf-arrows {
+    display: none !important;
+  }
+  .storefront-shelf-viewall-label {
+    font-size: 0;
+  }
+  .storefront-shelf-viewall-label::after {
+    content: 'عرض الكل';
+    font-size: 12.5px;
+  }
+  .storefront-shelf {
+    scroll-snap-type: none !important;
+    cursor: default !important;
+  }
+  .storefront-product-card {
+    transition: none !important;
+  }
+  .storefront-product-card:hover {
+    transform: none !important;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04) !important;
+    border-color: #e2e8f0 !important;
+  }
+  .storefront-main-content {
+    padding-bottom: 18px !important;
+  }
+  .storefront-explore-banner {
+    padding: 18px 14px !important;
+    border-radius: 12px !important;
+  }
+}
+
+/*
+ * منع جلتش تعليق الماوس عند السحب والتصفح (Anti-Mouse-Stuck Standard)
+ * حظر السحب الأصلي للصور وتحديد النصوص في الرفوف والأقسام والكروت لمنع المتصفح من التعليق
+ */
+.storefront-cat-showcase,
+.storefront-subnav {
+  touch-action: pan-x pan-y;
+  overscroll-behavior-x: contain;
+}
+
+.storefront-cat-showcase,
+.storefront-shelf,
+.storefront-banner-carousel-wrapper,
+.storefront-product-card,
+.storefront-subnav {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.storefront-cat-showcase img,
+.storefront-shelf img,
+.storefront-product-card img,
+.storefront-banner-img {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   Storefront Categories Modal (تصفح جميع أقسام وتصنيفات المتجر)
+   ========================================================================== */
+
+.storefront-cat-modal-shell {
+  width: min(1160px, 96vw) !important;
+  max-width: 96vw !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+}
+
+.storefront-cat-modal-root {
+  background: #ffffff;
+  width: 100%;
+  height: min(86vh, 760px);
+  min-height: min(86vh, 580px);
+  max-height: min(88vh, 780px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  overscroll-behavior: contain !important;
+  direction: rtl;
+  padding: 0 !important;
+  box-sizing: border-box;
+}
+
+.storefront-cat-modal-header {
+  padding: 12px 20px;
+  border-bottom: 1.5px solid #e2e8f0;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-shrink: 0;
+  touch-action: none;
+}
+
+.storefront-cat-modal-header-brand {
+  order: 1;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 240px;
+  min-width: 240px;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.storefront-cat-modal-search-box {
+  order: 2;
+  position: relative;
+  flex: 1;
+  max-width: 440px;
+}
+
+.storefront-cat-modal-close-btn {
+  order: 3;
+  width: 32px;
+  height: 32px;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background: #f1f5f9;
+  border: none;
+  color: #475569;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 0;
+  box-sizing: border-box;
+  transition: background 0.15s ease;
+}
+
+.storefront-cat-modal-close-btn:hover {
+  background: #e2e8f0;
+}
+
+.storefront-cat-modal-mobile-tabs {
+  display: none !important;
+}
+
+.storefront-cat-modal-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: inherit;
+  white-space: nowrap;
+  flex-shrink: 0;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+  transition: all 0.12s ease;
+}
+
+.storefront-cat-modal-chip.active {
+  background: var(--storefront-primary-color, #170e5e) !important;
+  color: #ffffff !important;
+  border-color: var(--storefront-primary-color, #170e5e) !important;
+  box-shadow: 0 2px 6px rgba(23, 14, 94, 0.22) !important;
+}
+
+.storefront-cat-modal-chip-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.storefront-cat-modal-chip.active .storefront-cat-modal-chip-badge {
+  background: rgba(255, 255, 255, 0.22) !important;
+  color: #ffffff !important;
+}
+
+.storefront-cat-modal-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.storefront-cat-modal-sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  background: #f8fafc;
+  border-left: 1.5px solid #e2e8f0;
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overscroll-behavior: contain !important;
+}
+
+.storefront-cat-modal-content {
+  flex: 1;
+  padding: 18px 22px;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overscroll-behavior: contain !important;
+  overscroll-behavior-y: contain !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+.storefront-cat-modal-content-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid #f1f5f9;
+  flex-shrink: 0;
+}
+
+.storefront-cat-modal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+  gap: 12px;
+  flex: 1;
+  align-content: start;
+}
+
+.storefront-cat-modal-grid.five-cols {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.storefront-cat-modal-card {
+  border-radius: 11px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.16s ease;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.02);
+  position: relative;
+  height: 136px;
+  box-sizing: border-box;
+}
+
+.storefront-cat-modal-card.selected {
+  border: 2px solid var(--storefront-primary-color, #170e5e) !important;
+  background: var(--storefront-primary-subtle, #f0f3ff) !important;
+}
+
+.storefront-cat-modal-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.08);
+  border-color: #cbd5e1;
+}
+
+.storefront-cat-modal-card-img-box {
+  width: 100%;
+  height: 84px;
+  position: relative;
+  overflow: hidden;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Mobile Breakpoint (< 640px) */
+@media (max-width: 640px) {
+  .storefront-cat-modal-shell {
+    width: calc(100vw - 16px) !important;
+    max-width: calc(100vw - 16px) !important;
+    border-radius: 16px !important;
+    margin: auto !important;
+    max-height: calc(100vh - 20px) !important;
+  }
+
+  .storefront-cat-modal-root {
+    height: min(90vh, 800px) !important;
+    min-height: 520px !important;
+    max-height: min(92vh, calc(100vh - 20px)) !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .storefront-cat-modal-header {
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 8px 12px 6px !important;
+    gap: 6px !important;
+    touch-action: none !important;
+  }
+
+  .storefront-cat-modal-header-brand {
+    order: 1 !important;
+    width: auto !important;
+    min-width: 0 !important;
+    flex: 1 !important;
+  }
+
+  .storefront-cat-modal-close-btn {
+    order: 2 !important;
+    width: 28px !important;
+    height: 28px !important;
+    aspect-ratio: 1 / 1 !important;
+    border-radius: 50% !important;
+    flex-shrink: 0 !important;
+  }
+
+  .storefront-cat-modal-search-box {
+    order: 3 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+  }
+
+  .storefront-cat-modal-search-box input {
+    height: 30px !important;
+    padding: 4px 28px 4px 10px !important;
+    font-size: 11px !important;
+    border-radius: 7px !important;
+  }
+
+  .storefront-cat-modal-sidebar {
+    display: none !important;
+  }
+
+  .storefront-cat-modal-mobile-tabs {
+    display: flex !important;
+    overflow-x: auto !important;
+    gap: 4px !important;
+    padding: 4px 8px !important;
+    background: #f8fafc !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    scrollbar-width: none !important;
+    touch-action: pan-x !important;
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+    flex-shrink: 0 !important;
+  }
+
+  .storefront-cat-modal-mobile-tabs::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .storefront-cat-modal-chip {
+    padding: 2px 7px !important;
+    gap: 3.5px !important;
+    font-size: 10.5px !important;
+    font-weight: 700 !important;
+    height: 26px !important;
+    box-sizing: border-box !important;
+    border-radius: 6px !important;
+  }
+
+  .storefront-cat-modal-chip svg {
+    width: 11px !important;
+    height: 11px !important;
+    stroke-width: 2.2 !important;
+    flex-shrink: 0 !important;
+  }
+
+  .storefront-cat-modal-chip-badge {
+    font-size: 8.5px !important;
+    font-weight: 800 !important;
+    padding: 1px 3.5px !important;
+    min-width: 12px !important;
+    text-align: center !important;
+    border-radius: 3px !important;
+    line-height: 1 !important;
+  }
+
+  .storefront-cat-modal-content {
+    padding: 8px 10px 12px !important;
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+  }
+
+  .storefront-cat-modal-content-header {
+    padding-bottom: 6px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .storefront-cat-modal-grid,
+  .storefront-cat-modal-grid.five-cols {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+  }
+
+  .storefront-cat-modal-card {
+    height: 112px !important;
+    border-radius: 10px !important;
+  }
+
+  .storefront-cat-modal-card-img-box {
+    height: 72px !important;
+  }
+}
+
+/* Full-Bleed Panoramic Hero Banner */
+.storefront-banner-carousel-wrapper.full-bleed {
+  max-width: 100% !important;
+  margin: 0 0 14px !important;
+  padding: 0 !important;
+}
+
+.storefront-banner-carousel-wrapper.full-bleed .storefront-banner-carousel-inner {
+  border-radius: 0 !important;
+}
+
+.storefront-banner-carousel-wrapper.full-bleed .storefront-banner-img {
+  border-radius: 0 !important;
+}
+
+/* Mid-Page Interstitial Promotional Banners */
+.storefront-mid-banner-card {
+  width: 100%;
+  margin: 20px 0;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.storefront-mid-banner-card:focus-visible {
+  outline: 2px solid var(--storefront-primary-color, #170e5e);
+  outline-offset: 2px;
+}

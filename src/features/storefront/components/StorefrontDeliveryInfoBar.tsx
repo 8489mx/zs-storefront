@@ -1,0 +1,153 @@
+import { useTranslation } from 'react-i18next';
+import { useMemo } from 'react';
+import type { StorefrontInfo } from '../types/storefront.types';
+import { IconTruck } from './StorefrontIcons';
+
+/**
+ * شريط إشارات التوصيل أسفل الهيدر مباشرة.
+ *
+ * **لماذا:** أول سؤال لأي عميل على طلبات/نون هو «التوصيل بكام وهيوصل إمتى؟»،
+ * وهذه البيانات كانت موجودة في `info` و`deliveryZones` ولا تُعرض في أي مكان قبل
+ * الوصول لشاشة إتمام الطلب — أي أن العميل يضيف للسلة وهو لا يعرف تكلفة التوصيل
+ * ولا حد الطلب الأدنى، فيتفاجأ في آخر خطوة وهي أعلى نقطة تسرّب في أي متجر.
+ *
+ * لا يستدعي أي endpoint جديد: كل القيم مشتقّة مما يرسله `getInfo` أصلاً.
+ */
+
+type Props = {
+  info: StorefrontInfo;
+};
+
+function formatMoney(value: number, currency: string): string {
+  const rounded = Number.isInteger(value) ? value : Number(value.toFixed(2));
+  return `${rounded.toLocaleString('ar-EG')} ${currency}`;
+}
+
+/**
+ * شريط الحوافز الترويجية للتوصيل (Smart Incentive Banner):
+ * - يظهر فقط كأداة تسويقية محفزة إذا كان هناك حد أدنى للشحن المجاني (Upselling).
+ * - لا يظهر إطلاقاً إذا كانت رسوم التوصيل عادية بمقابل، حتى لا يُنفر العميل قبل الشراء.
+ * - رسوم التوصيل العادية تُعرض بشفافية تامة داخل السلة وشاشة إتمام الطلب حسب منطقة العميل.
+ */
+export function StorefrontDeliveryInfoBar({ info }: Props) {
+  const { t } = useTranslation();
+  const signals = useMemo(() => {
+    const currency = info.currency === 'EGP' ? 'ج.م' : (info.currency || 'ج.م');
+    const freeShippingAt = info.freeShippingEnabled ? Number(info.freeShippingMinOrder || 0) : 0;
+
+    const zones = (info.deliveryZones || []).filter((z) => z.isActive !== false);
+    const zoneFees = zones.map((z) => Number(z.deliveryFee || 0)).filter((n) => Number.isFinite(n));
+    const baseFee = Number(info.deliveryFee || 0);
+    const fees = zoneFees.length > 0 ? zoneFees : [baseFee];
+    const isAllFree = fees.length > 0 && fees.every((f) => f <= 0);
+
+    // إذا لم يكن التوصيل مجانياً بالكامل ولا يوجد شحن مجاني مشروط بمبلغ أكبر من صفر -> يختفي البانر
+    if (!isAllFree && freeShippingAt <= 0) {
+      return null;
+    }
+
+    const estimatedTime = zones.map((z) => String(z.estimatedTime || '').trim()).find(Boolean) || '';
+    const minOrder = Number(info.minOrder || 0);
+
+    let promoText = '';
+    let mobilePromoText = '';
+    if (freeShippingAt > 0) {
+      promoText = `توصيل مجاني لجميع الطلبات بقيمة ${formatMoney(freeShippingAt, currency)} فأكثر`;
+      mobilePromoText = `توصيل مجاني للطلبات من ${formatMoney(freeShippingAt, currency)}`;
+    } else if (isAllFree) {
+      promoText = 'توصيل مجاني لجميع الطلبات';
+      mobilePromoText = 'توصيل مجاني لجميع الطلبات';
+    } else {
+      return null;
+    }
+
+    return { currency, estimatedTime, minOrder, promoText, mobilePromoText };
+  }, [info]);
+
+  if (!signals) return null;
+
+  return (
+    <div
+      className="storefront-delivery-info-bar-container"
+      style={{
+        maxWidth: 'var(--storefront-container, 1440px)',
+        width: '100%',
+        margin: '10px auto',
+        padding: '0 24px',
+        boxSizing: 'border-box',
+      }}
+    >
+      <style>{`
+        .sf-promo-text-mobile {
+          display: none;
+        }
+        @media (max-width: 640px) {
+          .storefront-delivery-info-bar-container {
+            margin: 6px auto !important;
+            padding: 0 8px !important;
+          }
+          .storefront-delivery-info-pill {
+            padding: 6px 10px !important;
+            border-radius: 8px !important;
+            gap: 6px !important;
+            flex-wrap: nowrap !important;
+            justify-content: center !important;
+          }
+          .storefront-delivery-info-text {
+            gap: 6px !important;
+            font-size: clamp(10.5px, 3.1vw, 12px) !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            display: inline-flex !important;
+            align-items: center !important;
+          }
+          .storefront-delivery-info-text svg {
+            width: 15px !important;
+            height: 15px !important;
+            flex-shrink: 0 !important;
+          }
+          .sf-promo-text-full {
+            display: none !important;
+          }
+          .sf-promo-text-mobile {
+            display: inline !important;
+            white-space: nowrap !important;
+          }
+          .storefront-delivery-info-time {
+            display: none !important;
+          }
+        }
+      `}</style>
+      <div
+        className="storefront-delivery-info-pill"
+        style={{
+          background: 'var(--storefront-surface-color, #f0f3ff)',
+          border: '1px solid rgba(23, 14, 94, 0.14)',
+          borderRadius: '10px',
+          padding: '6px 18px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '12px',
+          flexWrap: 'wrap',
+          boxSizing: 'border-box',
+          fontSize: '0.8125rem',
+          boxShadow: '0 1px 3px rgba(23, 14, 94, 0.04)',
+        }}
+      >
+        <div className="storefront-delivery-info-text" style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--storefront-primary-color, #170e5e)', fontWeight: 700 }}>
+          <IconTruck size={17} color="var(--storefront-primary-color, #170e5e)" strokeWidth={2.2} />
+          <span className="sf-promo-text-full">{signals.promoText}</span>
+          <span className="sf-promo-text-mobile">{signals.mobilePromoText}</span>
+        </div>
+        {signals.estimatedTime && (
+          <div className="storefront-delivery-info-time" style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--storefront-primary-color, #170e5e)', opacity: 0.85, fontSize: '0.78rem' }}>
+            <span>{t('storefront.storefront_delivery_info_bar.s0', "• التوصيل المتوقع:")}</span>
+            <strong>{signals.estimatedTime}</strong>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
