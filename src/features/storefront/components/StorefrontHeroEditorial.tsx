@@ -28,68 +28,65 @@ const CARD_BADGES = [
   'مختاراتنا',
 ];
 
-// Balanced 3D Coverflow geometry by offset from center (-3 to +3)
-// Keeps cards wide enough for crisp Arabic typography & product art while stepping height & 3D tilt inward
-function getCoverflowStyle(offset: number, isHovered: boolean) {
-  const abs = Math.abs(offset);
-  const sign = offset < 0 ? -1 : 1;
+// Pure GPU 3D Coverflow transforms by offset from center (-3 to +3)
+// Fixed layout width/height (ZERO DOM reflow or page shake on hover!)
+// Milder angles (14deg - 22deg) so side cards remain clearly visible and readable
+function getCoverflowTransform(offset: number, isHovered: boolean, hoveredOffset: number | null) {
+  const isActiveHero = isHovered || (hoveredOffset === null && offset === 0);
 
-  if (offset === 0) {
+  if (isActiveHero) {
     return {
-      width: '248px',
-      height: '312px',
-      borderRadius: '22px',
-      marginInline: '4px',
       transform: isHovered
-        ? 'perspective(1000px) rotateY(0deg) translateY(-10px) scale(1.03)'
-        : 'perspective(1000px) rotateY(0deg) translateY(-4px) scale(1)',
-      zIndex: 30,
+        ? 'perspective(1100px) rotateY(0deg) translateY(-8px) scale(1.12)'
+        : 'perspective(1100px) rotateY(0deg) translateY(-2px) scale(1.1)',
+      zIndex: 40,
       opacity: 1,
+      isHighlighted: true,
     };
   }
 
-  if (abs === 1) {
-    const rotY = sign * 20;
+  // If a side card is hovered, the center card gently steps back via GPU transform only
+  if (offset === 0 && hoveredOffset !== null) {
+    const tiltSign = hoveredOffset > 0 ? -1 : 1;
+    const rotY = tiltSign * 14;
     return {
-      width: '212px',
-      height: '282px',
-      borderRadius: '20px',
-      marginInline: '-2px',
-      transform: isHovered
-        ? `perspective(950px) rotateY(${rotY * 0.65}deg) translateY(0px) scale(1.03)`
-        : `perspective(950px) rotateY(${rotY}deg) translateY(8px) scale(1)`,
+      transform: `perspective(1000px) rotateY(${rotY}deg) translateY(6px) scale(0.96)`,
       zIndex: 20,
-      opacity: 0.99,
+      opacity: 0.96,
+      isHighlighted: false,
+    };
+  }
+
+  const abs = Math.abs(offset);
+  const sign = offset < 0 ? -1 : 1;
+
+  if (abs === 1) {
+    const rotY = sign * 15;
+    return {
+      transform: `perspective(1000px) rotateY(${rotY}deg) translateY(6px) scale(0.96)`,
+      zIndex: 20,
+      opacity: 0.98,
+      isHighlighted: false,
     };
   }
 
   if (abs === 2) {
-    const rotY = sign * 24;
+    const rotY = sign * 19;
     return {
-      width: '194px',
-      height: '254px',
-      borderRadius: '18px',
-      marginInline: '-6px',
-      transform: isHovered
-        ? `perspective(950px) rotateY(${rotY * 0.65}deg) translateY(10px) scale(1.03)`
-        : `perspective(950px) rotateY(${rotY}deg) translateY(20px) scale(1)`,
-      zIndex: 10,
-      opacity: 0.96,
+      transform: `perspective(1000px) rotateY(${rotY}deg) translateY(14px) scale(0.89)`,
+      zIndex: 12,
+      opacity: 0.95,
+      isHighlighted: false,
     };
   }
 
   // abs >= 3
-  const rotY = sign * 28;
+  const rotY = sign * 22;
   return {
-    width: '178px',
-    height: '228px',
-    borderRadius: '16px',
-    marginInline: '-8px',
-    transform: isHovered
-      ? `perspective(950px) rotateY(${rotY * 0.65}deg) translateY(20px) scale(1.03)`
-      : `perspective(950px) rotateY(${rotY}deg) translateY(32px) scale(1)`,
-    zIndex: 5,
+    transform: `perspective(1000px) rotateY(${rotY}deg) translateY(22px) scale(0.82)`,
+    zIndex: 6,
     opacity: 0.92,
+    isHighlighted: false,
   };
 }
 
@@ -169,12 +166,11 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
       <style>{`
         .storefront-coverflow-card {
           transition:
-            transform 0.42s cubic-bezier(0.16, 1, 0.3, 1),
-            width 0.42s cubic-bezier(0.16, 1, 0.3, 1),
-            height 0.42s cubic-bezier(0.16, 1, 0.3, 1),
-            box-shadow 0.32s ease,
-            opacity 0.32s ease !important;
-          will-change: transform, width, height;
+            transform 0.34s cubic-bezier(0.16, 1, 0.3, 1),
+            box-shadow 0.28s ease,
+            border-color 0.28s ease,
+            opacity 0.28s ease !important;
+          will-change: transform;
           transform-style: preserve-3d;
           backface-visibility: hidden;
         }
@@ -186,6 +182,8 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
           }
           .storefront-fanned-deck {
             overflow-x: auto !important;
+            height: auto !important;
+            min-height: 270px !important;
             padding: 16px 12px 24px !important;
             width: 100% !important;
             justify-content: flex-start !important;
@@ -200,7 +198,7 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
             transform: none !important;
             width: 185px !important;
             min-width: 185px !important;
-            height: 250px !important;
+            height: 255px !important;
             margin-inline: 0 !important;
             opacity: 1 !important;
             flex-shrink: 0 !important;
@@ -209,34 +207,36 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
       `}</style>
 
       {/* Top Main Headline */}
-      <div style={{ maxWidth: '820px', marginBottom: '18px', position: 'relative', zIndex: 5 }}>
+      <div style={{ maxWidth: '100%', marginBottom: '12px', position: 'relative', zIndex: 5 }}>
         <h1
           style={{
-            margin: '0 0 8px',
-            fontSize: 'clamp(2rem, 4vw, 3.4rem)',
+            margin: 0,
+            fontSize: '25px',
             fontWeight: 800,
-            lineHeight: 1.22,
+            lineHeight: 1.3,
             color: '#0f172a',
-            letterSpacing: '-0.02em',
-            textWrap: 'balance',
+            letterSpacing: '-0.01em',
+            whiteSpace: 'nowrap',
             fontFamily: "'Alexandria', 'Inter', 'Tajawal', 'Cairo', sans-serif",
           }}
         >
-          كل ما تحتاجه في مكان واحد وبأفضل سعر.
+          أفضل المنتجات بأحسن سعر
         </h1>
       </div>
 
-      {/* Centerpiece: Symmetrical 3D Coverflow Deck */}
+      {/* Centerpiece: Fixed-Height 3D Coverflow Stage (Zero page reflow on hover) */}
       <div
         dir="ltr"
         className="storefront-fanned-deck"
+        onMouseLeave={() => setHoveredCardIdx(null)}
         style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: '0px',
+          gap: '16px',
+          height: '336px',
           position: 'relative',
-          padding: '16px 12px 42px',
+          padding: '12px 16px 24px',
           maxWidth: '100%',
           zIndex: 4,
           flexWrap: 'nowrap',
@@ -247,10 +247,10 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
           const { product, originalIdx } = item;
           const midSlot = Math.floor(orderedDeck.length / 2);
           const offset = slotIdx - midSlot;
-          const isCenter = offset === 0;
-          const isOuter = Math.abs(offset) >= 2;
           const isHovered = hoveredCardIdx === slotIdx;
-          const covStyle = getCoverflowStyle(offset, isHovered);
+          const hoveredOffset = hoveredCardIdx !== null ? hoveredCardIdx - midSlot : null;
+          const covStyle = getCoverflowTransform(offset, isHovered, hoveredOffset);
+          const isHighlighted = covStyle.isHighlighted;
 
           const autoPhoto = resolveProductPhoto(product.name, product.categoryName);
           const photoUrl = product.imageUrl || autoPhoto.url;
@@ -263,26 +263,22 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
               dir="rtl"
               className="storefront-coverflow-card"
               onMouseEnter={() => setHoveredCardIdx(slotIdx)}
-              onMouseLeave={() => setHoveredCardIdx(null)}
               onClick={() => {
-                if (!isCenter && orderedDeck.length >= 7) {
+                if (offset !== 0 && orderedDeck.length >= 7) {
                   setCenterIdx(originalIdx);
                 } else {
                   onQuickView(product);
                 }
               }}
               style={{
-                width: covStyle.width,
-                height: covStyle.height,
-                borderRadius: covStyle.borderRadius,
-                marginInline: covStyle.marginInline,
+                width: '186px',
+                height: '274px',
+                borderRadius: '20px',
                 background: '#ffffff',
-                border: isCenter ? '1.5px solid #cbd5e1' : '1px solid #e2e8f0',
-                boxShadow: isCenter
-                  ? '0 24px 48px -12px rgba(15, 23, 42, 0.2), 0 6px 16px rgba(15, 23, 42, 0.07)'
-                  : isHovered
-                    ? '0 20px 36px -10px rgba(15, 23, 42, 0.16), 0 4px 10px rgba(0, 0, 0, 0.05)'
-                    : '0 14px 28px -10px rgba(15, 23, 42, 0.1), 0 2px 6px rgba(0, 0, 0, 0.03)',
+                border: isHighlighted ? '1.5px solid #cbd5e1' : '1px solid #E0E3E7',
+                boxShadow: isHighlighted
+                  ? '0 24px 48px -12px rgba(15, 23, 42, 0.22), 0 6px 16px rgba(15, 23, 42, 0.08)'
+                  : '0 12px 24px -8px rgba(15, 23, 42, 0.1), 0 2px 6px rgba(0, 0, 0, 0.03)',
                 position: 'relative',
                 transform: covStyle.transform,
                 transformOrigin: 'center 55%',
@@ -291,14 +287,14 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
-                padding: isCenter ? '14px' : isOuter ? '10px' : '12px',
+                padding: '12px',
                 boxSizing: 'border-box',
-                zIndex: isHovered ? 35 : covStyle.zIndex,
+                zIndex: covStyle.zIndex,
                 opacity: covStyle.opacity,
                 flexShrink: 0,
               }}
             >
-              {/* Card Header: Dark Badge Pill + Price Tag */}
+              {/* Card Header: Badge & Price Tag (Always rendered so layout never shifts) */}
               <div
                 style={{
                   display: 'flex',
@@ -313,9 +309,9 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
                   style={{
                     background: isOutOfStock ? '#ef4444' : '#0f172a',
                     color: '#ffffff',
-                    fontSize: isCenter ? '11px' : isOuter ? '9.5px' : '10px',
+                    fontSize: '10px',
                     fontWeight: 800,
-                    padding: isCenter ? '4px 10px' : '3px 8px',
+                    padding: '3.5px 8px',
                     borderRadius: '8px',
                     whiteSpace: 'nowrap',
                     lineHeight: 1.2,
@@ -326,13 +322,13 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
 
                 <span
                   style={{
-                    fontSize: isCenter ? '12.5px' : isOuter ? '10.5px' : '11.5px',
+                    fontSize: '11.5px',
                     fontWeight: 800,
                     color: '#0f172a',
                     fontVariantNumeric: 'tabular-nums',
                     background: '#f8fafc',
                     border: '1px solid #e2e8f0',
-                    padding: isCenter ? '3px 8px' : '2px 6px',
+                    padding: '2.5px 7px',
                     borderRadius: '8px',
                     whiteSpace: 'nowrap',
                     lineHeight: 1.2,
@@ -342,7 +338,7 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
                 </span>
               </div>
 
-              {/* Seamless Product Artwork Container (No square drop-shadow artifact) */}
+              {/* Product Artwork Container */}
               <div
                 style={{
                   width: '100%',
@@ -351,7 +347,7 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  padding: isCenter ? '6px 4px' : '4px 2px',
+                  padding: '6px 4px',
                   boxSizing: 'border-box',
                   position: 'relative',
                 }}
@@ -367,27 +363,27 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
                     height: '100%',
                     objectFit: 'contain',
                     transition: 'transform 0.3s ease',
-                    transform: isHovered ? 'scale(1.06)' : 'scale(1)',
+                    transform: isHighlighted ? 'scale(1.05)' : 'scale(1)',
                   }}
                 />
               </div>
 
-              {/* Card Footer: Product Name & Quick Add Squircle Button */}
+              {/* Card Footer: Product Name & Add Action */}
               <div
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  gap: '8px',
+                  gap: '6px',
                   borderTop: '1px solid #f1f5f9',
-                  paddingTop: isCenter ? '10px' : '8px',
+                  paddingTop: '8px',
                   position: 'relative',
                   zIndex: 2,
                 }}
               >
                 <span
                   style={{
-                    fontSize: isCenter ? '13px' : isOuter ? '11px' : '12px',
+                    fontSize: '11.5px',
                     fontWeight: 800,
                     color: '#0f172a',
                     lineHeight: 1.32,
@@ -409,8 +405,8 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
                   onClick={(e) => handleInstantAdd(e, product)}
                   disabled={isOutOfStock}
                   style={{
-                    width: isCenter ? '34px' : '30px',
-                    height: isCenter ? '34px' : '30px',
+                    width: '30px',
+                    height: '30px',
                     borderRadius: '10px',
                     background: justAddedId === product.id ? '#16a34a' : isOutOfStock ? '#e2e8f0' : '#0f172a',
                     color: '#ffffff',
@@ -421,14 +417,13 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
                     cursor: isOutOfStock ? 'not-allowed' : 'pointer',
                     flexShrink: 0,
                     transition: 'all 0.16s cubic-bezier(0.16, 1, 0.3, 1)',
-                    boxShadow: isOutOfStock ? 'none' : '0 4px 10px rgba(15, 23, 42, 0.14)',
                   }}
                   title="أضف للسلة"
                 >
                   {justAddedId === product.id ? (
-                    <IconCheckCircle size={isCenter ? 16 : 14} />
+                    <IconCheckCircle size={15} />
                   ) : (
-                    <IconShoppingCart size={isCenter ? 15 : 13} />
+                    <IconShoppingCart size={14} />
                   )}
                 </button>
               </div>
@@ -437,39 +432,20 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
         })}
       </div>
 
-      {/* Bottom Subtitle & CTA Buttons */}
+      {/* Bottom CTA Buttons */}
       <div
         style={{
           maxWidth: '640px',
+          marginTop: '24px',
           display: 'flex',
-          flexDirection: 'column',
           alignItems: 'center',
-          gap: '16px',
+          justifyContent: 'center',
+          gap: '10px',
+          flexWrap: 'wrap',
           position: 'relative',
           zIndex: 5,
         }}
       >
-        <p
-          style={{
-            margin: 0,
-            fontSize: 'clamp(0.95rem, 1.35vw, 1.1rem)',
-            color: '#64748b',
-            lineHeight: 1.65,
-            fontWeight: 600,
-          }}
-        >
-          تشكيلة متنوعة من المنتجات المختارة بعناية، اطلب أونلاين بسهولة واستلم طلبك في أسرع وقت.
-        </p>
-
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '10px',
-            flexWrap: 'wrap',
-          }}
-        >
           <button
             type="button"
             onClick={onSelectDeals}
@@ -518,7 +494,6 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
             <IconArrowUpRight size={14} />
           </button>
         </div>
-      </div>
     </section>
   );
 });
