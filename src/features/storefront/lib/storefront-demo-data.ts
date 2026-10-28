@@ -7,28 +7,14 @@ function svgDataUri(svgContent: string): string {
 
 // Bespoke Multi-Layered Studio Vector Illustrations for Categories (Rich Cover Artwork for Bento & Category Circles)
 const CAT_FASHION_SVG = svgDataUri(`
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
-  <defs>
-    <linearGradient id="cfBg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#1e1b4b"/>
-      <stop offset="55%" stop-color="#312e81"/>
-      <stop offset="100%" stop-color="#0f172a"/>
-    </linearGradient>
-    <linearGradient id="cfShirt" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#f8fafc"/>
-      <stop offset="100%" stop-color="#cbd5e1"/>
-    </linearGradient>
-  </defs>
-  <rect width="600" height="400" fill="url(#cfBg)"/>
-  <circle cx="170" cy="200" r="160" fill="#4f46e5" opacity="0.25"/>
-  <g transform="translate(40, 20)">
-    <path d="M105 85 L135 70 L185 70 L215 85 L265 125 L240 165 L210 145 L210 280 L110 280 L110 145 L80 165 L55 125 Z" fill="url(#cfShirt)" stroke="#94a3b8" stroke-width="3" stroke-linejoin="round"/>
-    <path d="M135 70 L160 110 L185 70" fill="#1e1b4b" stroke="#cbd5e1" stroke-width="2.5"/>
-    <circle cx="160" cy="135" r="3.5" fill="#1e1b4b"/>
-    <circle cx="160" cy="165" r="3.5" fill="#1e1b4b"/>
-    <circle cx="160" cy="195" r="3.5" fill="#1e1b4b"/>
-    <circle cx="160" cy="225" r="3.5" fill="#1e1b4b"/>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <rect width="400" height="400" fill="#ffffff"/>
+  <path d="M125 95 L165 75 L235 75 L275 95 L335 145 L302 192 L265 168 L265 325 L135 325 L135 168 L98 192 L65 145 Z" fill="#1e293b" stroke="#0f172a" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M165 75 L200 125 L235 75" fill="#e2e8f0" stroke="#0f172a" stroke-width="3"/>
+  <circle cx="200" cy="155" r="4.5" fill="#f8fafc"/>
+  <circle cx="200" cy="195" r="4.5" fill="#f8fafc"/>
+  <circle cx="200" cy="235" r="4.5" fill="#f8fafc"/>
+  <circle cx="200" cy="275" r="4.5" fill="#f8fafc"/>
 </svg>
 `);
 
@@ -505,8 +491,8 @@ export const DEMO_STOREFRONT_INFO: StorefrontInfo = {
   bannerFit: 'cover',
   logoUrl: '/logo.png',
   logo_url: '/logo.png',
-  brandColor: '#170e5e',
-  brandSecondaryColor: '#d97706',
+  brandColor: '#588cb3',
+  brandSecondaryColor: '#2d6c97',
   brandSurfaceColor: '#f8fafc',
   themePreset: 'modern-navy',
   currency: 'EGP',

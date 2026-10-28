@@ -132,7 +132,7 @@ export const StorefrontShelfSection = React.memo(function StorefrontShelfSection
           flexWrap: 'nowrap',
         }}
       >
-        {/* Title Badge & Subtitle */}
+        {/* Title Badge */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0, flex: '1 1 auto' }}>
           <span
             style={{
@@ -153,22 +153,6 @@ export const StorefrontShelfSection = React.memo(function StorefrontShelfSection
           >
             {badge}
           </span>
-          {subtitle && (
-            <span
-              className="storefront-deals-subtitle"
-              style={{
-                fontSize: '12.5px',
-                color: '#475569',
-                fontWeight: 600,
-                minWidth: 0,
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {subtitle}
-            </span>
-          )}
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>

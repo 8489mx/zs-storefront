@@ -95,19 +95,16 @@ export function StorefrontPredictiveSearch({
           width: '100%',
           display: 'flex',
           alignItems: 'center',
-          background: isOpen ? '#ffffff' : '#f8fafc',
+          background: '#ffffff',
           borderRadius: '12px',
           padding: '0 4px 0 12px',
-          border: isOpen ? '1.5px solid var(--storefront-primary-color, #170e5e)' : '1px solid #E0E3E7',
+          border: isOpen ? '1.5px solid var(--storefront-primary-color, #588cb3)' : '1px solid #E0E3E7',
           transition: 'all 0.2s ease',
-          boxShadow: isOpen ? '0 4px 16px rgba(23, 14, 94, 0.08)' : '0 1px 3px rgba(15, 23, 42, 0.03)',
+          boxShadow: isOpen ? '0 4px 16px rgba(88, 140, 179, 0.12)' : '0 1px 2px rgba(15, 23, 42, 0.04)',
           boxSizing: 'border-box',
           height: '35px',
         }}
       >
-        <span style={{ color: '#94a3b8', display: 'flex', alignItems: 'center', marginRight: '6px', flexShrink: 0 }}>
-          <IconSearch size={16} strokeWidth={2.2} />
-        </span>
         <input
           className="storefront-search-input"
           type="text"

@@ -450,9 +450,6 @@ export function PublicStorefrontPage() {
         />
       )}
 
-      {/* Trust & Guarantee Metrics Ribbon */}
-      {!searchTerm && <StorefrontTrustBar info={info} />}
-
       {/* Sub-Header Utility Navigation Bar (Shown when filtering/browsing specific view to avoid duplicating Hero CTAs) */}
       {!isHomepageMultiRow && (
         <StorefrontSubNav

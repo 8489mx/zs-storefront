@@ -151,9 +151,10 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
       className="storefront-pallet-hero"
       style={{
         position: 'relative',
-        background: 'radial-gradient(ellipse 90% 70% at 50% 15%, #ffffff 0%, #f4f7fb 55%, #eaeff7 100%)',
+        background: 'radial-gradient(ellipse 90% 75% at 50% 12%, #ffffff 0%, #f4f7fb 52%, #eaeff7 100%)',
         color: '#0f172a',
-        padding: '40px 16px 48px',
+        marginTop: '-64px',
+        padding: '88px 16px 18px',
         overflow: 'hidden',
         borderBottom: '1px solid #e2e8f0',
         display: 'flex',
@@ -175,10 +176,51 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
           backface-visibility: hidden;
         }
 
+        @keyframes sfHeroTickerMove {
+          0% {
+            transform: translate3d(0, 0, 0);
+          }
+          100% {
+            transform: translate3d(-50%, 0, 0);
+          }
+        }
+
+        .sf-hero-ticker-viewport {
+          width: 100%;
+          max-width: 1280px;
+          margin-top: 26px;
+          padding-top: 14px;
+          border-top: 1px solid rgba(203, 213, 225, 0.55);
+          overflow: hidden;
+          position: relative;
+          z-index: 5;
+          mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+          -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+        }
+
+        .sf-hero-ticker-track {
+          display: flex;
+          align-items: center;
+          width: max-content;
+          will-change: transform;
+          animation: sfHeroTickerMove 34s linear infinite;
+        }
+
+        .sf-hero-ticker-viewport:hover .sf-hero-ticker-track {
+          animation-play-state: paused;
+        }
+
         /* Responsive Mobile Scroll Track */
         @media (max-width: 920px) {
           .storefront-pallet-hero {
-            padding: 28px 12px 36px !important;
+            margin-top: -64px !important;
+            padding: 84px 12px 18px !important;
+          }
+        }
+        @media (max-width: 640px) {
+          .storefront-pallet-hero {
+            margin-top: -96px !important;
+            padding: 112px 12px 18px !important;
           }
           .storefront-fanned-deck {
             overflow-x: auto !important;
@@ -307,7 +349,7 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
               >
                 <span
                   style={{
-                    background: isOutOfStock ? '#ef4444' : '#0f172a',
+                    background: isOutOfStock ? '#ef4444' : 'var(--storefront-primary-color, #588cb3)',
                     color: '#ffffff',
                     fontSize: '10px',
                     fontWeight: 800,
@@ -408,7 +450,7 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
                     width: '30px',
                     height: '30px',
                     borderRadius: '10px',
-                    background: justAddedId === product.id ? '#16a34a' : isOutOfStock ? '#e2e8f0' : '#0f172a',
+                    background: justAddedId === product.id ? '#16a34a' : isOutOfStock ? '#e2e8f0' : 'var(--storefront-primary-color, #588cb3)',
                     color: '#ffffff',
                     border: 'none',
                     display: 'flex',
@@ -453,16 +495,16 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
               height: '35px',
               padding: '0 18px',
               borderRadius: '12px',
-              background: '#0f172a',
+              background: 'var(--storefront-primary-color, #588cb3)',
               color: '#ffffff',
-              border: '1px solid #0f172a',
+              border: '1px solid var(--storefront-primary-color, #588cb3)',
               fontSize: '13px',
               fontWeight: 700,
               cursor: 'pointer',
               display: 'inline-flex',
               alignItems: 'center',
               gap: '8px',
-              boxShadow: '0 4px 12px rgba(15, 23, 42, 0.12)',
+              boxShadow: '0 4px 12px var(--storefront-primary-subtle, rgba(88, 140, 179, 0.24))',
               transition: 'all 0.2s ease',
             }}
           >
@@ -494,6 +536,88 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
             <IconArrowUpRight size={14} />
           </button>
         </div>
+
+      {/* Bottom Hero Continuous Moving Trust & Value Marquee Strip */}
+      <div className="sf-hero-ticker-viewport" dir="ltr" aria-label="مميزات المتجر">
+        <div className="sf-hero-ticker-track">
+          {[0, 1].map((copyIdx) => {
+            const rawCurr = (info.currency || '').trim().toUpperCase();
+            const currLabel =
+              !rawCurr || rawCurr === 'EGP' || rawCurr === 'ج.م'
+                ? 'جنيه'
+                : info.currency;
+
+            const freeShipPhrase =
+              info.freeShippingEnabled && info.freeShippingMinOrder
+                ? { start: 'شحن مجاني للطلبات فوق', bold: `${info.freeShippingMinOrder} ${currLabel}` }
+                : { bold: 'توصيل سريع', end: 'لباب البيت' };
+
+            const tickerPhrases: Array<{ start?: string; bold: string; end?: string }> = [
+              { start: 'جودة أصلية مضمونة', bold: '100%' },
+              freeShipPhrase,
+              { bold: 'دفع آمن', end: 'عند الاستلام أو بالبطاقات والمحافظ' },
+              { start: 'خدمة عملاء فورية عبر واتساب', bold: '24/7' },
+              { bold: '+10,000', end: 'عميل سعيد يثق بنا' },
+              { start: 'استبدال واسترجاع مرن خلال', bold: '14 يوم' },
+              { bold: 'تغليف محكم', end: 'وعناية فائقة بكل طلب حتى يصلك' },
+              { bold: 'أفضل سعر', end: 'وعروض وخصومات يومية حصرية' },
+              { bold: 'توصيل سريع', end: 'شحن مباشر لجميع المحافظات' },
+            ];
+
+            return (
+              <div
+                key={copyIdx}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  flexShrink: 0,
+                }}
+              >
+                {tickerPhrases.map((phrase, idx) => (
+                  <React.Fragment key={`${copyIdx}-${idx}`}>
+                    <div
+                      dir="rtl"
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '5px',
+                        padding: '0 20px',
+                        whiteSpace: 'nowrap',
+                        fontSize: '13px',
+                        fontWeight: 600,
+                        color: '#475569',
+                      }}
+                    >
+                      {phrase.start && <span>{phrase.start}</span>}
+                      <span
+                        style={{
+                          fontWeight: 800,
+                          color: 'var(--storefront-primary-color, #588cb3)',
+                          fontSize: '13.5px',
+                        }}
+                      >
+                        {phrase.bold}
+                      </span>
+                      {phrase.end && <span>{phrase.end}</span>}
+                    </div>
+                    <span
+                      aria-hidden="true"
+                      style={{
+                        color: '#cbd5e1',
+                        fontSize: '14px',
+                        fontWeight: 300,
+                        userSelect: 'none',
+                      }}
+                    >
+                      |
+                    </span>
+                  </React.Fragment>
+                ))}
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </section>
   );
 });
