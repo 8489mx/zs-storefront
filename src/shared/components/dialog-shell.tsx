@@ -65,16 +65,10 @@ export function DialogShell({
     if (activeDialogCount === 0) {
       savedBodyOverflow = document.body.style.overflow;
       savedHtmlOverflow = document.documentElement.style.overflow;
-      document.body.style.setProperty('overflow', 'hidden', 'important');
-      document.documentElement.style.setProperty('overflow', 'hidden', 'important');
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
       document.body.classList.add('dialog-shell-open');
       document.documentElement.classList.add('dialog-shell-open');
-      const rootEl = document.getElementById('root');
-      if (rootEl) {
-        rootEl.style.setProperty('overflow', 'hidden', 'important');
-        rootEl.style.setProperty('overflow-y', 'hidden', 'important');
-        rootEl.style.setProperty('touch-action', 'none', 'important');
-      }
     }
     activeDialogCount++;
 
@@ -114,7 +108,7 @@ export function DialogShell({
       const focusable = getFocusableElements(shell);
       if (!focusable.length) {
         event.preventDefault();
-        shell.focus();
+        shell.focus({ preventScroll: true });
         return;
       }
 
@@ -124,10 +118,10 @@ export function DialogShell({
 
       if (event.shiftKey && active === first) {
         event.preventDefault();
-        last.focus();
+        last.focus({ preventScroll: true });
       } else if (!event.shiftKey && active === last) {
         event.preventDefault();
-        first.focus();
+        first.focus({ preventScroll: true });
       }
     };
 
@@ -135,7 +129,7 @@ export function DialogShell({
     return () => {
       if (frameId !== null) window.cancelAnimationFrame(frameId);
       window.removeEventListener('keydown', handleKeyDown, { capture: true });
-      previousActiveElementRef.current?.focus();
+      previousActiveElementRef.current?.focus({ preventScroll: true });
 
       activeDialogCount = Math.max(0, activeDialogCount - 1);
       if (activeDialogCount === 0) {
@@ -161,69 +155,6 @@ export function DialogShell({
     };
   }, [isVisible, autoFocus]);
 
-  // Bulletproof background scroll trap: intercepts any touch dragging or mouse wheel outside or at edges of the dialog
-  useEffect(() => {
-    if (!isVisible) return;
-
-    const preventBackgroundTouch = (e: TouchEvent) => {
-      const shell = shellRef.current;
-      // If the touch originated outside the active modal, block background scrolling completely
-      if (shell && !shell.contains(e.target as Node)) {
-        if (e.cancelable) {
-          e.preventDefault();
-        }
-      }
-    };
-
-    const preventBackgroundWheel = (e: WheelEvent) => {
-      const shell = shellRef.current;
-      if (!shell) return;
-
-      // If inside another dialog shell (nested modal), allow it to scroll freely
-      const activeShells = Array.from(document.querySelectorAll('.dialog-shell'));
-      const isOverAnyShell = activeShells.some((s) => s.contains(e.target as Node));
-      if (!shell.contains(e.target as Node)) {
-        if (isOverAnyShell) return;
-        if (e.cancelable) {
-          e.preventDefault();
-        }
-        return;
-      }
-
-      // If wheel is directly inside this modal shell, allow smooth natural scrolling for inner containers
-      let el = e.target as HTMLElement | null;
-      let hasScrollRoom = false;
-      while (el && el !== document.body) {
-        const style = window.getComputedStyle(el);
-        const overflowY = style.overflowY;
-        if ((overflowY === 'auto' || overflowY === 'scroll') && el.scrollHeight > el.clientHeight) {
-          hasScrollRoom = true;
-          break;
-        }
-        if (el === shell) {
-          if ((overflowY === 'auto' || overflowY === 'scroll') && el.scrollHeight > el.clientHeight) {
-            hasScrollRoom = true;
-          }
-          break;
-        }
-        el = el.parentElement;
-      }
-
-      // If inside modal, do NOT block wheel unless attempting to scroll completely outside
-      if (hasScrollRoom) {
-        return;
-      }
-    };
-
-    document.addEventListener('touchmove', preventBackgroundTouch, { passive: false });
-    document.addEventListener('wheel', preventBackgroundWheel, { passive: false });
-
-    return () => {
-      document.removeEventListener('touchmove', preventBackgroundTouch);
-      document.removeEventListener('wheel', preventBackgroundWheel);
-    };
-  }, [isVisible]);
-
   if (!isVisible || typeof document === 'undefined') return null;
 
   const effectiveZIndex = zIndex && zIndex >= 1000 ? zIndex : 10000 + (zIndex || 0);
@@ -241,7 +172,21 @@ export function DialogShell({
     <div
       ref={overlayRef}
       className={`dialog-overlay ${overlayClassName}`.trim()}
-      style={{ zIndex: effectiveZIndex }}
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: effectiveZIndex,
+        background: 'rgba(15, 23, 42, 0.52)',
+        backdropFilter: 'blur(4px)',
+        WebkitBackdropFilter: 'blur(4px)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '16px',
+        boxSizing: 'border-box',
+        overflowY: 'auto',
+        overscrollBehavior: 'contain',
+      }}
       onClick={(event) => {
         if (!closeOnBackdrop) return;
         if (event.target === event.currentTarget) onClose();
@@ -252,10 +197,20 @@ export function DialogShell({
         ref={shellRef}
         className={`dialog-shell ${shellClassName}`.trim()}
         style={{
+          position: 'relative',
           width: effectiveWidth,
+          maxWidth: '100%',
+          maxHeight: maxHeight || 'min(90vh, 820px)',
           ...(height ? { height } : {}),
           ...(minHeight ? { minHeight } : {}),
-          ...(maxHeight ? { maxHeight } : {}),
+          background: '#ffffff',
+          borderRadius: '24px',
+          boxShadow: '0 24px 48px -12px rgba(15, 23, 42, 0.25), 0 4px 16px -2px rgba(15, 23, 42, 0.08)',
+          border: '1px solid rgba(226, 232, 240, 0.9)',
+          overflow: 'hidden',
+          boxSizing: 'border-box',
+          outline: 'none',
+          margin: 'auto',
         }}
         role="dialog"
         aria-modal="true"
