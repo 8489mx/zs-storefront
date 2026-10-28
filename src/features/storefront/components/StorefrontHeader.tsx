@@ -111,29 +111,26 @@ export function StorefrontHeader({
         </div>
       )}
 
-      {/* Sticky Translucent Luxury Header — unboxed directly over the Hero at top, morphs into a floating pill island on scroll */}
+      {/* Sticky Luxury Header — full-width unboxed over Hero at top, morphs into 60% floating pill island on scroll */}
       <header
         className={`storefront-sticky-header ${isScrolled ? 'is-scrolled' : ''}`}
         style={{
-          background: isScrolled ? 'rgba(255, 255, 255, 0.88)' : 'transparent',
+          background: isScrolled ? 'rgba(255, 255, 255, 0.96)' : 'transparent',
           backdropFilter: isScrolled ? 'blur(20px) saturate(180%)' : 'none',
           WebkitBackdropFilter: isScrolled ? 'blur(20px) saturate(180%)' : 'none',
-          borderTop: isScrolled ? '1px solid #dadce0' : '1px solid transparent',
-          borderLeft: isScrolled ? '1px solid #dadce0' : '1px solid transparent',
-          borderRight: isScrolled ? '1px solid #dadce0' : '1px solid transparent',
-          borderBottom: isScrolled ? '1px solid #dadce0' : '1px solid transparent',
-          borderRadius: isScrolled ? '24px' : '0px',
+          border: isScrolled ? '1px solid rgba(226, 232, 240, 0.92)' : '1px solid transparent',
+          borderRadius: isScrolled ? '9999px' : '0px',
           position: 'sticky',
           top: isScrolled ? '12px' : '0px',
-          width: isScrolled ? 'calc(100% - 32px)' : '100%',
-          maxWidth: isScrolled ? '1180px' : '100%',
+          width: isScrolled ? '48%' : '100%',
+          maxWidth: isScrolled ? '780px' : '100%',
           margin: '0 auto',
           zIndex: 110,
           boxShadow: isScrolled
-            ? '0 16px 36px -8px rgba(15, 23, 42, 0.14), 0 4px 12px rgba(15, 23, 42, 0.06)'
+            ? '0 10px 30px -4px rgba(15, 23, 42, 0.12), 0 3px 10px -2px rgba(15, 23, 42, 0.05)'
             : 'none',
           transition:
-            'top 0.32s cubic-bezier(0.16, 1, 0.3, 1), width 0.32s cubic-bezier(0.16, 1, 0.3, 1), max-width 0.32s cubic-bezier(0.16, 1, 0.3, 1), border-radius 0.32s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.28s ease',
+            'top 0.32s cubic-bezier(0.16, 1, 0.3, 1), width 0.32s cubic-bezier(0.16, 1, 0.3, 1), max-width 0.32s cubic-bezier(0.16, 1, 0.3, 1), border-radius 0.32s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease',
         }}
       >
         <style>{`
@@ -142,15 +139,26 @@ export function StorefrontHeader({
           .storefront-nav-bottom-row {
             display: contents;
           }
-          @media (max-width: 640px) {
+          @media (min-width: 769px) {
+            .storefront-sticky-header.is-scrolled {
+              width: 48% !important;
+              max-width: 780px !important;
+              min-width: 480px !important;
+              border-radius: 9999px !important;
+              top: 12px !important;
+            }
+          }
+          @media (max-width: 768px) {
             .storefront-sticky-header.is-scrolled {
               top: 8px !important;
               width: calc(100% - 16px) !important;
+              max-width: calc(100% - 16px) !important;
               border-radius: 20px !important;
             }
             .storefront-navbar {
               display: grid !important;
-              grid-template-columns: minmax(0, 1fr) auto !important;
+              grid-template-columns: auto auto !important;
+              justify-content: space-between !important;
               grid-template-rows: auto auto !important;
               gap: 7px 8px !important;
               padding: 7px 12px 9px !important;
@@ -218,24 +226,24 @@ export function StorefrontHeader({
               display: contents !important;
             }
             .storefront-actions {
-              grid-column: 1 / 2 !important;
+              grid-column: 2 / 3 !important;
               grid-row: 1 !important;
               display: flex !important;
               align-items: center !important;
               gap: 5px !important;
               flex-shrink: 0 !important;
               margin: 0 !important;
-              justify-content: flex-start !important;
+              justify-content: flex-end !important;
             }
             .storefront-brand-btn {
-              grid-column: 2 / 3 !important;
+              grid-column: 1 / 2 !important;
               grid-row: 1 !important;
               gap: 8px !important;
               min-width: 0 !important;
               max-width: 100% !important;
               overflow: hidden !important;
               width: auto !important;
-              justify-content: flex-end !important;
+              justify-content: flex-start !important;
             }
             .storefront-action-label {
               display: none !important;
@@ -288,18 +296,99 @@ export function StorefrontHeader({
           className="storefront-navbar storefront-header-shell"
           style={{
             width: '100%',
-            maxWidth: '1440px',
-            margin: '0 auto',
-            padding: isScrolled ? '8px 24px' : '12px 28px',
-            display: 'flex',
+            maxWidth: '100%',
+            margin: '0',
+            padding: isScrolled ? '4px 14px' : '12px 24px',
+            display: 'grid',
+            gridTemplateColumns: 'minmax(0, 1fr) auto minmax(0, 1fr)',
             alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '14px',
-            transition: 'padding 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+            gap: isScrolled ? '10px' : '14px',
+            boxSizing: 'border-box',
+            transition: 'padding 0.25s cubic-bezier(0.16, 1, 0.3, 1), gap 0.25s ease',
           }}
         >
-          {/* Quick Actions (WhatsApp, Orders & Cart) — Far Right in RTL */}
-          <div className="storefront-actions" style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+          {/* Brand & Store Name (Clickable to go home / reset) — Right side in RTL */}
+          <div
+            onClick={onGoHome}
+            role={onGoHome ? 'button' : undefined}
+            tabIndex={onGoHome ? 0 : undefined}
+            onKeyDown={(e) => {
+              if (onGoHome && (e.key === 'Enter' || e.key === ' ')) {
+                e.preventDefault();
+                onGoHome();
+              }
+            }}
+            title={onGoHome ? t('storefront.storefront_header.s0', 'العودة للصفحة الرئيسية') : undefined}
+            className="storefront-brand-btn"
+            style={{
+              justifySelf: 'start',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              cursor: onGoHome ? 'pointer' : 'default',
+              userSelect: 'none',
+              outline: 'none',
+            }}
+          >
+            {info.logo_url || info.logoUrl ? (
+              <img
+                src={info.logo_url || info.logoUrl}
+                alt={info.title || info.businessName}
+                className="storefront-brand-avatar"
+                style={{
+                  width: isScrolled ? '30px' : '42px',
+                  height: isScrolled ? '30px' : '42px',
+                  objectFit: 'contain',
+                  background: 'transparent',
+                  border: 'none',
+                  boxShadow: 'none',
+                  borderRadius: 0,
+                  padding: 0,
+                  flexShrink: 0,
+                  transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                }}
+              />
+            ) : (
+              <div
+                className="storefront-brand-avatar"
+                style={{
+                  width: isScrolled ? '30px' : '42px',
+                  height: isScrolled ? '30px' : '42px',
+                  borderRadius: '9px',
+                  background: 'linear-gradient(135deg, var(--storefront-primary-color, #588cb3) 0%, #2d6c97 100%)',
+                  color: '#ffffff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontWeight: 900,
+                  fontSize: isScrolled ? '14px' : '17px',
+                  boxShadow: '0 2px 8px var(--storefront-primary-subtle, rgba(88, 140, 179, 0.25))',
+                  flexShrink: 0,
+                  border: '1.5px solid rgba(255,255,255,0.25)',
+                  transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                }}
+              >
+                {((brand.title || '').trim().replace(/^ال/, '').trim().charAt(0) || (brand.title || '').trim().charAt(0) || t('storefront.storefront_header.s1', 'م'))}
+              </div>
+            )}
+          </div>
+
+          {/* Unified Search & Actions Bottom Row on Mobile / Inline on Desktop */}
+          <div className="storefront-nav-bottom-row">
+            {/* Center: Sleek Unified Predictive Search Bar */}
+            <StorefrontPredictiveSearch
+              slug={info.slug}
+              searchTerm={searchTerm}
+              onSearchChange={onSearchChange}
+              onSelectCategory={onSelectCategory}
+              onSelectProduct={onSelectProduct}
+              onAddToCart={onAddToCart}
+              isScrolled={isScrolled}
+            />
+          </div>
+
+          {/* Quick Actions (WhatsApp, Orders & Cart) — Left side in RTL */}
+          <div className="storefront-actions" style={{ justifySelf: 'end', display: 'flex', alignItems: 'center', gap: isScrolled ? '6px' : '8px', flexShrink: 0 }}>
             {/* My Orders Trigger */}
             {onOpenOrders && (
               <button
@@ -310,14 +399,14 @@ export function StorefrontHeader({
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '6px',
-                  padding: '0 13px',
-                  height: '35px',
-                  borderRadius: '12px',
+                  gap: '5px',
+                  padding: isScrolled ? '0 10px' : '0 13px',
+                  height: isScrolled ? '31px' : '35px',
+                  borderRadius: '9999px',
                   background: '#ffffff',
                   border: '1px solid #E0E3E7',
                   color: '#0f172a',
-                  fontSize: '13px',
+                  fontSize: isScrolled ? '12px' : '13px',
                   fontWeight: 700,
                   cursor: 'pointer',
                   boxShadow: '0 1px 2px rgba(15, 23, 42, 0.04)',
@@ -334,8 +423,8 @@ export function StorefrontHeader({
                   e.currentTarget.style.borderColor = '#E0E3E7';
                 }}
               >
-                <PackageIcon size={18} />
-                <span className="storefront-action-label" style={{ fontSize: '12.5px', fontWeight: 700 }}>
+                <PackageIcon size={isScrolled ? 15 : 18} />
+                <span className="storefront-action-label" style={{ fontSize: isScrolled ? '11.5px' : '12.5px', fontWeight: 700 }}>
                   {t('storefront.storefront_header.s6', 'طلباتي')}
                 </span>
               </button>
@@ -350,13 +439,13 @@ export function StorefrontHeader({
                 position: 'relative',
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '8px',
-                padding: '0 14px',
-                height: '35px',
-                borderRadius: '12px',
+                gap: '6px',
+                padding: isScrolled ? '0 11px' : '0 14px',
+                height: isScrolled ? '31px' : '35px',
+                borderRadius: '9999px',
                 background: 'var(--storefront-primary-color, #588cb3)',
                 color: 'var(--storefront-primary-contrast, #ffffff)',
-                fontSize: '13px',
+                fontSize: isScrolled ? '12px' : '13px',
                 fontWeight: 800,
                 border: 'none',
                 cursor: 'pointer',
@@ -364,9 +453,10 @@ export function StorefrontHeader({
                 boxSizing: 'border-box',
                 fontVariantNumeric: 'tabular-nums',
                 whiteSpace: 'nowrap',
+                transition: 'all 0.16s cubic-bezier(0.16, 1, 0.3, 1)',
               }}
             >
-              <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg width={isScrolled ? 15 : 18} height={isScrolled ? 15 : 18} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -380,11 +470,11 @@ export function StorefrontHeader({
                   style={{
                     background: '#ffffff',
                     color: 'var(--storefront-primary-color, #0f172a)',
-                    fontSize: '11px',
+                    fontSize: '10.5px',
                     fontWeight: 900,
-                    padding: '1px 6px',
-                    borderRadius: '8px',
-                    minWidth: '18px',
+                    padding: '1px 5px',
+                    borderRadius: '9999px',
+                    minWidth: '16px',
                     textAlign: 'center',
                     boxShadow: '0 1px 3px rgba(0, 0, 0, 0.18)',
                   }}
@@ -404,84 +494,6 @@ export function StorefrontHeader({
                 );
               })()}
             </button>
-          </div>
-
-          {/* Unified Search & Actions Bottom Row on Mobile / Inline on Desktop */}
-          <div className="storefront-nav-bottom-row">
-            {/* Center: Sleek Unified Predictive Search Bar */}
-            <StorefrontPredictiveSearch
-              slug={info.slug}
-              searchTerm={searchTerm}
-              onSearchChange={onSearchChange}
-              onSelectCategory={onSelectCategory}
-              onSelectProduct={onSelectProduct}
-              onAddToCart={onAddToCart}
-            />
-          </div>
-
-          {/* Brand & Store Name (Clickable to go home / reset) — Far Left in RTL */}
-          <div
-            onClick={onGoHome}
-            role={onGoHome ? 'button' : undefined}
-            tabIndex={onGoHome ? 0 : undefined}
-            onKeyDown={(e) => {
-              if (onGoHome && (e.key === 'Enter' || e.key === ' ')) {
-                e.preventDefault();
-                onGoHome();
-              }
-            }}
-            title={onGoHome ? t('storefront.storefront_header.s0', 'العودة للصفحة الرئيسية') : undefined}
-            className="storefront-brand-btn"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              cursor: onGoHome ? 'pointer' : 'default',
-              userSelect: 'none',
-              outline: 'none',
-            }}
-          >
-            {info.logo_url || info.logoUrl ? (
-              <img
-                src={info.logo_url || info.logoUrl}
-                alt={info.title || info.businessName}
-                className="storefront-brand-avatar"
-                style={{
-                  width: isScrolled ? '38px' : '42px',
-                  height: isScrolled ? '38px' : '42px',
-                  objectFit: 'contain',
-                  background: 'transparent',
-                  border: 'none',
-                  boxShadow: 'none',
-                  borderRadius: 0,
-                  padding: 0,
-                  flexShrink: 0,
-                  transition: 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
-                }}
-              />
-            ) : (
-              <div
-                className="storefront-brand-avatar"
-                style={{
-                  width: isScrolled ? '38px' : '42px',
-                  height: isScrolled ? '38px' : '42px',
-                  borderRadius: '11px',
-                  background: 'linear-gradient(135deg, var(--storefront-primary-color, #588cb3) 0%, #2d6c97 100%)',
-                  color: '#ffffff',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: 900,
-                  fontSize: '17px',
-                  boxShadow: '0 2px 8px var(--storefront-primary-subtle, rgba(88, 140, 179, 0.25))',
-                  flexShrink: 0,
-                  border: '1.5px solid rgba(255,255,255,0.25)',
-                  transition: 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
-                }}
-              >
-                {((brand.title || '').trim().replace(/^ال/, '').trim().charAt(0) || (brand.title || '').trim().charAt(0) || t('storefront.storefront_header.s1', 'م'))}
-              </div>
-            )}
           </div>
         </div>
       </header>
