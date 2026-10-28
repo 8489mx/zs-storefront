@@ -1062,9 +1062,9 @@ body, button, input, select, textarea, [class*="storefront-"] {
 /* 2. Secondary / Neutral Text Buttons (Like [Preview], [Default v], My Orders & Support) */
 .storefront-btn-neutral,
 .storefront-action-btn:not(.storefront-cart-btn) {
-  height: 35px !important;
-  min-height: 34px !important;
-  max-height: 36px !important;
+  height: 37px !important;
+  min-height: 36px !important;
+  max-height: 38px !important;
   padding: 0 13px !important;
   border-radius: 12px !important;
   background: #ffffff !important;
@@ -1085,9 +1085,9 @@ body, button, input, select, textarea, [class*="storefront-"] {
 
 /* 3. Primary Cart Button & CTAs */
 .storefront-cart-btn {
-  height: 35px !important;
-  min-height: 34px !important;
-  max-height: 36px !important;
+  height: 37px !important;
+  min-height: 36px !important;
+  max-height: 38px !important;
   padding: 0 14px !important;
   border-radius: 12px !important;
   border: 1px solid transparent !important;
@@ -1136,7 +1136,7 @@ body, button, input, select, textarea, [class*="storefront-"] {
 /* 7. Predictive Search Bar */
 .storefront-search-box {
   border-radius: 12px !important;
-  height: 35px !important;
+  height: 37px !important;
   border: 1px solid #E0E3E7 !important;
 }
 
@@ -1216,8 +1216,8 @@ a.storefront-action-btn,
   border-radius: 10px !important;
 }
 
-/* 9. Floating Scrolled Header Island -> 20px Squircle */
+/* 9. Floating Scrolled Header Island -> Matches Button Curvature (14px) */
 .storefront-sticky-header.is-scrolled {
-  border-radius: 20px !important;
+  border-radius: 14px !important;
 }
 

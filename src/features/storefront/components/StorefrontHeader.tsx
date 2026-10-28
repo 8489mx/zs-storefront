@@ -111,7 +111,7 @@ export function StorefrontHeader({
         </div>
       )}
 
-      {/* Sticky Luxury Header — full-width unboxed over Hero at top, morphs into 60% floating pill island on scroll */}
+      {/* Sticky Luxury Header — full-width unboxed over Hero at top, morphs into floating island on scroll */}
       <header
         className={`storefront-sticky-header ${isScrolled ? 'is-scrolled' : ''}`}
         style={{
@@ -119,7 +119,7 @@ export function StorefrontHeader({
           backdropFilter: isScrolled ? 'blur(20px) saturate(180%)' : 'none',
           WebkitBackdropFilter: isScrolled ? 'blur(20px) saturate(180%)' : 'none',
           border: isScrolled ? '1px solid rgba(226, 232, 240, 0.92)' : '1px solid transparent',
-          borderRadius: isScrolled ? '9999px' : '0px',
+          borderRadius: isScrolled ? '14px' : '0px',
           position: 'sticky',
           top: isScrolled ? '12px' : '0px',
           width: isScrolled ? '48%' : '100%',
@@ -144,7 +144,7 @@ export function StorefrontHeader({
               width: 48% !important;
               max-width: 780px !important;
               min-width: 480px !important;
-              border-radius: 9999px !important;
+              border-radius: 14px !important;
               top: 12px !important;
             }
           }
@@ -153,7 +153,7 @@ export function StorefrontHeader({
               top: 8px !important;
               width: calc(100% - 16px) !important;
               max-width: calc(100% - 16px) !important;
-              border-radius: 20px !important;
+              border-radius: 14px !important;
             }
             .storefront-navbar {
               display: grid !important;
@@ -298,11 +298,11 @@ export function StorefrontHeader({
             width: '100%',
             maxWidth: '100%',
             margin: '0',
-            padding: isScrolled ? '4px 14px' : '12px 24px',
+            padding: isScrolled ? '9px 18px' : '12px 24px',
             display: 'grid',
             gridTemplateColumns: 'minmax(0, 1fr) auto minmax(0, 1fr)',
             alignItems: 'center',
-            gap: isScrolled ? '10px' : '14px',
+            gap: isScrolled ? '12px' : '14px',
             boxSizing: 'border-box',
             transition: 'padding 0.25s cubic-bezier(0.16, 1, 0.3, 1), gap 0.25s ease',
           }}
@@ -336,8 +336,8 @@ export function StorefrontHeader({
                 alt={info.title || info.businessName}
                 className="storefront-brand-avatar"
                 style={{
-                  width: isScrolled ? '30px' : '42px',
-                  height: isScrolled ? '30px' : '42px',
+                  width: isScrolled ? '36px' : '42px',
+                  height: isScrolled ? '36px' : '42px',
                   objectFit: 'contain',
                   background: 'transparent',
                   border: 'none',
@@ -352,16 +352,16 @@ export function StorefrontHeader({
               <div
                 className="storefront-brand-avatar"
                 style={{
-                  width: isScrolled ? '30px' : '42px',
-                  height: isScrolled ? '30px' : '42px',
-                  borderRadius: '9px',
+                  width: isScrolled ? '36px' : '42px',
+                  height: isScrolled ? '36px' : '42px',
+                  borderRadius: '10px',
                   background: 'linear-gradient(135deg, var(--storefront-primary-color, #588cb3) 0%, #2d6c97 100%)',
                   color: '#ffffff',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   fontWeight: 900,
-                  fontSize: isScrolled ? '14px' : '17px',
+                  fontSize: isScrolled ? '15px' : '17px',
                   boxShadow: '0 2px 8px var(--storefront-primary-subtle, rgba(88, 140, 179, 0.25))',
                   flexShrink: 0,
                   border: '1.5px solid rgba(255,255,255,0.25)',
@@ -388,7 +388,7 @@ export function StorefrontHeader({
           </div>
 
           {/* Quick Actions (WhatsApp, Orders & Cart) — Left side in RTL */}
-          <div className="storefront-actions" style={{ justifySelf: 'end', display: 'flex', alignItems: 'center', gap: isScrolled ? '6px' : '8px', flexShrink: 0 }}>
+          <div className="storefront-actions" style={{ justifySelf: 'end', display: 'flex', alignItems: 'center', gap: isScrolled ? '8px' : '8px', flexShrink: 0 }}>
             {/* My Orders Trigger */}
             {onOpenOrders && (
               <button
@@ -399,14 +399,14 @@ export function StorefrontHeader({
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '5px',
-                  padding: isScrolled ? '0 10px' : '0 13px',
-                  height: isScrolled ? '31px' : '35px',
+                  gap: '6px',
+                  padding: isScrolled ? '0 13px' : '0 14px',
+                  height: isScrolled ? '36px' : '37px',
                   borderRadius: '9999px',
                   background: '#ffffff',
                   border: '1px solid #E0E3E7',
                   color: '#0f172a',
-                  fontSize: isScrolled ? '12px' : '13px',
+                  fontSize: isScrolled ? '12.5px' : '13px',
                   fontWeight: 700,
                   cursor: 'pointer',
                   boxShadow: '0 1px 2px rgba(15, 23, 42, 0.04)',
@@ -423,8 +423,8 @@ export function StorefrontHeader({
                   e.currentTarget.style.borderColor = '#E0E3E7';
                 }}
               >
-                <PackageIcon size={isScrolled ? 15 : 18} />
-                <span className="storefront-action-label" style={{ fontSize: isScrolled ? '11.5px' : '12.5px', fontWeight: 700 }}>
+                <PackageIcon size={isScrolled ? 16 : 18} />
+                <span className="storefront-action-label" style={{ fontSize: isScrolled ? '12.5px' : '12.5px', fontWeight: 700 }}>
                   {t('storefront.storefront_header.s6', 'طلباتي')}
                 </span>
               </button>
@@ -440,12 +440,12 @@ export function StorefrontHeader({
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '6px',
-                padding: isScrolled ? '0 11px' : '0 14px',
-                height: isScrolled ? '31px' : '35px',
+                padding: isScrolled ? '0 14px' : '0 15px',
+                height: isScrolled ? '36px' : '37px',
                 borderRadius: '9999px',
                 background: 'var(--storefront-primary-color, #588cb3)',
                 color: 'var(--storefront-primary-contrast, #ffffff)',
-                fontSize: isScrolled ? '12px' : '13px',
+                fontSize: isScrolled ? '12.5px' : '13px',
                 fontWeight: 800,
                 border: 'none',
                 cursor: 'pointer',
@@ -456,7 +456,7 @@ export function StorefrontHeader({
                 transition: 'all 0.16s cubic-bezier(0.16, 1, 0.3, 1)',
               }}
             >
-              <svg width={isScrolled ? 15 : 18} height={isScrolled ? 15 : 18} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg width={isScrolled ? 16 : 18} height={isScrolled ? 16 : 18} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
