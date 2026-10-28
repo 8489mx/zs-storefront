@@ -88,7 +88,7 @@ export function StorefrontFloatingWhatsApp({
         }
         @media (max-width: 640px) {
           .sf-floating-whatsapp {
-            bottom: ${hasFloatingCart ? '78px' : '18px'} !important;
+            bottom: ${hasFloatingCart ? '140px' : '76px'} !important;
             right: 14px !important;
             padding: 11px !important;
             border-radius: 50% !important;

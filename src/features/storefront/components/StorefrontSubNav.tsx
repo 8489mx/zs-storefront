@@ -36,13 +36,14 @@ export function StorefrontSubNav({
     <div
       className="storefront-subnav"
       style={{
-        background: '#ffffff',
+        background: 'rgba(255, 255, 255, 0.92)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
         borderBottom: '1px solid #e2e8f0',
         padding: '8px 20px',
-        position: 'sticky',
-        top: 0,
-        zIndex: 90,
-        boxShadow: '0 1px 3px rgba(15, 23, 42, 0.04)',
+        position: 'relative',
+        zIndex: 85,
+        boxShadow: '0 1px 3px rgba(15, 23, 42, 0.03)',
         width: '100%',
         maxWidth: '100vw',
         boxSizing: 'border-box',

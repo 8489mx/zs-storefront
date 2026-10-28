@@ -19,6 +19,8 @@ import { IconArrowUpRight } from './StorefrontIcons';
  */
 
 type Props = {
+  /** معرف الرف للتمرير السلس المباشر */
+  sectionId?: string;
   /** الاسم المعروض في الشارة (اسم القسم عادة) */
   badge: string;
   /** سطر وصفي بجانب الشارة — يُخفى على الموبايل */
@@ -39,6 +41,7 @@ type Props = {
 };
 
 export const StorefrontShelfSection = React.memo(function StorefrontShelfSection({
+  sectionId,
   badge,
   subtitle,
   viewAllLabel = 'عرض كل أصناف القسم',
@@ -104,6 +107,7 @@ export const StorefrontShelfSection = React.memo(function StorefrontShelfSection
 
   return (
     <div
+      id={sectionId}
       className="storefront-section-card"
       style={{
         background: '#ffffff',
@@ -111,6 +115,7 @@ export const StorefrontShelfSection = React.memo(function StorefrontShelfSection
         border: '1px solid #e2e8f0',
         padding: '20px',
         boxShadow: '0 2px 8px rgba(15, 23, 42, 0.03)',
+        scrollMarginTop: '96px',
       }}
     >
       <div

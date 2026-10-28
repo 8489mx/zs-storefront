@@ -31,7 +31,7 @@ export const StorefrontFeaturedBroadcastCard = React.memo(function StorefrontFea
       {/* Card 1: B2B & Wholesale */}
       <div
         style={{
-          background: 'linear-gradient(135deg, #1e1b4b 0%, #170e5e 100%)',
+          background: 'linear-gradient(135deg, var(--storefront-primary-hover, #120b4c) 0%, var(--storefront-primary-color, #170e5e) 100%)',
           borderRadius: '16px',
           padding: '22px 24px',
           color: '#ffffff',
@@ -39,7 +39,7 @@ export const StorefrontFeaturedBroadcastCard = React.memo(function StorefrontFea
           flexDirection: 'column',
           justifyContent: 'space-between',
           gap: '14px',
-          boxShadow: '0 4px 14px rgba(23, 14, 94, 0.12)',
+          boxShadow: '0 4px 14px var(--storefront-primary-subtle, rgba(23, 14, 94, 0.12))',
           position: 'relative',
           overflow: 'hidden',
         }}

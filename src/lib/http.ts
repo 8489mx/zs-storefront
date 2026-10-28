@@ -32,6 +32,9 @@ export async function http<T>(path: string, init?: RequestInit): Promise<T> {
     if (contentType.includes('application/json')) {
       return await res.json();
     }
+    if (contentType.includes('text/html') || path.startsWith('/api/')) {
+      throw new ApiError(`API endpoint returned non-JSON response (${contentType || 'unknown'})`, 404);
+    }
     return (await res.text()) as unknown as T;
   } catch (err: any) {
     if (err instanceof ApiError) throw err;

@@ -83,11 +83,9 @@ export function StorefrontDealSpotlight({
   const cleanPhone = (whatsappPhone || '').replace(/[^0-9]/g, '');
   const formattedPhone = cleanPhone.startsWith('01') ? `2${cleanPhone}` : cleanPhone;
 
-  const handleAdd = () => {
-    if (getProductVariants(product).length > 0 && onQuickView) {
-      onQuickView(product);
-      return;
-    }
+  const handleAdd = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isOutOfStock) return;
     onAddToCart(product);
   };
 
@@ -257,12 +255,11 @@ export function StorefrontDealSpotlight({
           borderRadius: '12px',
           overflow: 'hidden',
           background: '#ffffff',
-          border: '1px solid #e2e8f0',
-          boxShadow: '0 2px 8px rgba(15, 23, 42, 0.04)',
+          border: 'none',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: '8px',
+          padding: '12px',
           boxSizing: 'border-box',
         }}
       >
@@ -377,17 +374,17 @@ export function StorefrontDealSpotlight({
               fontWeight: 700,
               padding: '3px 8px',
               borderRadius: '6px',
-              background: isOutOfStock ? '#fef2f2' : '#f0fdf4',
-              color: isOutOfStock ? '#b91c1c' : '#166534',
-              border: isOutOfStock ? '1px solid #fecaca' : '1px solid #bbf7d0',
+              background: isOutOfStock ? '#f1f5f9' : '#f0fdf4',
+              color: isOutOfStock ? '#475569' : '#166534',
+              border: isOutOfStock ? '1px solid #cbd5e1' : '1px solid #bbf7d0',
               display: 'inline-flex',
               alignItems: 'center',
               gap: '4px',
               boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
             }}
           >
-            <IconCheckCircle size={11} color={isOutOfStock ? '#b91c1c' : '#16a34a'} strokeWidth={2.4} />
-            <span>{isOutOfStock ? t('storefront.storefront_deal_spotlight.s3', "نفد من المخزن") : t('storefront.storefront_deal_spotlight.s4', "متوفر بالمخزن")}</span>
+            <IconCheckCircle size={11} color={isOutOfStock ? '#475569' : '#16a34a'} strokeWidth={2.4} />
+            <span>{isOutOfStock ? 'نفدت الكمية' : t('storefront.storefront_deal_spotlight.s4', "متوفر بالمخزن")}</span>
           </span>
         </div>
       </div>
@@ -764,9 +761,9 @@ export function StorefrontDealSpotlight({
                 width: '100%',
                 height: '42px',
                 borderRadius: '10px',
-                background: isOutOfStock ? '#94a3b8' : 'var(--storefront-primary-color, #170e5e)',
-                color: '#ffffff',
-                border: 'none',
+                background: isOutOfStock ? '#e2e8f0' : 'var(--storefront-primary-color, #170e5e)',
+                color: isOutOfStock ? '#64748b' : '#ffffff',
+                border: isOutOfStock ? '1px solid #cbd5e1' : 'none',
                 fontSize: '13.5px',
                 fontWeight: 800,
                 cursor: isOutOfStock ? 'not-allowed' : 'pointer',
@@ -780,8 +777,8 @@ export function StorefrontDealSpotlight({
               onMouseEnter={(e) => !isOutOfStock && (e.currentTarget.style.filter = 'brightness(1.12)')}
               onMouseLeave={(e) => (e.currentTarget.style.filter = 'none')}
             >
-              <IconShoppingCart size={17} color="#ffffff" strokeWidth={2.2} />
-              <span>{isOutOfStock ? t('storefront.storefront_deal_spotlight.s22', "غير متاح حالياً") : t('storefront.storefront_deal_spotlight.s23', "أضف العرض للسلة")}</span>
+              {!isOutOfStock && <IconShoppingCart size={17} color="#ffffff" strokeWidth={2.2} />}
+              <span>{isOutOfStock ? 'غير متوفر' : t('storefront.storefront_deal_spotlight.s23', "أضف العرض للسلة")}</span>
             </button>
           )}
         </div>

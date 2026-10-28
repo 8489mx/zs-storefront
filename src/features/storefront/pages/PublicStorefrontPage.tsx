@@ -5,7 +5,7 @@ import { useParams, useSearchParams, useLocation, useNavigate } from 'react-rout
 import { StorefrontHeader } from '../components/StorefrontHeader';
 import { StorefrontSubNav } from '../components/StorefrontSubNav';
 import { StorefrontCategoryShowcase } from '../components/StorefrontCategoryShowcase';
-import { StorefrontBannerCarousel } from '../components/StorefrontBannerCarousel';
+import { StorefrontHeroEditorial } from '../components/StorefrontHeroEditorial';
 import { StorefrontMultiRowHome } from '../components/StorefrontMultiRowHome';
 import { StorefrontFilteredGrid } from '../components/StorefrontFilteredGrid';
 import { StorefrontModals } from '../components/StorefrontModals';
@@ -13,6 +13,7 @@ import { StorefrontDeliveryInfoBar } from '../components/StorefrontDeliveryInfoB
 import { StorefrontFooter } from '../components/StorefrontFooter';
 import { StorefrontSkeleton } from '../components/StorefrontSkeleton';
 import { StorefrontTrustBar } from '../components/StorefrontTrustBar';
+import { StorefrontMobileBottomNav } from '../components/StorefrontMobileBottomNav';
 import { initStorefrontPixels, trackStorefrontEvent } from '../lib/storefront-pixel-tracker';
 import type { StorefrontProduct } from '../types/storefront.types';
 import { usePublicStorefront, ITEMS_PER_PAGE } from '../hooks/usePublicStorefront';
@@ -288,7 +289,7 @@ export function PublicStorefrontPage() {
         fontFamily: 'inherit',
         width: '100%',
         maxWidth: '100vw',
-        overflowX: 'hidden',
+        overflowX: 'clip',
         boxSizing: 'border-box',
       }}
     >
@@ -395,7 +396,7 @@ export function PublicStorefrontPage() {
               type="button"
               onClick={() => setIsTableBillOpen(true)}
               style={{
-                background: '#170e5e',
+                background: 'var(--storefront-primary-color, #170e5e)',
                 color: '#ffffff',
                 border: '1px solid rgba(255,255,255,0.4)',
                 borderRadius: '8px',
@@ -427,17 +428,29 @@ export function PublicStorefrontPage() {
         </div>
       )}
 
-      {/* Top Promotional Billboard Banner Carousel */}
-      {!searchTerm && ((info.bannerUrls && info.bannerUrls.length > 0) || info.bannerUrl) && (
-        <StorefrontBannerCarousel
-          banners={info.bannerUrls && info.bannerUrls.length > 0 ? info.bannerUrls : (info.bannerUrl ? [info.bannerUrl] : [])}
-          title={info.title || info.businessName}
-          bannerFit={info.bannerFit || 'contain'}
-          bannerPosition={info.bannerPosition || 'center'}
-          bannerPositions={info.bannerPositions}
-          bannerIntervalSeconds={info.bannerIntervalSeconds || 4}
-          onBannerClick={handleBannerClick}
-          fullBleed={info.heroBannerFullBleed !== false}
+      {/* Interactive Luxury Split-Screen Editorial Hero */}
+      {!searchTerm && isHomepageMultiRow && (
+        <StorefrontHeroEditorial
+          info={info}
+          featuredProducts={dealsProducts.length > 0 ? dealsProducts : filteredProducts}
+          categories={categories}
+          cartMap={cartMap}
+          onAddToCart={handleAddToCart}
+          onUpdateQuantity={handleUpdateQuantity}
+          onQuickView={openProduct}
+          onSelectDeals={() => {
+            setOnlyDeals(true);
+            setOnlyFavorites(false);
+            setSelectedCategory('all');
+            handleBannerClick();
+          }}
+          onSelectCategory={(id) => {
+            setSelectedCategory(id);
+            setOnlyDeals(false);
+            setOnlyFavorites(false);
+            handleBannerClick();
+          }}
+          onOpenCategoriesModal={() => setIsCategoriesModalOpen(true)}
         />
       )}
 
@@ -480,9 +493,20 @@ export function PublicStorefrontPage() {
           categories={categories}
           selectedCategoryId={selectedCategory}
           onSelectCategory={(id) => {
+            if (id !== 'all') {
+              const shelfEl = document.getElementById(`storefront-category-shelf-${id}`);
+              if (shelfEl) {
+                shelfEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                return;
+              }
+            }
             setSelectedCategory(id);
             setOnlyDeals(false);
             setOnlyFavorites(false);
+            const mainEl = document.querySelector('.storefront-main-content');
+            if (mainEl) {
+              mainEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
           }}
           onOpenCategoriesModal={() => setIsCategoriesModalOpen(true)}
           categoryCounts={categoryCounts}
@@ -490,7 +514,6 @@ export function PublicStorefrontPage() {
       )}
 
       {/* Main Content Area */}
-
       <main
         className="storefront-main-content"
         style={{
@@ -506,6 +529,7 @@ export function PublicStorefrontPage() {
             dealsProducts={dealsProducts}
             topHomepageSections={topHomepageSections}
             categories={categories}
+            categoryCounts={categoryCounts}
             cartMap={cartMap}
             info={info}
             favoriteIds={favoriteIds}
@@ -556,6 +580,40 @@ export function PublicStorefrontPage() {
           setOnlyDeals(true);
           setSelectedCategory('all');
         }}
+      />
+
+      {/* Native-Grade Mobile Bottom Navigation Bar */}
+      <StorefrontMobileBottomNav
+        activeTab={
+          isCartOpen
+            ? 'cart'
+            : isCategoriesModalOpen
+            ? 'categories'
+            : onlyFavorites
+            ? 'favorites'
+            : onlyDeals
+            ? 'deals'
+            : 'home'
+        }
+        cartCount={cartCount}
+        favoritesCount={favoriteIds.size}
+        dealsCount={dealsProducts.length}
+        onGoHome={() => {
+          handleGoHome();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+        onOpenCategories={() => setIsCategoriesModalOpen(true)}
+        onToggleDeals={() => {
+          setOnlyDeals(!onlyDeals);
+          setOnlyFavorites(false);
+          setSelectedCategory('all');
+          window.scrollTo({ top: 180, behavior: 'smooth' });
+        }}
+        onToggleFavorites={() => {
+          handleToggleFavorites();
+          window.scrollTo({ top: 180, behavior: 'smooth' });
+        }}
+        onOpenCart={() => setIsCartOpen(true)}
       />
 
       {/* Modals & Live Cart */}
