@@ -453,35 +453,37 @@ export function PublicStorefrontPage() {
       {/* Trust & Guarantee Metrics Ribbon */}
       {!searchTerm && <StorefrontTrustBar info={info} />}
 
-      {/* Sub-Header Utility Navigation Bar (Amazon Quick Bar) */}
-      <StorefrontSubNav
-        categories={categories}
-        selectedCategoryId={selectedCategory}
-        onSelectCategory={(id) => {
-          setSelectedCategory(id);
-          setOnlyDeals(false);
-          setOnlyFavorites(false);
-        }}
-        onOpenCategoriesModal={() => setIsCategoriesModalOpen(true)}
-        onlyDeals={onlyDeals}
-        onToggleDeals={() => {
-          setOnlyDeals(!onlyDeals);
-          setOnlyFavorites(false);
-          setSelectedCategory('all');
-        }}
-        inStockOnly={inStockOnly}
-        onToggleInStock={() => setInStockOnly(!inStockOnly)}
-        dealsCount={dealsProducts.length}
-        onlyFavorites={onlyFavorites}
-        onToggleFavorites={handleToggleFavorites}
-        favoritesCount={favoriteIds.size}
-        onClearFilters={() => {
-          setOnlyDeals(false);
-          setOnlyFavorites(false);
-          setInStockOnly(false);
-          setSelectedCategory('all');
-        }}
-      />
+      {/* Sub-Header Utility Navigation Bar (Shown when filtering/browsing specific view to avoid duplicating Hero CTAs) */}
+      {!isHomepageMultiRow && (
+        <StorefrontSubNav
+          categories={categories}
+          selectedCategoryId={selectedCategory}
+          onSelectCategory={(id) => {
+            setSelectedCategory(id);
+            setOnlyDeals(false);
+            setOnlyFavorites(false);
+          }}
+          onOpenCategoriesModal={() => setIsCategoriesModalOpen(true)}
+          onlyDeals={onlyDeals}
+          onToggleDeals={() => {
+            setOnlyDeals(!onlyDeals);
+            setOnlyFavorites(false);
+            setSelectedCategory('all');
+          }}
+          inStockOnly={inStockOnly}
+          onToggleInStock={() => setInStockOnly(!inStockOnly)}
+          dealsCount={dealsProducts.length}
+          onlyFavorites={onlyFavorites}
+          onToggleFavorites={handleToggleFavorites}
+          favoritesCount={favoriteIds.size}
+          onClearFilters={() => {
+            setOnlyDeals(false);
+            setOnlyFavorites(false);
+            setInStockOnly(false);
+            setSelectedCategory('all');
+          }}
+        />
+      )}
 
       {/* Horizontal Circular Category Showcase - Always visible unless searching */}
       {!searchTerm && (
