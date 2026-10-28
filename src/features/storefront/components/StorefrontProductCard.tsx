@@ -235,7 +235,7 @@ export const StorefrontProductCard = React.memo(function StorefrontProductCard({
                 className="storefront-product-badge"
                 style={{
                   fontSize: '11px',
-                  fontWeight: 800,
+                  fontWeight: 500,
                   color: primaryBadge.color,
                   backgroundColor: primaryBadge.bg,
                   padding: '3px 8px',
@@ -404,6 +404,7 @@ export const StorefrontProductCard = React.memo(function StorefrontProductCard({
             style={{
               display: 'flex',
               alignItems: 'center',
+              justifyContent: 'flex-end',
               minHeight: '28px',
               margin: '2px 0 6px',
             }}
@@ -418,6 +419,8 @@ export const StorefrontProductCard = React.memo(function StorefrontProductCard({
             style={{
               display: 'flex',
               alignItems: 'baseline',
+              justifyContent: 'flex-start',
+              direction: 'ltr',
               flexWrap: 'wrap',
               gap: '6px',
               margin: '2px 0 6px',
@@ -426,6 +429,16 @@ export const StorefrontProductCard = React.memo(function StorefrontProductCard({
             }}
           >
             <div style={{ display: 'inline-flex', alignItems: 'baseline', gap: '3px' }}>
+              <span
+                className="storefront-product-price-curr"
+                style={{
+                  fontSize: '12px',
+                  fontWeight: 800,
+                  color: '#0f172a',
+                }}
+              >
+                <CurrencySymbol />
+              </span>
               <span
                 className="storefront-product-price-main"
                 style={{
@@ -438,20 +451,17 @@ export const StorefrontProductCard = React.memo(function StorefrontProductCard({
               >
                 {product.price.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
               </span>
-              <span className="storefront-product-price-curr" style={{ fontSize: '11.5px', fontWeight: 800, color: '#475569' }}>
-                <CurrencySymbol />
-              </span>
             </div>
 
             {hasDiscount && (
               <span
                 className="storefront-product-price-old"
                 style={{
-                  fontSize: '12px',
+                  fontSize: '13px',
                   fontWeight: 600,
                   color: '#94a3b8',
                   textDecoration: 'line-through',
-                  marginInlineStart: '2px',
+                  marginLeft: '2px',
                 }}
               >
                 {oldPrice.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
