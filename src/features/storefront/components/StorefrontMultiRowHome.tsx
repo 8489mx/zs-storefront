@@ -90,9 +90,9 @@ export function StorefrontMultiRowHome({
       {dealsProducts.length > 0 && (
         <StorefrontShelfSection
           sectionId="storefront-deals-shelf"
-          badge={t('storefront.storefront_multi_row_home.s0', 'عروض وتخفيضات حصرية')}
-          subtitle={t('storefront.storefront_multi_row_home.s1', 'أقوى الخصومات المختارة بعناية لفترة محدودة')}
-          viewAllLabel={`عرض كل العروض (${dealsProducts.length})`}
+          badge={t('storefront.storefront_multi_row_home.s0', 'تخفيضات وعروض اليوم')}
+          subtitle={t('storefront.storefront_multi_row_home.s1', 'خصومات لفترة محدودة حتى نفاد الكمية')}
+          viewAllLabel={`عرض كل التخفيضات (${dealsProducts.length})`}
           products={dealsProducts.slice(0, 12)}
           cartMap={cartMap}
           whatsappPhone={info.whatsappPhone}
@@ -148,7 +148,7 @@ export function StorefrontMultiRowHome({
             <StorefrontShelfSection
               sectionId={`storefront-category-shelf-${section.categoryId}`}
               badge={section.categoryName}
-              subtitle={t('storefront.multi_row.category_subtitle', 'تشكيلة مختارة من أرقى منتجات {{category}}', { category: section.categoryName })}
+              subtitle={t('storefront.multi_row.category_subtitle', 'أفضل المنتجات في قسم {{category}}', { category: section.categoryName })}
               viewAllLabel={`عرض كل أصناف القسم (${section.totalCount})`}
               products={section.products.slice(0, 12)}
               cartMap={cartMap}
@@ -264,7 +264,7 @@ export function StorefrontMultiRowHome({
           }}
         >
           <span style={{ display: 'inline-block', whiteSpace: 'nowrap' }}>
-            {t('storefront.storefront_multi_row_home.s2', 'استكشف كافة أقسام المتجر')}
+            {t('storefront.storefront_multi_row_home.s2', 'تصفح جميع أقسام المتجر')}
           </span>
           <span
             style={{
@@ -276,11 +276,11 @@ export function StorefrontMultiRowHome({
               fontVariantNumeric: 'tabular-nums',
             }}
           >
-            ({categories.length} {t('storefront.storefront_multi_row_home.s3', 'قسم متاح)')}
+            ({categories.length} {t('storefront.storefront_multi_row_home.s3', 'قسم متوفر)')}
           </span>
         </h4>
         <p style={{ margin: '0 0 18px', fontSize: '13.5px', color: '#64748b', maxWidth: '540px', marginInline: 'auto' }}>
-          {info?.bio || t('storefront.storefront_multi_row_home.s4', 'تصفح كافة الأقسام والمنتجات المتاحة واطلب ما تحتاجه بكل سهولة مع خدمة التوصيل المباشر')}
+          {info?.bio || t('storefront.storefront_multi_row_home.s4', 'كل ما تبحث عنه متوفر في مكان واحد، تصفح الأقسام واطلب أونلاين بسهولة مع توصيل سريع لبابك.')}
         </p>
         <button
           type="button"
@@ -303,7 +303,7 @@ export function StorefrontMultiRowHome({
           }}
         >
           <IconFolder size={16} strokeWidth={2} />
-          <span>{t('storefront.storefront_multi_row_home.s5', 'تصفح جميع الأقسام والمنتجات')}</span>
+          <span>{t('storefront.storefront_multi_row_home.s5', 'عرض جميع الأقسام')}</span>
         </button>
       </div>
     </div>

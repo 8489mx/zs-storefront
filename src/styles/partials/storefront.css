@@ -21,6 +21,14 @@
   --storefront-surface-border: #e2e8f0;
 }
 
+body, button, input, select, textarea, [class*="storefront-"] {
+  font-family: 'Alexandria', 'Inter', 'Tajawal', 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.font-en, [data-font="en"] {
+  font-family: 'Inter', 'Alexandria', sans-serif !important;
+}
+
 .storefront-container {
   max-width: var(--storefront-container);
   width: 100%;
@@ -205,7 +213,7 @@
   }
   .storefront-main-content .storefront-section-card {
     padding: 10px !important;
-    border-radius: 12px !important;
+    border-radius: 20px !important;
   }
   .storefront-homepage-sections {
     gap: 12px !important;
@@ -410,10 +418,10 @@
   width: 32px;
   height: 32px;
   aspect-ratio: 1 / 1;
-  border-radius: 50%;
-  background: #f1f5f9;
-  border: none;
-  color: #475569;
+  border-radius: 12px;
+  background: #f0f4f9;
+  border: 1px solid #dadce0;
+  color: #1f1f1f;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -604,7 +612,7 @@
     width: 28px !important;
     height: 28px !important;
     aspect-ratio: 1 / 1 !important;
-    border-radius: 50% !important;
+    border-radius: 10px !important;
     flex-shrink: 0 !important;
   }
 
@@ -837,10 +845,10 @@
   }
   .storefront-product-card {
     padding: 9px !important;
-    border-radius: 14px !important;
+    border-radius: 18px !important;
   }
   .storefront-product-photo-box {
-    border-radius: 10px !important;
+    border-radius: 14px !important;
     margin-bottom: 6px !important;
     padding: 12px !important;
     background: #ffffff !important;
@@ -944,3 +952,188 @@
     padding-bottom: calc(130px + env(safe-area-inset-bottom, 0px)) !important;
   }
 }
+
+/* ==========================================================================
+   Google AI Studio Universal Button & Pill Design System
+   Exact curvature, styling, and micro-elevation from Google AI Studio UI
+   ========================================================================== */
+
+/* 1. All Action & CTA Text Buttons -> rounded-xl (12px) Curvature */
+.storefront-product-action-btn,
+.storefront-checkout-btn,
+.sf-quickview-cta-btn,
+.storefront-cart-btn,
+.storefront-action-btn,
+.storefront-subnav-pill,
+.storefront-hero-btn,
+.storefront-live-cart-pill,
+.sf-footer-whatsapp-link,
+.storefront-filter-chip,
+.storefront-pill-btn {
+  border-radius: 12px !important;
+  font-family: inherit;
+  transition: all 0.16s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* 2. Secondary / Neutral Text Buttons (Like [Preview], [Default v], My Orders & Support) */
+.storefront-btn-neutral,
+.storefront-action-btn:not(.storefront-cart-btn) {
+  height: 35px !important;
+  min-height: 34px !important;
+  max-height: 36px !important;
+  padding: 0 13px !important;
+  border-radius: 12px !important;
+  background: #ffffff !important;
+  border: 1px solid #E0E3E7 !important;
+  color: #0f172a !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  box-sizing: border-box !important;
+}
+
+.storefront-btn-neutral:hover,
+.storefront-action-btn:not(.storefront-cart-btn):hover {
+  background: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+  transform: translateY(-1px);
+}
+
+/* 3. Primary Cart Button & CTAs */
+.storefront-cart-btn {
+  height: 35px !important;
+  min-height: 34px !important;
+  max-height: 36px !important;
+  padding: 0 14px !important;
+  border-radius: 12px !important;
+  border: 1px solid transparent !important;
+  box-sizing: border-box !important;
+}
+
+/* 4. Icon Buttons -> Squircle Curvature (12px) */
+.storefront-icon-btn,
+.storefront-product-fav-btn,
+.storefront-shelf-arrows button,
+.storefront-shelf-floating-arrow,
+.storefront-cat-modal-close-btn,
+.sf-quickview-close-btn,
+.storefront-modal-close-btn {
+  border-radius: 12px !important;
+  border: 1px solid #E0E3E7 !important;
+  transition: all 0.16s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.storefront-icon-btn:hover,
+.storefront-shelf-arrows button:hover {
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  transform: scale(1.02);
+}
+
+/* 5. Stepper Container & Plus/Minus Controls */
+.storefront-product-stepper,
+.sf-quickview-stepper,
+.storefront-stepper-control {
+  border-radius: 10px !important;
+}
+
+.storefront-product-stepper-btn,
+.sf-quickview-stepper-btn {
+  border-radius: 8px !important;
+}
+
+/* 6. Floating Chevrons on Shelf */
+.storefront-shelf-floating-arrow {
+  border-radius: 12px !important;
+  background: #ffffff !important;
+  border: 1px solid #E0E3E7 !important;
+}
+
+/* 7. Predictive Search Bar */
+.storefront-search-box {
+  border-radius: 12px !important;
+  height: 35px !important;
+  border: 1px solid #E0E3E7 !important;
+}
+
+.storefront-search-btn {
+  border-radius: 9px !important;
+  height: 27px !important;
+  padding: 0 12px !important;
+}
+
+/* 8. Zero-Pill Enforcement across ALL Buttons, Badges, and Action Pills */
+button,
+a.storefront-action-btn,
+.storefront-subnav-pill,
+.storefront-cat-shelf-header span,
+.storefront-deal-add-btn,
+.storefront-deal-wa-btn,
+.storefront-spotlight-breakaway button,
+.storefront-spotlight-breakaway a {
+  border-radius: 12px !important;
+}
+
+
+/* ==========================================================================
+   Apple-Grade Universal Squircle Geometry System
+   Applied across all sections, shelves, cards, modals, and content boxes
+   ========================================================================== */
+
+/* 1. Main Sections, Shelves & Feature Containers -> 26px Squircle (desktop), 20px (mobile) */
+.storefront-section-card,
+.storefront-customer-reviews-section,
+.storefront-deals-shelf-section {
+  border-radius: 26px !important;
+}
+
+/* 2. Bento Grid Hero & Major Cards -> 24px Squircle */
+.storefront-bento-card-hero,
+.storefront-bento-card,
+.storefront-mid-banner-card,
+.storefront-trust-bar-grid,
+.storefront-featured-broadcast-grid > div {
+  border-radius: 24px !important;
+}
+
+/* 3. Product Cards -> 22px Continuous Apple Squircle */
+.storefront-product-card {
+  border-radius: 22px !important;
+}
+
+/* 4. Product Photo Boxes & Inner Card Media Windows -> 16px Squircle */
+.storefront-product-photo-box {
+  border-radius: 16px !important;
+}
+
+/* 5. Filter Headers & Control Bars -> 20px Squircle */
+.storefront-filter-header {
+  border-radius: 20px !important;
+}
+
+/* 6. Modal Shells & Large Popovers -> 24px Squircle */
+.storefront-checkout-modal-container,
+.sf-quickview-shell,
+.storefront-cat-modal-shell,
+.storefront-modal-shell {
+  border-radius: 24px !important;
+}
+
+/* 7. Predictive Search Dropdown Popover -> 20px Squircle */
+.storefront-predictive-popover {
+  border-radius: 20px !important;
+}
+
+/* 8. Free Shipping Milestone Bar -> 16px Squircle */
+.storefront-free-shipping-bar {
+  border-radius: 16px !important;
+}
+.storefront-free-shipping-bar.compact {
+  border-radius: 10px !important;
+}
+
+/* 9. Floating Scrolled Header Island -> 20px Squircle */
+.storefront-sticky-header.is-scrolled {
+  border-radius: 20px !important;
+}
+

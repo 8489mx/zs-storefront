@@ -4,7 +4,7 @@ import type { StorefrontProduct } from '../types/storefront.types';
 import { CurrencySymbol } from '@/shared/ui/currency-symbol';
 import { ShoppingCartIcon, PhoneIcon, CheckCircleIcon, EyeIcon } from '@/shared/components/icons/AppIcons';
 import { resolveProductPhoto, generatePremiumProductSvg } from '../lib/storefront-photo-matcher';
-import { IconStar } from './StorefrontIcons';
+import { IconStar, IconWhatsapp } from './StorefrontIcons';
 
 interface StorefrontInteractiveSpotlightBreakProps {
   product: StorefrontProduct;
@@ -86,7 +86,7 @@ export const StorefrontInteractiveSpotlightBreak = React.memo(function Storefron
       style={{
         margin: '16px 0',
         background: 'linear-gradient(135deg, #0b0f19 0%, var(--storefront-primary-color, #170e5e) 55%, var(--storefront-primary-hover, #120b4c) 100%)',
-        borderRadius: '22px',
+        borderRadius: '26px',
         padding: '28px',
         color: '#ffffff',
         position: 'relative',
@@ -121,10 +121,10 @@ export const StorefrontInteractiveSpotlightBreak = React.memo(function Storefron
               whiteSpace: 'nowrap',
             }}
           >
-            صفقة اليوم التفاعلية
+            صفقة اليوم
           </span>
           <span style={{ fontSize: '13px', color: '#cbd5e1', fontWeight: 600 }}>
-            اختر العرض المفضل لديك وأضفه لسلتك مباشرة بالسعر الحصري
+            وفر أكثر مع خصومات اليوم المحدودة
           </span>
         </div>
 
@@ -142,14 +142,19 @@ export const StorefrontInteractiveSpotlightBreak = React.memo(function Storefron
                   background: idx === selectedIndex ? '#fbbf24' : 'rgba(255, 255, 255, 0.08)',
                   color: idx === selectedIndex ? '#0f172a' : '#e2e8f0',
                   border: idx === selectedIndex ? 'none' : '1px solid rgba(255, 255, 255, 0.16)',
-                  borderRadius: '8px',
-                  padding: '5px 12px',
-                  fontSize: '12px',
+                  borderRadius: '12px',
+                  padding: '0 14px',
+                  height: '35px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '12.5px',
                   fontWeight: 800,
                   cursor: 'pointer',
                   whiteSpace: 'nowrap',
                   fontVariantNumeric: 'tabular-nums',
                   transition: 'transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.18s ease',
+                  boxSizing: 'border-box',
                 }}
               >
                 عرض #{idx + 1}
@@ -177,7 +182,7 @@ export const StorefrontInteractiveSpotlightBreak = React.memo(function Storefron
               width: '100%',
               maxWidth: '250px',
               aspectRatio: '1 / 1',
-              borderRadius: '18px',
+              borderRadius: '20px',
               background: '#ffffff',
               border: 'none',
               padding: '12px',
@@ -227,7 +232,7 @@ export const StorefrontInteractiveSpotlightBreak = React.memo(function Storefron
         <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
           {/* Unboxed Metadata Line */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12.5px', color: '#cbd5e1', fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>
-            <span style={{ color: '#fbbf24' }}>{product.categoryName || 'عروض النخبة'}</span>
+            <span style={{ color: '#fbbf24' }}>{product.categoryName || 'أفضل العروض'}</span>
             <span>·</span>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
               <IconStar size={13} fill="#fbbf24" color="#fbbf24" />
@@ -314,8 +319,8 @@ export const StorefrontInteractiveSpotlightBreak = React.memo(function Storefron
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px', fontWeight: 700, marginBottom: '6px' }}>
-              <span style={{ color: '#fbbf24' }}>تم حجز {claimedPercent}% من الكمية المخصصة للعرض</span>
-              <span style={{ color: '#e2e8f0' }}>متبقي {stockRemaining} قطع فقط</span>
+              <span style={{ color: '#fbbf24' }}>تم بيع {claimedPercent}% من الكمية المتوفرة</span>
+              <span style={{ color: '#e2e8f0' }}>متبقي {stockRemaining} فقط بالمخزون</span>
             </div>
             <div style={{ width: '100%', height: '6px', background: 'rgba(255, 255, 255, 0.14)', borderRadius: '999px', overflow: 'hidden' }}>
               <div
@@ -337,7 +342,7 @@ export const StorefrontInteractiveSpotlightBreak = React.memo(function Storefron
                 display: 'inline-flex',
                 alignItems: 'center',
                 background: '#ffffff',
-                borderRadius: '11px',
+                borderRadius: '9999px',
                 padding: '3px',
                 fontVariantNumeric: 'tabular-nums',
               }}
@@ -351,7 +356,7 @@ export const StorefrontInteractiveSpotlightBreak = React.memo(function Storefron
                   height: '34px',
                   background: '#f1f5f9',
                   border: 'none',
-                  borderRadius: '8px',
+                  borderRadius: '9999px',
                   fontWeight: 800,
                   fontSize: '16px',
                   color: '#0f172a',
@@ -384,7 +389,7 @@ export const StorefrontInteractiveSpotlightBreak = React.memo(function Storefron
                   height: '34px',
                   background: '#f1f5f9',
                   border: 'none',
-                  borderRadius: '8px',
+                  borderRadius: '9999px',
                   fontWeight: 800,
                   fontSize: '16px',
                   color: '#0f172a',
@@ -406,9 +411,10 @@ export const StorefrontInteractiveSpotlightBreak = React.memo(function Storefron
                 background: cartQuantity > 0 ? '#16a34a' : '#f59e0b',
                 color: cartQuantity > 0 ? '#ffffff' : '#0f172a',
                 border: 'none',
-                borderRadius: '11px',
-                padding: '10px 20px',
-                fontSize: '13.5px',
+                borderRadius: '12px',
+                padding: '0 14px',
+                height: '35px',
+                fontSize: '13px',
                 fontWeight: 900,
                 cursor: 'pointer',
                 display: 'inline-flex',
@@ -416,6 +422,7 @@ export const StorefrontInteractiveSpotlightBreak = React.memo(function Storefron
                 gap: '8px',
                 whiteSpace: 'nowrap',
                 boxShadow: '0 4px 14px rgba(0,0,0,0.22)',
+                boxSizing: 'border-box',
               }}
             >
               {cartQuantity > 0 ? (
@@ -426,7 +433,7 @@ export const StorefrontInteractiveSpotlightBreak = React.memo(function Storefron
               ) : (
                 <>
                   <ShoppingCartIcon size={16} color="#0f172a" />
-                  <span>{t('storefront.spotlight.add_to_cart', 'أضف العرض للسلة الآن')}</span>
+                  <span>{t('storefront.spotlight.add_to_cart', 'أضف إلى السلة')}</span>
                 </>
               )}
             </button>
@@ -440,8 +447,9 @@ export const StorefrontInteractiveSpotlightBreak = React.memo(function Storefron
                   background: 'rgba(255,255,255,0.1)',
                   color: '#ffffff',
                   border: '1px solid rgba(255,255,255,0.22)',
-                  borderRadius: '11px',
-                  padding: '10px 14px',
+                  borderRadius: '12px',
+                  padding: '0 14px',
+                  height: '35px',
                   fontSize: '12.5px',
                   fontWeight: 800,
                   cursor: 'pointer',
@@ -449,6 +457,7 @@ export const StorefrontInteractiveSpotlightBreak = React.memo(function Storefron
                   alignItems: 'center',
                   gap: '6px',
                   whiteSpace: 'nowrap',
+                  boxSizing: 'border-box',
                 }}
               >
                 <EyeIcon size={14} color="#ffffff" />
@@ -465,8 +474,9 @@ export const StorefrontInteractiveSpotlightBreak = React.memo(function Storefron
                   background: 'rgba(37, 211, 102, 0.14)',
                   color: '#4ade80',
                   border: '1px solid rgba(37, 211, 102, 0.3)',
-                  borderRadius: '11px',
-                  padding: '10px 14px',
+                  borderRadius: '12px',
+                  padding: '0 14px',
+                  height: '35px',
                   fontSize: '12.5px',
                   fontWeight: 800,
                   textDecoration: 'none',
@@ -474,9 +484,10 @@ export const StorefrontInteractiveSpotlightBreak = React.memo(function Storefron
                   alignItems: 'center',
                   gap: '6px',
                   whiteSpace: 'nowrap',
+                  boxSizing: 'border-box',
                 }}
               >
-                <PhoneIcon size={14} color="#4ade80" />
+                <IconWhatsapp size={15} color="#4ade80" />
                 <span>{t('storefront.spotlight.whatsapp_order', 'طلب واتساب')}</span>
               </a>
             )}

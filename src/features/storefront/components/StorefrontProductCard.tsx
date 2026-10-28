@@ -134,7 +134,7 @@ export const StorefrontProductCard = React.memo(function StorefrontProductCard({
       className="storefront-product-card"
       style={{
         background: '#ffffff',
-        borderRadius: '18px',
+        borderRadius: '22px',
         border: '1px solid #e2e8f0',
         padding: '12px',
         display: 'flex',
@@ -155,7 +155,7 @@ export const StorefrontProductCard = React.memo(function StorefrontProductCard({
             cursor: onQuickView ? 'pointer' : 'default',
             width: '100%',
             aspectRatio: '1 / 1',
-            borderRadius: '14px',
+            borderRadius: '16px',
             background: '#ffffff',
             position: 'relative',
             overflow: 'hidden',
@@ -267,7 +267,7 @@ export const StorefrontProductCard = React.memo(function StorefrontProductCard({
               flexShrink: 0,
               background: 'rgba(255, 255, 255, 0.94)',
               backdropFilter: 'blur(8px)',
-              borderRadius: '50%',
+              borderRadius: '12px',
               border: '1px solid #e2e8f0',
               boxShadow: '0 2px 6px rgba(15, 23, 42, 0.06)',
               outline: 'none',
@@ -469,8 +469,8 @@ export const StorefrontProductCard = React.memo(function StorefrontProductCard({
             style={{
               width: '100%',
               height: '40px',
-              padding: '0 12px',
-              borderRadius: '11px',
+              padding: '0 14px',
+              borderRadius: '9999px',
               border: '1px solid #cbd5e1',
               background: '#e2e8f0',
               color: '#64748b',
@@ -499,10 +499,10 @@ export const StorefrontProductCard = React.memo(function StorefrontProductCard({
             rel="noopener noreferrer"
             style={{
               width: '100%',
-              height: '40px',
-              padding: '0 12px',
-              borderRadius: '11px',
-              border: '1px solid #e2e8f0',
+              height: '35px',
+              padding: '0 14px',
+              borderRadius: '12px',
+              border: '1px solid #E0E3E7',
               background: '#ffffff',
               color: '#0f172a',
               fontSize: '13px',
@@ -524,12 +524,12 @@ export const StorefrontProductCard = React.memo(function StorefrontProductCard({
             onClick={(e) => e.stopPropagation()}
             style={{
               width: '100%',
-              height: '40px',
+              height: '35px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
               background: 'var(--storefront-primary-color, #170e5e)',
-              borderRadius: '11px',
+              borderRadius: '12px',
               padding: '3px',
               boxShadow: '0 3px 12px var(--storefront-primary-subtle, rgba(0, 0, 0, 0.14))',
               boxSizing: 'border-box',
@@ -545,16 +545,16 @@ export const StorefrontProductCard = React.memo(function StorefrontProductCard({
               }}
               title={t('storefront.storefront_product_card.s16', 'زيادة الكمية')}
               style={{
-                width: '34px',
-                height: '34px',
-                minWidth: '34px',
-                minHeight: '34px',
+                width: '29px',
+                height: '29px',
+                minWidth: '29px',
+                minHeight: '29px',
                 padding: 0,
                 borderRadius: '8px',
                 background: 'rgba(255,255,255,0.2)',
                 color: 'var(--storefront-primary-contrast, #ffffff)',
                 border: 'none',
-                fontSize: '18px',
+                fontSize: '16px',
                 fontWeight: 800,
                 cursor: 'pointer',
                 display: 'flex',
@@ -568,7 +568,7 @@ export const StorefrontProductCard = React.memo(function StorefrontProductCard({
             <span
               className="storefront-product-stepper-count"
               style={{
-                fontSize: '14px',
+                fontSize: '13px',
                 fontWeight: 900,
                 color: 'var(--storefront-primary-contrast, #ffffff)',
                 minWidth: '24px',
@@ -586,16 +586,16 @@ export const StorefrontProductCard = React.memo(function StorefrontProductCard({
               }}
               title={t('storefront.storefront_product_card.s17', 'تقليل الكمية')}
               style={{
-                width: '34px',
-                height: '34px',
-                minWidth: '34px',
-                minHeight: '34px',
+                width: '29px',
+                height: '29px',
+                minWidth: '29px',
+                minHeight: '29px',
                 padding: 0,
                 borderRadius: '8px',
                 background: 'rgba(255,255,255,0.2)',
                 color: 'var(--storefront-primary-contrast, #ffffff)',
                 border: 'none',
-                fontSize: '18px',
+                fontSize: '16px',
                 fontWeight: 800,
                 cursor: 'pointer',
                 display: 'flex',
@@ -614,9 +614,9 @@ export const StorefrontProductCard = React.memo(function StorefrontProductCard({
             onClick={handleAdd}
             style={{
               width: '100%',
-              height: '40px',
+              height: '35px',
               padding: '0 14px',
-              borderRadius: '11px',
+              borderRadius: '12px',
               border: 'none',
               background: justAdded ? '#16a34a' : 'var(--storefront-primary-color, #170e5e)',
               color: 'var(--storefront-primary-contrast, #ffffff)',

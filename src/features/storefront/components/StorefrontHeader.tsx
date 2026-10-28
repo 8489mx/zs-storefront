@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StorefrontInfo, StorefrontProduct } from '../types/storefront.types';
-import { IconCheckCircle } from './StorefrontIcons';
+import { IconCheckCircle, IconWhatsapp } from './StorefrontIcons';
 import { PackageIcon } from '@/shared/components/icons/AppIcons';
 import { StorefrontPredictiveSearch } from './StorefrontPredictiveSearch';
 import { getCurrencySymbol, isThreeDecimalCurrency } from '@/lib/currencies';
@@ -22,8 +22,12 @@ interface StorefrontHeaderProps {
 
 export function resolveStorefrontBrand(info: { title?: string; businessName?: string; address?: string }) {
   const business = String(info.businessName || '').trim();
-  const rawTitle = String(info.title || '').trim();
+  let rawTitle = String(info.title || '').trim();
   const rawAddress = String(info.address || '').trim();
+
+  if (rawTitle === 'تسوق أونلاين بأفضل الأسعار وتوصيل سريع' || rawTitle.includes('تسوق أونلاين بأفضل الأسعار')) {
+    rawTitle = business && business !== 'متجرنا' ? business : 'المتجر';
+  }
 
   if (rawAddress) {
     return {
@@ -107,23 +111,29 @@ export function StorefrontHeader({
         </div>
       )}
 
-      {/* Sticky Translucent Luxury Header */}
+      {/* Sticky Translucent Luxury Header — transforms into a floating pill island on scroll */}
       <header
         className={`storefront-sticky-header ${isScrolled ? 'is-scrolled' : ''}`}
         style={{
-          background: isScrolled ? 'rgba(255, 255, 255, 0.78)' : '#ffffff',
+          background: isScrolled ? 'rgba(255, 255, 255, 0.88)' : '#ffffff',
           backdropFilter: isScrolled ? 'blur(20px) saturate(180%)' : 'none',
           WebkitBackdropFilter: isScrolled ? 'blur(20px) saturate(180%)' : 'none',
-          borderBottom: isScrolled
-            ? '1px solid rgba(226, 232, 240, 0.75)'
-            : '1px solid #e2e8f0',
+          borderTop: isScrolled ? '1px solid #dadce0' : '1px solid transparent',
+          borderLeft: isScrolled ? '1px solid #dadce0' : '1px solid transparent',
+          borderRight: isScrolled ? '1px solid #dadce0' : '1px solid transparent',
+          borderBottom: isScrolled ? '1px solid #dadce0' : '1px solid #e2e8f0',
+          borderRadius: isScrolled ? '20px' : '0px',
           position: 'sticky',
-          top: 0,
+          top: isScrolled ? '12px' : '0px',
+          width: isScrolled ? 'calc(100% - 32px)' : '100%',
+          maxWidth: isScrolled ? '760px' : '100%',
+          margin: '0 auto',
           zIndex: 110,
           boxShadow: isScrolled
-            ? '0 12px 32px -8px rgba(15, 23, 42, 0.10), 0 2px 6px rgba(15, 23, 42, 0.04)'
+            ? '0 16px 36px -8px rgba(15, 23, 42, 0.14), 0 4px 12px rgba(15, 23, 42, 0.06)'
             : '0 2px 10px rgba(15, 23, 42, 0.03)',
-          transition: 'background-color 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.28s ease',
+          transition:
+            'top 0.32s cubic-bezier(0.16, 1, 0.3, 1), width 0.32s cubic-bezier(0.16, 1, 0.3, 1), max-width 0.32s cubic-bezier(0.16, 1, 0.3, 1), border-radius 0.32s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.28s ease',
         }}
       >
         <style>{`
@@ -133,6 +143,11 @@ export function StorefrontHeader({
             display: contents;
           }
           @media (max-width: 640px) {
+            .storefront-sticky-header.is-scrolled {
+              top: 8px !important;
+              width: calc(100% - 16px) !important;
+              border-radius: 20px !important;
+            }
             .storefront-navbar {
               display: grid !important;
               grid-template-columns: minmax(0, 1fr) auto !important;
@@ -142,7 +157,7 @@ export function StorefrontHeader({
               align-items: center !important;
             }
             .storefront-sticky-header.is-scrolled .storefront-navbar {
-              padding: 5px 12px 7px !important;
+              padding: 6px 12px 8px !important;
               gap: 5px 8px !important;
             }
             .storefront-brand-btn {
@@ -217,17 +232,19 @@ export function StorefrontHeader({
             }
             .storefront-action-btn {
               padding: 0 !important;
-              width: 36px !important;
-              min-width: 36px !important;
-              max-width: 36px !important;
-              height: 36px !important;
-              border-radius: 9px !important;
+              width: 35px !important;
+              min-width: 35px !important;
+              max-width: 35px !important;
+              height: 35px !important;
+              border-radius: 12px !important;
+              background: #ffffff !important;
+              border: 1px solid #E0E3E7 !important;
               justify-content: center !important;
             }
             .storefront-cart-btn {
               padding: 0 10px !important;
-              border-radius: 9px !important;
-              height: 36px !important;
+              border-radius: 12px !important;
+              height: 35px !important;
               justify-content: center !important;
               gap: 4px !important;
             }
@@ -240,10 +257,11 @@ export function StorefrontHeader({
               flex: none !important;
             }
             .storefront-search-box {
-              padding: 3px 6px 3px 12px !important;
-              border-radius: 10px !important;
-              height: 38px !important;
-              background: rgba(248, 250, 252, 0.9) !important;
+              padding: 0 6px 0 12px !important;
+              border-radius: 12px !important;
+              height: 35px !important;
+              border: 1px solid #E0E3E7 !important;
+              background: rgba(248, 250, 252, 0.95) !important;
             }
             .storefront-search-input {
               font-size: 13px !important;
@@ -259,13 +277,13 @@ export function StorefrontHeader({
         <div
           className="storefront-navbar storefront-header-shell"
           style={{
-            maxWidth: 'var(--storefront-container, 1440px)',
+            maxWidth: '760px',
             margin: '0 auto',
-            padding: isScrolled ? '8px 24px' : '12px 24px',
+            padding: isScrolled ? '8px 18px' : '10px 20px',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '16px',
+            justifyContent: 'center',
+            gap: '14px',
             transition: 'padding 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
           }}
         >
@@ -299,14 +317,14 @@ export function StorefrontHeader({
                 style={{
                   width: isScrolled ? '38px' : '42px',
                   height: isScrolled ? '38px' : '42px',
-                  borderRadius: '11px',
                   objectFit: 'contain',
-                  background: '#ffffff',
-                  border: '1.5px solid #e2e8f0',
-                  boxShadow: '0 2px 8px rgba(15, 23, 42, 0.08)',
+                  background: 'transparent',
+                  border: 'none',
+                  boxShadow: 'none',
+                  borderRadius: 0,
+                  padding: 0,
                   flexShrink: 0,
                   transition: 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
-                  padding: '2px',
                 }}
               />
             ) : (
@@ -332,112 +350,6 @@ export function StorefrontHeader({
                 {((brand.title || '').trim().replace(/^ال/, '').trim().charAt(0) || (brand.title || '').trim().charAt(0) || t('storefront.storefront_header.s1', 'م'))}
               </div>
             )}
-            <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0, justifyContent: 'center' }}>
-              <div className="storefront-brand-title-row" style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'nowrap' }}>
-                <span
-                  className="storefront-brand-title"
-                  style={{
-                    fontSize: '17px',
-                    fontWeight: 900,
-                    color: '#0f172a',
-                    letterSpacing: '-0.3px',
-                    transition: 'color 0.15s ease',
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  {brand.title}
-                </span>
-                <span
-                  className="storefront-brand-verified"
-                  title={t('storefront.storefront_header.s2', 'علامة تجارية موثقة ومعتمدة')}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '20px',
-                    height: '20px',
-                    borderRadius: '50%',
-                    background: '#f0fdf4',
-                    border: '1.5px solid #bbf7d0',
-                    color: '#16a34a',
-                    flexShrink: 0,
-                    boxShadow: '0 1px 2px rgba(22, 101, 52, 0.08)',
-                  }}
-                >
-                  <IconCheckCircle size={13} color="#16a34a" strokeWidth={2.6} />
-                </span>
-              </div>
-              {!isScrolled && (
-                brand.address ? (
-                  <div
-                    className="storefront-brand-address"
-                    style={{
-                      fontSize: '11.5px',
-                      color: '#64748b',
-                      fontWeight: 600,
-                      marginTop: '1.5px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '4px',
-                      lineHeight: '1.25',
-                    }}
-                  >
-                    <svg
-                      width="12"
-                      height="12"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="#64748b"
-                      strokeWidth="2.2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      style={{ flexShrink: 0 }}
-                    >
-                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                      <circle cx="12" cy="10" r="3" />
-                    </svg>
-                    <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                      {brand.address}
-                    </span>
-                  </div>
-                ) : info.bio ? (
-                  <span
-                    className="storefront-brand-subtitle"
-                    style={{
-                      fontSize: '11.5px',
-                      color: '#64748b',
-                      marginTop: '1.5px',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap',
-                      maxWidth: '280px',
-                    }}
-                  >
-                    {info.bio}
-                  </span>
-                ) : (
-                  <span
-                    className="storefront-brand-subtitle"
-                    style={{
-                      fontSize: '11.5px',
-                      color: '#64748b',
-                      marginTop: '1.5px',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    {info.onlinePaymentEnabled ? (
-                      info.currency === 'KWD' || info.countryCode === 'KW' ? (
-                        t('storefront.storefront_header.s3_kw_online', 'تسوق أونلاين • دفع إلكتروني آمن وتوصيل سريع')
-                      ) : (
-                        t('storefront.storefront_header.s3_online', 'تسوق أونلاين • دفع إلكتروني وتوصيل سريع')
-                      )
-                    ) : (
-                      t('storefront.storefront_header.s3_general', 'تسوق أونلاين وتوصيل سريع لكافة المناطق')
-                    )}
-                  </span>
-                )
-              )}
-            </div>
           </div>
 
           {/* Unified Search & Actions Bottom Row on Mobile / Inline on Desktop */}
@@ -454,43 +366,6 @@ export function StorefrontHeader({
 
             {/* Quick Actions (WhatsApp, Orders & Cart) */}
             <div className="storefront-actions" style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
-              {cleanPhone && (
-                <a
-                  className="storefront-action-btn"
-                  href={`https://wa.me/${cleanPhone}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '7px',
-                    padding: '0 14px',
-                    height: '40px',
-                    borderRadius: '10px',
-                    background: isScrolled ? 'rgba(255, 255, 255, 0.85)' : '#ffffff',
-                    border: '1.5px solid #e2e8f0',
-                    color: '#0f172a',
-                    fontSize: '13px',
-                    fontWeight: 700,
-                    textDecoration: 'none',
-                    boxShadow: '0 1px 3px rgba(15, 23, 42, 0.04)',
-                    transition: 'transform 0.15s ease, border-color 0.15s ease',
-                    boxSizing: 'border-box',
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  <svg
-                    width="18"
-                    height="18"
-                    fill="#25d366"
-                    viewBox="0 0 24 24"
-                    style={{ flexShrink: 0 }}
-                  >
-                    <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2m.01 1.67c2.2 0 4.26.86 5.82 2.42a8.225 8.225 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.24 8.23-1.48 0-2.93-.39-4.19-1.15l-.3-.17-3.12.82.83-3.04-.2-.31a8.216 8.216 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24m4.52 11.64c-.25-.13-1.47-.72-1.7-.81-.23-.08-.39-.13-.56.13-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.13-1.06-.39-2.02-1.25-.75-.67-1.26-1.5-1.41-1.75-.15-.25-.02-.39.11-.51.11-.11.25-.29.38-.44.13-.14.17-.25.25-.42.08-.17.04-.31-.02-.44s-.56-1.35-.77-1.85c-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.1 0 1.24.9 2.44 1.03 2.61.13.17 1.77 2.71 4.3 3.8 2.52 1.09 2.52.73 2.98.68.45-.04 1.47-.6 1.68-1.18.21-.58.21-1.07.15-1.18-.06-.11-.23-.17-.48-.3" />
-                  </svg>
-                  <span className="storefront-action-label">{t('storefront.storefront_header.s4', 'خدمة العملاء')}</span>
-                </a>
-              )}
 
               {/* My Orders Trigger */}
               {onOpenOrders && (
@@ -503,19 +378,27 @@ export function StorefrontHeader({
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '6px',
-                    padding: '0 14px',
-                    height: '40px',
-                    borderRadius: '10px',
-                    background: isScrolled ? 'rgba(255, 255, 255, 0.85)' : '#ffffff',
-                    border: '1.5px solid #e2e8f0',
+                    padding: '0 13px',
+                    height: '35px',
+                    borderRadius: '12px',
+                    background: '#ffffff',
+                    border: '1px solid #E0E3E7',
                     color: '#0f172a',
                     fontSize: '13px',
                     fontWeight: 700,
                     cursor: 'pointer',
-                    boxShadow: '0 1px 3px rgba(15, 23, 42, 0.04)',
-                    transition: 'transform 0.15s ease, border-color 0.15s ease',
+                    boxShadow: '0 1px 2px rgba(15, 23, 42, 0.04)',
+                    transition: 'all 0.16s cubic-bezier(0.16, 1, 0.3, 1)',
                     boxSizing: 'border-box',
                     whiteSpace: 'nowrap',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = '#f8fafc';
+                    e.currentTarget.style.borderColor = '#cbd5e1';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = '#ffffff';
+                    e.currentTarget.style.borderColor = '#E0E3E7';
                   }}
                 >
                   <PackageIcon size={18} />
@@ -535,16 +418,16 @@ export function StorefrontHeader({
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '8px',
-                  padding: '0 18px',
-                  height: '40px',
-                  borderRadius: '11px',
+                  padding: '0 14px',
+                  height: '35px',
+                  borderRadius: '12px',
                   background: 'var(--storefront-primary-color, #170e5e)',
                   color: 'var(--storefront-primary-contrast, #ffffff)',
                   fontSize: '13px',
                   fontWeight: 800,
                   border: 'none',
                   cursor: 'pointer',
-                  boxShadow: '0 4px 14px var(--storefront-primary-subtle, rgba(23, 14, 94, 0.25))',
+                  boxShadow: '0 2px 8px var(--storefront-primary-subtle, rgba(23, 14, 94, 0.2))',
                   boxSizing: 'border-box',
                   fontVariantNumeric: 'tabular-nums',
                   whiteSpace: 'nowrap',
@@ -566,11 +449,11 @@ export function StorefrontHeader({
                       color: 'var(--storefront-primary-color, #0f172a)',
                       fontSize: '11px',
                       fontWeight: 900,
-                      padding: '2px 7px',
-                      borderRadius: '999px',
-                      minWidth: '20px',
+                      padding: '1px 6px',
+                      borderRadius: '8px',
+                      minWidth: '18px',
                       textAlign: 'center',
-                      boxShadow: '0 1px 4px rgba(0, 0, 0, 0.2)',
+                      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.18)',
                     }}
                   >
                     {cartCount}

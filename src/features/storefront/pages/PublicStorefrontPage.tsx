@@ -9,7 +9,6 @@ import { StorefrontHeroEditorial } from '../components/StorefrontHeroEditorial';
 import { StorefrontMultiRowHome } from '../components/StorefrontMultiRowHome';
 import { StorefrontFilteredGrid } from '../components/StorefrontFilteredGrid';
 import { StorefrontModals } from '../components/StorefrontModals';
-import { StorefrontDeliveryInfoBar } from '../components/StorefrontDeliveryInfoBar';
 import { StorefrontFooter } from '../components/StorefrontFooter';
 import { StorefrontSkeleton } from '../components/StorefrontSkeleton';
 import { StorefrontTrustBar } from '../components/StorefrontTrustBar';
@@ -311,9 +310,6 @@ export function PublicStorefrontPage() {
         onSelectProduct={openProduct}
         onAddToCart={handleAddToCart}
       />
-
-      {/* إشارات التوصيل (المدة، الرسوم، أقل طلب) قبل أي تصفح */}
-      <StorefrontDeliveryInfoBar info={info} />
 
       {/* Dine-In QR Table Banner */}
       {tableParam && (

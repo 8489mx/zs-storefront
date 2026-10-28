@@ -48,10 +48,10 @@ export const StorefrontBentoShowcase = React.memo(function StorefrontBentoShowca
       >
         <div>
           <div style={{ fontSize: '12px', fontWeight: 800, color: 'var(--storefront-primary-color, #170e5e)', marginBottom: '2px' }}>
-            تشكيلات منسقة بعناية
+            تسوق حسب القسم
           </div>
           <h2 style={{ margin: 0, fontSize: 'clamp(1.15rem, 2vw, 1.45rem)', fontWeight: 900, color: '#0f172a' }}>
-            اكتشف عالم الأناقة والتميز حسب ذوقك
+            تصفح كل الأقسام والمنتجات المتوفرة
           </h2>
         </div>
         <button
@@ -68,7 +68,7 @@ export const StorefrontBentoShowcase = React.memo(function StorefrontBentoShowca
             whiteSpace: 'nowrap',
           }}
         >
-          تصفح جميع العروض الحصرية ←
+          عرض كل التخفيضات ←
         </button>
       </div>
 
@@ -84,7 +84,7 @@ export const StorefrontBentoShowcase = React.memo(function StorefrontBentoShowca
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               color: '#ffffff',
-              borderRadius: '20px',
+              borderRadius: '24px',
               padding: '24px',
               display: 'flex',
               flexDirection: 'column',
@@ -98,13 +98,13 @@ export const StorefrontBentoShowcase = React.memo(function StorefrontBentoShowca
           >
             <div style={{ position: 'relative', zIndex: 2, maxWidth: '72%' }}>
               <div style={{ fontSize: '11.5px', fontWeight: 700, color: '#fbbf24', marginBottom: '6px', fontVariantNumeric: 'tabular-nums' }}>
-                القسم الأكثر طلباً · {categoryCounts.get(primaryCat.id) || 12} منتج متاح
+                الأكثر طلباً · {categoryCounts.get(primaryCat.id) || 12} منتج متوفر
               </div>
               <h3 style={{ margin: '0 0 8px', fontSize: '22px', fontWeight: 900, color: '#ffffff', lineHeight: 1.25 }}>
                 {primaryCat.name}
               </h3>
               <p style={{ margin: 0, fontSize: '13px', color: '#e2e8f0', lineHeight: 1.55 }}>
-                خامات استثنائية وتصاميم عصرية تمنحك إطلالة متكاملة في كل مناسبة.
+                تشكيلة متنوعة بجودة مضمونة وأسعار مناسبة مع توصيل سريع.
               </p>
             </div>
 
@@ -113,18 +113,21 @@ export const StorefrontBentoShowcase = React.memo(function StorefrontBentoShowca
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
+                  justifyContent: 'center',
                   gap: '6px',
                   background: 'var(--storefront-primary-color, #170e5e)',
                   color: '#ffffff',
-                  padding: '9px 18px',
-                  borderRadius: '10px',
+                  padding: '0 14px',
+                  height: '35px',
+                  borderRadius: '12px',
                   fontSize: '12.5px',
                   fontWeight: 800,
                   whiteSpace: 'nowrap',
                   boxShadow: '0 4px 14px rgba(0, 0, 0, 0.25)',
+                  boxSizing: 'border-box',
                 }}
               >
-                <span>تسوق القسم الآن</span>
+                <span>تصفح القسم</span>
                 <span>←</span>
               </span>
             </div>
@@ -150,7 +153,7 @@ export const StorefrontBentoShowcase = React.memo(function StorefrontBentoShowca
                 style={{
                   background: '#ffffff',
                   border: '1px solid #e2e8f0',
-                  borderRadius: '18px',
+                  borderRadius: '22px',
                   padding: '16px',
                   display: 'flex',
                   flexDirection: 'column',
@@ -166,7 +169,7 @@ export const StorefrontBentoShowcase = React.memo(function StorefrontBentoShowca
                       width: '60px',
                       height: '60px',
                       aspectRatio: '1 / 1',
-                      borderRadius: '14px',
+                      borderRadius: '16px',
                       background: '#ffffff',
                       padding: '8px',
                       boxSizing: 'border-box',
@@ -217,7 +220,7 @@ export const StorefrontBentoShowcase = React.memo(function StorefrontBentoShowca
               style={{
                 background: '#ffffff',
                 border: '1px solid #e2e8f0',
-                borderRadius: '20px',
+                borderRadius: '24px',
                 padding: '20px',
                 display: 'flex',
                 alignItems: 'center',
@@ -228,7 +231,7 @@ export const StorefrontBentoShowcase = React.memo(function StorefrontBentoShowca
             >
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontSize: '11.5px', fontWeight: 800, color: 'var(--storefront-primary-color, #170e5e)', marginBottom: '4px' }}>
-                  اختيار الخبراء لهذا الأسبوع
+                  عرض مميز هذا الأسبوع
                 </div>
                 <h4
                   onClick={() => onQuickView?.(lookbookProduct)}
@@ -265,15 +268,15 @@ export const StorefrontBentoShowcase = React.memo(function StorefrontBentoShowca
                     background: isLookbookOutOfStock ? '#e2e8f0' : 'var(--storefront-primary-color, #170e5e)',
                     color: isLookbookOutOfStock ? '#64748b' : '#ffffff',
                     border: 'none',
-                    borderRadius: '10px',
-                    padding: '8px 16px',
+                    borderRadius: '9999px',
+                    padding: '8px 18px',
                     fontSize: '12px',
                     fontWeight: 800,
                     cursor: isLookbookOutOfStock ? 'not-allowed' : 'pointer',
                     whiteSpace: 'nowrap',
                   }}
                 >
-                  {isLookbookOutOfStock ? 'غير متوفر' : 'أضف للسلة فوراً'}
+                  {isLookbookOutOfStock ? 'غير متوفر' : 'أضف إلى السلة'}
                 </button>
               </div>
 

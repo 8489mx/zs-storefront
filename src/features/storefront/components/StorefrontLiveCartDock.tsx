@@ -517,8 +517,8 @@ export function StorefrontLiveCartDock({
                       type="button"
                       onClick={() => onAddToCart(p)}
                       style={{
-                        padding: '3px 7px',
-                        borderRadius: '6px',
+                        padding: '4px 10px',
+                        borderRadius: '9999px',
                         background: '#eff6ff',
                         color: '#1d4ed8',
                         border: '1px solid #bfdbfe',
@@ -637,7 +637,7 @@ export function StorefrontLiveCartDock({
               style={{
                 flex: 1.25,
                 height: '38px',
-                borderRadius: '9px',
+                borderRadius: '9999px',
                 background: isMinOrderMet ? 'var(--storefront-primary-color, #170e5e)' : '#94a3b8',
                 color: 'var(--storefront-primary-contrast, #ffffff)',
                 border: 'none',
@@ -664,10 +664,10 @@ export function StorefrontLiveCartDock({
               style={{
                 flex: 1,
                 height: '38px',
-                borderRadius: '9px',
-                background: '#f8fafc',
-                color: '#475569',
-                border: '1px solid #cbd5e1',
+                borderRadius: '9999px',
+                background: '#f0f4f9',
+                color: '#1f1f1f',
+                border: '1px solid #dadce0',
                 fontSize: '12px',
                 fontWeight: 700,
                 cursor: 'pointer',

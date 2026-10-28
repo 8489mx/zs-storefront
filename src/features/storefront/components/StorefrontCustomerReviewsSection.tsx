@@ -21,29 +21,29 @@ interface VerifiedReviewItem {
 const VERIFIED_REVIEWS: VerifiedReviewItem[] = [
   {
     id: 'rev-1',
-    customerName: 'أحمد عبد الرحمن المنصوري',
-    customerRole: 'عميل موثق · القاهرة الجديدة',
+    customerName: 'أحمد عبد الرحمن',
+    customerRole: 'مشتري موثق · الرياض',
     rating: 5,
     dateLabel: 'منذ يومين',
-    quote: 'الخامة فاقت توقعاتي بمراحل والتقفيل متقن جداً. الطلب وصلني في أقل من 24 ساعة مع إمكانية المعاينة الكاملة قبل الاستلام.',
+    quote: 'منتجات ممتازة ومطابقة للوصف تماماً، الطلب وصل في الموعد المحدد وبحالة ممتازة.',
     productIndex: 0,
   },
   {
     id: 'rev-2',
-    customerName: 'سارة محمود الكيلاني',
-    customerRole: 'عميلة موثقة · الإسكندرية',
+    customerName: 'سارة محمود',
+    customerRole: 'مشترية موثقة · القاهرة',
     rating: 5,
     dateLabel: 'منذ 4 أيام',
-    quote: 'الساعة الذكية أصلية وشاشتها فائقة الوضوح حتى تحت الشمس، والبطارية استمرت معي 5 أيام كاملة بشحنة واحدة.',
+    quote: 'الطلب سهل وسريع والتغليف ممتاز ومرتب جداً، والأسعار مناسبة مقارنة بالسوق.',
     productIndex: 2,
   },
   {
     id: 'rev-3',
-    customerName: 'كريم طارق الشافعي',
-    customerRole: 'عميل موثق · الشيخ زايد',
+    customerName: 'خالد المنصوري',
+    customerRole: 'مشتري موثق · دبي',
     rating: 5,
     dateLabel: 'منذ أسبوع',
-    quote: 'عطر العود الملكي ثباته مذهل وفوحانه راقٍ جداً، والتغليف الفاخر جعله هدية مثالية. بالتأكيد ليست آخر تجربة لي مع المتجر.',
+    quote: 'تعامل راقي وخدمة عملاء سريعة وممتازة، تجربة شراء مريحة وأكيد هطلب مرة تانية.',
     productIndex: 3,
   },
 ];
@@ -60,7 +60,7 @@ export const StorefrontCustomerReviewsSection = React.memo(function StorefrontCu
       style={{
         background: '#ffffff',
         border: '1px solid #e2e8f0',
-        borderRadius: '20px',
+        borderRadius: '26px',
         padding: '24px',
         boxShadow: '0 4px 16px rgba(15, 23, 42, 0.03)',
       }}
@@ -81,10 +81,10 @@ export const StorefrontCustomerReviewsSection = React.memo(function StorefrontCu
         <div>
           <div style={{ fontSize: '12px', fontWeight: 800, color: '#16a34a', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
             <IconCheckCircle size={14} color="#16a34a" />
-            <span>تجارب شراء حقيقية وموثقة</span>
+            <span>تقييمات المشترين</span>
           </div>
           <h3 style={{ margin: 0, fontSize: 'clamp(1.1rem, 1.8vw, 1.35rem)', fontWeight: 900, color: '#0f172a' }}>
-            ماذا يقول عملاؤنا عن تجربتهم معنا؟
+            آراء وتجارب العملاء بعد الشراء
           </h3>
         </div>
 
@@ -95,7 +95,7 @@ export const StorefrontCustomerReviewsSection = React.memo(function StorefrontCu
             gap: '14px',
             background: '#f8fafc',
             border: '1px solid #e2e8f0',
-            borderRadius: '14px',
+            borderRadius: '16px',
             padding: '10px 16px',
             fontVariantNumeric: 'tabular-nums',
           }}
@@ -110,8 +110,8 @@ export const StorefrontCustomerReviewsSection = React.memo(function StorefrontCu
           </div>
           <div style={{ width: '1px', height: '28px', background: '#cbd5e1' }} />
           <div style={{ fontSize: '12px', color: '#475569', lineHeight: 1.4 }}>
-            <strong style={{ color: '#0f172a', display: 'block', fontWeight: 800 }}>+890 تقييم موثق</strong>
-            <span>نسبة رضا 98.4%</span>
+            <strong style={{ color: '#0f172a', display: 'block', fontWeight: 800 }}>+890 تقييم معتمد</strong>
+            <span>نسبة رضا 98%</span>
           </div>
         </div>
       </div>
@@ -132,7 +132,7 @@ export const StorefrontCustomerReviewsSection = React.memo(function StorefrontCu
               style={{
                 background: '#f8fafc',
                 border: '1px solid #e2e8f0',
-                borderRadius: '16px',
+                borderRadius: '20px',
                 padding: '18px',
                 display: 'flex',
                 flexDirection: 'column',

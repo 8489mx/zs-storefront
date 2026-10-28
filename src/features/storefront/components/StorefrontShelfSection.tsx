@@ -91,17 +91,17 @@ export const StorefrontShelfSection = React.memo(function StorefrontShelfSection
   };
 
   const arrowStyle: React.CSSProperties = {
-    width: '32px',
-    height: '32px',
-    borderRadius: '8px',
-    border: '1px solid #cbd5e1',
-    background: '#ffffff',
+    width: '34px',
+    height: '34px',
+    borderRadius: '12px',
+    border: '1px solid #dadce0',
+    background: '#f0f4f9',
     color: '#0f172a',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     cursor: 'pointer',
-    transition: 'background 0.15s ease',
+    transition: 'all 0.16s cubic-bezier(0.16, 1, 0.3, 1)',
     flexShrink: 0,
   };
 
@@ -111,7 +111,7 @@ export const StorefrontShelfSection = React.memo(function StorefrontShelfSection
       className="storefront-section-card"
       style={{
         background: '#ffffff',
-        borderRadius: '16px',
+        borderRadius: '26px',
         border: '1px solid #e2e8f0',
         padding: '20px',
         boxShadow: '0 2px 8px rgba(15, 23, 42, 0.03)',
@@ -140,13 +140,15 @@ export const StorefrontShelfSection = React.memo(function StorefrontShelfSection
               color: '#ffffff',
               fontSize: '13px',
               fontWeight: 800,
-              padding: '4px 14px',
-              borderRadius: '8px',
+              padding: '0 14px',
+              height: '35px',
+              borderRadius: '12px',
               display: 'inline-flex',
               alignItems: 'center',
               flexShrink: 0,
               whiteSpace: 'nowrap',
               boxShadow: '0 2px 6px var(--storefront-primary-subtle, rgba(23, 14, 94, 0.2))',
+              boxSizing: 'border-box',
             }}
           >
             {badge}
