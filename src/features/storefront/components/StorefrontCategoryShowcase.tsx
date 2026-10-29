@@ -150,9 +150,9 @@ export function StorefrontCategoryShowcase({
               width: '68px',
               height: '68px',
               borderRadius: '18px',
-              background: selectedCategoryId === 'all' ? 'var(--storefront-primary-color, #588cb3)' : '#ffffff',
-              color: selectedCategoryId === 'all' ? '#ffffff' : 'var(--storefront-primary-color, #588cb3)',
-              border: selectedCategoryId === 'all' ? '2px solid var(--storefront-primary-color, #588cb3)' : '1.5px solid #E0E3E7',
+              background: selectedCategoryId === 'all' ? 'var(--storefront-primary-color, #2d68c4)' : '#ffffff',
+              color: selectedCategoryId === 'all' ? '#ffffff' : 'var(--storefront-primary-color, #2d68c4)',
+              border: selectedCategoryId === 'all' ? '2px solid var(--storefront-primary-color, #2d68c4)' : '1.5px solid #E0E3E7',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -160,14 +160,14 @@ export function StorefrontCategoryShowcase({
               boxSizing: 'border-box',
               boxShadow:
                 selectedCategoryId === 'all'
-                  ? '0 6px 16px var(--storefront-primary-subtle, rgba(88, 140, 179, 0.24))'
+                  ? '0 6px 16px var(--storefront-primary-subtle, rgba(45, 104, 196, 0.22))'
                   : '0 2px 6px rgba(15, 23, 42, 0.04)',
               transition: 'all 0.2s ease',
             }}
           >
             <IconShoppingBag
               size={24}
-              color={selectedCategoryId === 'all' ? '#ffffff' : '#588cb3'}
+              color={selectedCategoryId === 'all' ? '#ffffff' : '#2d68c4'}
               strokeWidth={2}
             />
           </div>
@@ -189,11 +189,10 @@ export function StorefrontCategoryShowcase({
         {/* Top 10 Curated Category Rounded-Square Cards */}
         {topCategories.map((cat) => {
           const isSelected = selectedCategoryId === cat.id;
-          const rawPhotoUrl = cat.imageUrl || getAutoProductPhoto(cat.name, cat.name);
           const photoUrl =
-            rawPhotoUrl && (rawPhotoUrl.includes('cfBg') || rawPhotoUrl.includes('600%20400') || rawPhotoUrl.includes('600 400'))
-              ? CLEAN_FASHION_SQUARE_SVG
-              : rawPhotoUrl;
+            cat.imageUrl && !cat.imageUrl.startsWith('data:image/svg+xml')
+              ? cat.imageUrl
+              : generatePremiumProductSvg(cat.name, cat.name);
 
           return (
             <div
@@ -221,10 +220,10 @@ export function StorefrontCategoryShowcase({
                   height: '68px',
                   borderRadius: '18px',
                   overflow: 'hidden',
-                  border: isSelected ? '2px solid var(--storefront-primary-color, #588cb3)' : '1.5px solid #E0E3E7',
+                  border: isSelected ? '2px solid var(--storefront-primary-color, #2d68c4)' : '1.5px solid #E0E3E7',
                   marginBottom: '8px',
                   boxShadow: isSelected
-                    ? '0 6px 16px var(--storefront-primary-subtle, rgba(88, 140, 179, 0.24))'
+                    ? '0 6px 16px var(--storefront-primary-subtle, rgba(45, 104, 196, 0.22))'
                     : '0 2px 6px rgba(15, 23, 42, 0.04)',
                   position: 'relative',
                   background: '#ffffff',

@@ -97,14 +97,14 @@ export function StorefrontHeader({
       {info.announcement && (
         <div
           style={{
-            background: 'linear-gradient(90deg, #2d6c97 0%, #588cb3 50%, #2d6c97 100%)',
+            background: 'linear-gradient(90deg, #2353a0 0%, #2d68c4 50%, #2353a0 100%)',
             color: '#ffffff',
             padding: '7px 16px',
             fontSize: '12px',
             fontWeight: 700,
             textAlign: 'center',
             letterSpacing: '0.2px',
-            borderBottom: '1px solid rgba(255,255,255,0.08)',
+            borderBottom: '1px solid rgba(255,255,255,0.12)',
           }}
         >
           <span>{info.announcement}</span>
@@ -135,7 +135,7 @@ export function StorefrontHeader({
       >
         <style>{`
           .storefront-brand-btn:hover .storefront-brand-avatar { transform: scale(1.05); }
-          .storefront-brand-btn:hover .storefront-brand-title { color: var(--storefront-primary-color, #170e5e); }
+          .storefront-brand-btn:hover .storefront-brand-title { color: var(--storefront-primary-color, #2d68c4); }
           .storefront-nav-bottom-row {
             display: contents;
           }
@@ -355,14 +355,14 @@ export function StorefrontHeader({
                   width: isScrolled ? '36px' : '42px',
                   height: isScrolled ? '36px' : '42px',
                   borderRadius: '10px',
-                  background: 'linear-gradient(135deg, var(--storefront-primary-color, #588cb3) 0%, #2d6c97 100%)',
+                  background: 'linear-gradient(135deg, var(--storefront-primary-color, #2d68c4) 0%, #2353a0 100%)',
                   color: '#ffffff',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   fontWeight: 900,
                   fontSize: isScrolled ? '15px' : '17px',
-                  boxShadow: '0 2px 8px var(--storefront-primary-subtle, rgba(88, 140, 179, 0.25))',
+                  boxShadow: '0 2px 8px var(--storefront-primary-subtle, rgba(45, 104, 196, 0.22))',
                   flexShrink: 0,
                   border: '1.5px solid rgba(255,255,255,0.25)',
                   transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -443,13 +443,13 @@ export function StorefrontHeader({
                 padding: isScrolled ? '0 14px' : '0 15px',
                 height: isScrolled ? '36px' : '37px',
                 borderRadius: '9999px',
-                background: 'var(--storefront-primary-color, #588cb3)',
+                background: 'var(--storefront-primary-color, #2d68c4)',
                 color: 'var(--storefront-primary-contrast, #ffffff)',
                 fontSize: isScrolled ? '12.5px' : '13px',
                 fontWeight: 800,
                 border: 'none',
                 cursor: 'pointer',
-                boxShadow: '0 2px 8px var(--storefront-primary-subtle, rgba(88, 140, 179, 0.22))',
+                boxShadow: '0 2px 8px var(--storefront-primary-subtle, rgba(45, 104, 196, 0.22))',
                 boxSizing: 'border-box',
                 fontVariantNumeric: 'tabular-nums',
                 whiteSpace: 'nowrap',

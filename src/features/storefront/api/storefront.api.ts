@@ -24,6 +24,7 @@ import {
 import type { CustomerOrderRef } from '../lib/customer-order-refs';
 import { resolveStorefrontMediaList, resolveStorefrontMediaUrl, withResolvedProductMedia } from '../lib/storefront-media-url';
 import { DEMO_STOREFRONT_INFO, DEMO_STOREFRONT_CATALOG } from '../lib/storefront-demo-data';
+import { generatePremiumProductSvg } from '../lib/storefront-photo-matcher';
 
 /** Banner / logo fields of /info and /admin/settings → loadable URLs (SF-9). */
 function withResolvedInfoMedia<T extends StorefrontInfo>(info: T): T {
@@ -221,7 +222,7 @@ export const storefrontApi = {
       res.categories = res.categories.map((c) => ({
         ...c,
         id: Number(c.id),
-        imageUrl: resolveStorefrontMediaUrl(c.imageUrl),
+        imageUrl: resolveStorefrontMediaUrl(c.imageUrl) || generatePremiumProductSvg(c.name, c.name),
       }));
     }
     if (res?.products) {

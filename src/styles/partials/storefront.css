@@ -9,13 +9,13 @@
   --storefront-container: 1440px;
   /* ارتفاع بار السلة السفلي — تقرؤه شبكة المنتجات لتترك مساحة أسفلها */
   --storefront-dock-height: 84px;
-  --storefront-primary-color: #588cb3;
-  --storefront-primary-hover: #477ba2;
+  --storefront-primary-color: #2d68c4;
+  --storefront-primary-hover: #2353a0;
   --storefront-primary-contrast: #ffffff;
-  --storefront-primary-subtle: rgba(88, 140, 179, 0.14);
-  --storefront-secondary-color: #2d6c97;
+  --storefront-primary-subtle: rgba(45, 104, 196, 0.14);
+  --storefront-secondary-color: #2353a0;
   --storefront-secondary-contrast: #ffffff;
-  --storefront-secondary-subtle: rgba(45, 108, 151, 0.12);
+  --storefront-secondary-subtle: rgba(35, 83, 160, 0.12);
   --storefront-surface-color: #f8fafc;
   --storefront-surface-contrast: #0f172a;
   --storefront-surface-border: #e2e8f0;
