@@ -83,7 +83,7 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
     let currentScrolled = false;
 
     const updateScrollState = () => {
-      const y = window.scrollY;
+      const y = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
       // Hysteresis prevents rapid toggling jitter near the scroll threshold
       const nextScrolled = currentScrolled ? y > 8 : y > 24;
       if (nextScrolled !== currentScrolled) {
@@ -101,9 +101,13 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
     };
 
     window.addEventListener('scroll', onScroll, { passive: true });
+    document.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('wheel', onScroll, { passive: true });
     updateScrollState();
     return () => {
       window.removeEventListener('scroll', onScroll);
+      document.removeEventListener('scroll', onScroll);
+      window.removeEventListener('wheel', onScroll);
       if (rafId) window.cancelAnimationFrame(rafId);
     };
   }, []);
@@ -392,6 +396,7 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
             {/* Center: Sleek Unified Predictive Search Bar */}
             <StorefrontPredictiveSearch
               slug={info.slug}
+              storeName={brand.title}
               searchTerm={searchTerm}
               onSearchChange={onSearchChange}
               onSelectCategory={onSelectCategory}
