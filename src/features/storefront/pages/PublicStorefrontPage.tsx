@@ -518,7 +518,7 @@ export function PublicStorefrontPage() {
           maxWidth: 'var(--storefront-container, 1440px)',
           width: '100%',
           margin: '0 auto',
-          padding: '20px 20px 80px',
+          padding: '20px 20px 36px',
         }}
       >
         {isHomepageMultiRow ? (
@@ -564,6 +564,9 @@ export function PublicStorefrontPage() {
             onQuickView={openProduct}
           />
         )}
+
+        {/* 🛡️ شريط مميزات وثقة المتجر (Value Proposition & Trust Bar) */}
+        {info && <StorefrontTrustBar info={info} />}
       </main>
 
       {/* Corporate E-commerce Footer */}

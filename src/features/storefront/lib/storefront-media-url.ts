@@ -39,7 +39,8 @@ export function withResolvedProductMedia<
   const fallbackPhoto = generatePremiumProductSvg(product.name || '', product.categoryName || '');
   const finalUrl =
     cleanedUrl &&
-    (cleanedUrl.startsWith('data:image/webp;base64,') ||
+    (cleanedUrl.startsWith('/assets/products/') ||
+      cleanedUrl.startsWith('data:image/webp;base64,') ||
       cleanedUrl.startsWith('data:image/png;base64,') ||
       /\/api\/storefront\/media\//.test(cleanedUrl))
       ? cleanedUrl
