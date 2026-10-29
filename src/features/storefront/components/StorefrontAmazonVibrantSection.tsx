@@ -19,7 +19,7 @@ interface StorefrontAmazonVibrantSectionProps {
 }
 
 const QUICK_TILE_ITEMS = [
-  { label: 'الأكثر مبيعاً', badge: 'الأعلى تقييماً', badgeBg: '#f1f5f9', badgeColor: '#334155' },
+  { label: 'الأكثر مبيعاً', badge: 'اختيار مميز', badgeBg: '#f1f5f9', badgeColor: '#334155' },
   { label: 'ترشيحاتنا لك', badge: 'اختيار المتجر', badgeBg: '#eff6ff', badgeColor: '#2d68c4' },
   { label: 'عرض خاص لك', badge: 'عرض لمدة محدودة', badgeBg: '#cc0c39', badgeColor: '#ffffff' },
   { label: 'أفضل العروض', badge: 'خصم حصري', badgeBg: '#fef3c7', badgeColor: '#b45309' },

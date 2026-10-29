@@ -22,7 +22,7 @@ const CARD_BADGES = [
   'عرض محدود',
   'وصل حديثاً',
   'خصم خاص',
-  'أفضل تقييم',
+  'عرض حصري',
   'تخفيضات اليوم',
   'الأكثر مبيعاً',
   'مختاراتنا',
@@ -451,9 +451,8 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
               onClick={() => {
                 if (offset !== 0 && orderedDeck.length >= 7) {
                   setCenterIdx(originalIdx);
-                } else {
-                  onQuickView(product);
                 }
+                onQuickView(product);
               }}
               style={{
                 width: `${metrics.width}px`,

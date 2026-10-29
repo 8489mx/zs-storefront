@@ -73,7 +73,8 @@ export function StorefrontHeader({
     const onScroll = () => {
       if (rafId) return;
       rafId = window.requestAnimationFrame(() => {
-        setIsScrolled(window.scrollY > 18);
+        const nextScrolled = window.scrollY > 18;
+        setIsScrolled((prev) => (prev !== nextScrolled ? nextScrolled : prev));
         rafId = 0;
       });
     };
@@ -115,9 +116,9 @@ export function StorefrontHeader({
       <header
         className={`storefront-sticky-header ${isScrolled ? 'is-scrolled' : ''}`}
         style={{
-          background: isScrolled ? 'rgba(255, 255, 255, 0.96)' : 'transparent',
-          backdropFilter: isScrolled ? 'blur(20px) saturate(180%)' : 'none',
-          WebkitBackdropFilter: isScrolled ? 'blur(20px) saturate(180%)' : 'none',
+          background: isScrolled ? 'rgba(255, 255, 255, 0.94)' : 'transparent',
+          backdropFilter: isScrolled ? 'blur(14px) saturate(160%)' : 'none',
+          WebkitBackdropFilter: isScrolled ? 'blur(14px) saturate(160%)' : 'none',
           border: isScrolled ? '1px solid rgba(226, 232, 240, 0.92)' : '1px solid transparent',
           borderRadius: isScrolled ? '14px' : '0px',
           position: 'sticky',
@@ -126,11 +127,13 @@ export function StorefrontHeader({
           maxWidth: isScrolled ? '780px' : '100%',
           margin: '0 auto',
           zIndex: 110,
+          transform: 'translate3d(0, 0, 0)',
+          backfaceVisibility: 'hidden',
           boxShadow: isScrolled
             ? '0 10px 30px -4px rgba(15, 23, 42, 0.12), 0 3px 10px -2px rgba(15, 23, 42, 0.05)'
             : 'none',
           transition:
-            'top 0.32s cubic-bezier(0.16, 1, 0.3, 1), width 0.32s cubic-bezier(0.16, 1, 0.3, 1), max-width 0.32s cubic-bezier(0.16, 1, 0.3, 1), border-radius 0.32s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease',
+            'background-color 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease, border-radius 0.22s ease',
         }}
       >
         <style>{`

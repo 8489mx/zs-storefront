@@ -133,6 +133,7 @@ export const StorefrontProductCard = React.memo(function StorefrontProductCard({
   return (
     <div
       className={`storefront-product-card ${isWide ? 'storefront-product-card-wide' : ''}`}
+      onClick={() => onQuickView?.(product)}
       style={{
         background: '#ffffff',
         borderRadius: '22px',
@@ -145,13 +146,13 @@ export const StorefrontProductCard = React.memo(function StorefrontProductCard({
         height: '100%',
         boxSizing: 'border-box',
         position: 'relative',
+        cursor: onQuickView ? 'pointer' : 'default',
         boxShadow: '0 2px 10px rgba(15, 23, 42, 0.03)',
       }}
     >
       {/* Pure White Seamless Studio Product Image Box */}
       <div
         className="storefront-product-photo-box"
-        onClick={() => onQuickView?.(product)}
         style={{
           cursor: onQuickView ? 'pointer' : 'default',
           width: isWide ? '180px' : '100%',
@@ -259,7 +260,7 @@ export const StorefrontProductCard = React.memo(function StorefrontProductCard({
             </div>
           )}
 
-          {/* Top Left: Interactive Wishlist Heart Button */}
+          {/* Top Left: Interactive Wishlist Heart Button (Solid crisp surface for 120Hz zero-blur-lag scrolling) */}
           <button
             className="storefront-product-fav-btn"
             type="button"
@@ -281,8 +282,7 @@ export const StorefrontProductCard = React.memo(function StorefrontProductCard({
               margin: 0,
               boxSizing: 'border-box',
               flexShrink: 0,
-              background: 'rgba(255, 255, 255, 0.94)',
-              backdropFilter: 'blur(8px)',
+              background: '#ffffff',
               borderRadius: '12px',
               border: '1px solid #e2e8f0',
               boxShadow: '0 2px 6px rgba(15, 23, 42, 0.06)',
