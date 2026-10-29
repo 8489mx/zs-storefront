@@ -11,7 +11,6 @@ import { StorefrontFilteredGrid } from '../components/StorefrontFilteredGrid';
 import { StorefrontModals } from '../components/StorefrontModals';
 import { StorefrontFooter } from '../components/StorefrontFooter';
 import { StorefrontSkeleton } from '../components/StorefrontSkeleton';
-import { StorefrontTrustBar } from '../components/StorefrontTrustBar';
 import { StorefrontMobileBottomNav } from '../components/StorefrontMobileBottomNav';
 import { initStorefrontPixels, trackStorefrontEvent } from '../lib/storefront-pixel-tracker';
 import type { StorefrontProduct } from '../types/storefront.types';
