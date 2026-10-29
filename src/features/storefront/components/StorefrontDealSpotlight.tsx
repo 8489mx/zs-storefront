@@ -33,8 +33,8 @@ export function StorefrontDealSpotlight({
   product,
   cartQuantity,
   whatsappPhone,
-  isSmartDeal: _isSmartDeal,
-  categoryBadge: _categoryBadge,
+  isSmartDeal,
+  categoryBadge,
   onAddToCart,
   onUpdateQuantity,
   onQuickView,
@@ -77,6 +77,8 @@ export function StorefrontDealSpotlight({
   const discountPercent = oldPrice > product.price
     ? Math.round(((oldPrice - product.price) / oldPrice) * 100)
     : 0;
+
+  const savingsAmount = oldPrice > product.price ? oldPrice - product.price : 0;
 
   const autoPhoto = resolveProductPhoto(product.name, product.categoryName);
   const displayPhotoUrl = product.imageUrl || autoPhoto.url;
