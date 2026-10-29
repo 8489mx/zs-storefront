@@ -1288,7 +1288,7 @@ button.storefront-btn-pill,
   box-sizing: border-box !important;
 }
 
-/* 6. All Badges & Micro-Pills -> Google AI Studio Soft Squircle (border-radius: 8px) */
+/* 6. All Badges & Micro-Pills -> Google AI Studio Soft Squircle (border-radius: 8px) & Non-Bold */
 .storefront-product-badge,
 .sf-coverflow-badge,
 .sf-amz-quick-tile-badge,
@@ -1300,6 +1300,7 @@ button.storefront-btn-pill,
 .sf-cat-tile span {
   border-radius: 8px !important;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+  font-weight: 500 !important;
 }
 
 /* 7. Stepper Container & Plus/Minus Controls -> Soft Squircle Stepper */
