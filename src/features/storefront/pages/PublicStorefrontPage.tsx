@@ -52,9 +52,10 @@ export function PublicStorefrontPage() {
   }, [location.pathname, cleanSlug, hostSlug]);
   const storeHomePath = storeBasePath || '/';
 
-  /** فتح منتج = تغيير الرابط؛ المودال يتبع الرابط لا العكس. */
+  /** فتح منتج = استجابة فورية 0ms + مزامنة الرابط للتاريخ والمشاركة. */
   const openProduct = useCallback(
     (product: StorefrontProduct) => {
+      setQuickViewProduct(product);
       navigate(`${storeBasePath}/p/${product.id}`);
     },
     [navigate, storeBasePath],
@@ -62,8 +63,8 @@ export function PublicStorefrontPage() {
 
   /** الإغلاق يرجع خطوة في التاريخ حتى يعمل زر الرجوع طبيعياً. */
   const closeProduct = useCallback(() => {
+    setQuickViewProduct(null);
     if (productId) navigate(storeHomePath, { replace: false });
-    else setQuickViewProduct(null);
   }, [navigate, productId, storeHomePath]);
 
   const {
@@ -126,6 +127,17 @@ export function PublicStorefrontPage() {
     handleRequestTableService,
     isCallingService,
   } = usePublicStorefront(cleanSlug);
+
+  const handleOpenCart = useCallback(() => setIsCartOpen(true), [setIsCartOpen]);
+  const handleOpenOrders = useCallback(() => setIsMyOrdersOpen(true), [setIsMyOrdersOpen]);
+  const handleHeaderSelectCategory = useCallback(
+    (id: number | 'all') => {
+      setSelectedCategory(id);
+      setOnlyDeals(false);
+      setOnlyFavorites(false);
+    },
+    [setSelectedCategory, setOnlyDeals, setOnlyFavorites],
+  );
 
   const handleCallWaiter = async () => {
     if (!tableParam || isCallingService) return;
@@ -299,14 +311,10 @@ export function PublicStorefrontPage() {
         onSearchChange={setSearchTerm}
         cartCount={cartCount}
         cartTotal={cartSubtotal}
-        onOpenCart={() => setIsCartOpen(true)}
-        onOpenOrders={() => setIsMyOrdersOpen(true)}
+        onOpenCart={handleOpenCart}
+        onOpenOrders={handleOpenOrders}
         onGoHome={handleGoHome}
-        onSelectCategory={(id) => {
-          setSelectedCategory(id);
-          setOnlyDeals(false);
-          setOnlyFavorites(false);
-        }}
+        onSelectCategory={handleHeaderSelectCategory}
         onSelectProduct={openProduct}
         onAddToCart={handleAddToCart}
       />
