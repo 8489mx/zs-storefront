@@ -1426,4 +1426,37 @@ button.storefront-btn-pill,
   border-radius: 14px !important;
 }
 
+/* 10. Public Storefront Natural Window Scrolling & Unconstrained Sticky Header
+   Safely overrides ERP shell's body { overflow: hidden } and #root { height: 100% }
+   strictly while visiting the public storefront routes. */
+html.storefront-html,
+html.storefront-html body,
+body.storefront-body {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  height: auto !important;
+  min-height: 100vh !important;
+}
+
+body.storefront-body #root {
+  height: auto !important;
+  min-height: 100vh !important;
+  overflow: visible !important;
+}
+
+/* 11. Seamless Studio Image Blending on Vibrant & Colored Surfaces
+   Dissolves solid white photo backgrounds on podium stages, colored promotional cards,
+   gradient category tiles, and product cards so legacy and live products look natively cut out. */
+.sf-amz-podium-side-img,
+.sf-amz-podium-center-img,
+.sf-amz-promo-card img,
+.sf-cat-tile-img,
+.sf-amz-quick-tile-img,
+.storefront-product-img,
+.sf-quickview-img,
+.sf-studio-blend {
+  mix-blend-mode: multiply !important;
+}
+
+
 
