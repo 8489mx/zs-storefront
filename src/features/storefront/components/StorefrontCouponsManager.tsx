@@ -463,7 +463,7 @@ export function StorefrontCouponsManager() {
                           disabled={toggleActiveMutation.isPending}
                           style={{
                             padding: '3px 10px',
-                            borderRadius: '999px',
+                            borderRadius: '6px',
                             border: 'none',
                             fontSize: '11px',
                             fontWeight: 700,

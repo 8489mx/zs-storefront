@@ -121,7 +121,8 @@ export function StorefrontLiveCartItem({ item, onUpdateQuantity }: StorefrontLiv
           alignItems: 'center',
           background: '#ffffff',
           border: '1px solid #dadce0',
-          borderRadius: '9999px',
+          borderRadius: '8px',
+          boxShadow: '0 1px 2px rgba(0, 0, 0, 0.03)',
           overflow: 'hidden',
           flexShrink: 0,
         }}

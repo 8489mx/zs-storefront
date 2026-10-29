@@ -411,10 +411,10 @@ export const StorefrontShopByCategoryGrid = React.memo(function StorefrontShopBy
                       color: theme.badgeColor,
                       background: theme.badgeBg,
                       padding: '2.5px 8.5px',
-                      borderRadius: '999px',
+                      borderRadius: '8px',
                       whiteSpace: 'nowrap',
                       border: '1px solid rgba(255, 255, 255, 0.65)',
-                      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
+                      boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
                     }}
                   >
                     {item.count} {t('storefront.shop_by_cat.item_unit', 'صنف')}
@@ -427,13 +427,13 @@ export const StorefrontShopByCategoryGrid = React.memo(function StorefrontShopBy
                       color: theme.badgeColor,
                       background: theme.badgeBg,
                       padding: '2.5px 8.5px',
-                      borderRadius: '999px',
+                      borderRadius: '8px',
                       whiteSpace: 'nowrap',
                       display: 'inline-flex',
                       alignItems: 'center',
                       gap: '3px',
                       border: '1px solid rgba(255, 255, 255, 0.65)',
-                      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
+                      boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
                     }}
                   >
                     <span>{t('storefront.shop_by_cat.explore', 'تسوق الآن')}</span>

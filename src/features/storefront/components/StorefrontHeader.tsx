@@ -254,18 +254,20 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
               max-width: 36px !important;
               height: 36px !important;
               min-height: 36px !important;
-              border-radius: 10px !important;
+              border-radius: 12px !important;
               background: #ffffff !important;
               border: 1px solid #E0E3E7 !important;
+              box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
               justify-content: center !important;
               align-items: center !important;
             }
             .storefront-cart-btn {
               padding: 0 14px !important;
               min-width: 36px !important;
-              border-radius: 9999px !important;
+              border-radius: 12px !important;
               height: 36px !important;
               min-height: 36px !important;
+              box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
               justify-content: center !important;
               gap: 5px !important;
             }
@@ -411,14 +413,14 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
                   gap: '6px',
                   padding: '0 16px',
                   height: '36px',
-                  borderRadius: '9999px',
+                  borderRadius: '12px',
                   background: '#ffffff',
                   border: '1px solid #dadce0',
                   color: '#1f1f1f',
-                  fontSize: '13px',
+                  fontSize: '12.5px',
                   fontWeight: 600,
                   cursor: 'pointer',
-                  boxShadow: '0 1px 2px rgba(15, 23, 42, 0.04)',
+                  boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
                   transition: 'transform 0.16s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.16s ease, border-color 0.16s ease',
                   boxSizing: 'border-box',
                   whiteSpace: 'nowrap',
@@ -426,7 +428,7 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
                 }}
               >
                 <PackageIcon size={17} style={{ flexShrink: 0 }} />
-                <span className="storefront-action-label" style={{ fontSize: '12.5px', fontWeight: 700 }}>
+                <span className="storefront-action-label" style={{ fontSize: '12.5px', fontWeight: 600 }}>
                   {t('storefront.storefront_header.s6', 'طلباتي')}
                 </span>
               </button>
@@ -444,14 +446,14 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
                 gap: '6px',
                 padding: '0 16px',
                 height: '36px',
-                borderRadius: '9999px',
+                borderRadius: '12px',
                 background: 'var(--storefront-primary-color, #2d68c4)',
                 color: 'var(--storefront-primary-contrast, #ffffff)',
-                fontSize: '13px',
-                fontWeight: 800,
-                border: 'none',
+                fontSize: '12.5px',
+                fontWeight: 600,
+                border: '1px solid var(--storefront-primary-color, #2d68c4)',
                 cursor: 'pointer',
-                boxShadow: '0 2px 8px var(--storefront-primary-subtle, rgba(45, 104, 196, 0.22))',
+                boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
                 boxSizing: 'border-box',
                 fontVariantNumeric: 'tabular-nums',
                 whiteSpace: 'nowrap',
@@ -465,12 +467,12 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
                     background: '#ffffff',
                     color: 'var(--storefront-primary-color, #0f172a)',
                     fontSize: '10.5px',
-                    fontWeight: 900,
+                    fontWeight: 800,
                     padding: '1px 5px',
-                    borderRadius: '9999px',
+                    borderRadius: '6px',
                     minWidth: '16px',
                     textAlign: 'center',
-                    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.18)',
+                    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.12)',
                   }}
                 >
                   {cartCount}

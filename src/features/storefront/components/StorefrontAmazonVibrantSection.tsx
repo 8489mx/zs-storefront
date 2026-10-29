@@ -987,9 +987,10 @@ export const StorefrontAmazonVibrantSection = React.memo(function StorefrontAmaz
                           fontSize: '10.5px',
                           fontWeight: 700,
                           lineHeight: 1.4,
-                          padding: '2px 9px',
-                          borderRadius: '999px',
+                          padding: '2.5px 9px',
+                          borderRadius: '8px',
                           whiteSpace: 'nowrap',
+                          boxShadow: '0 1px 2px rgba(0, 0, 0, 0.04)',
                         }}
                       >
                         {meta.badge}

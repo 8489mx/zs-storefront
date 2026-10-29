@@ -127,7 +127,7 @@ export function StorefrontCartDrawer({
                 background: '#f1f5f9',
                 color: '#475569',
                 padding: '2px 8px',
-                borderRadius: '999px',
+                borderRadius: '6px',
               }}
             >
               {cartItems.reduce((acc, i) => acc + i.quantity, 0)} {t('storefront.storefront_cart_drawer.s1', "منتج")}
@@ -305,8 +305,9 @@ export function StorefrontCartDrawer({
                     display: 'flex',
                     alignItems: 'center',
                     background: '#f1f5f9',
-                    borderRadius: '9999px',
+                    borderRadius: '8px',
                     padding: '2px',
+                    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.03)',
                   }}
                 >
                   <button
@@ -316,7 +317,7 @@ export function StorefrontCartDrawer({
                     style={{
                       width: '26px',
                       height: '26px',
-                      borderRadius: '9999px',
+                      borderRadius: '6px',
                       border: 'none',
                       background: 'none',
                       cursor: 'pointer',
@@ -349,7 +350,7 @@ export function StorefrontCartDrawer({
                     style={{
                       width: '26px',
                       height: '26px',
-                      borderRadius: '9999px',
+                      borderRadius: '6px',
                       border: 'none',
                       background: 'none',
                       cursor: 'pointer',

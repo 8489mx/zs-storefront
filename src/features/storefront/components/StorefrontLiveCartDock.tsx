@@ -291,7 +291,7 @@ export function StorefrontLiveCartDock({
                   color: '#475569',
                   border: '1px solid #e2e8f0',
                   padding: '2px 8px',
-                  borderRadius: '999px',
+                  borderRadius: '6px',
                   whiteSpace: 'nowrap',
                   flexShrink: 0,
                 }}
@@ -435,7 +435,7 @@ export function StorefrontLiveCartDock({
                 height: '4px',
                 width: '100%',
                 background: '#e2e8f0',
-                borderRadius: '999px',
+                borderRadius: '4px',
                 overflow: 'hidden',
               }}
             >
@@ -444,7 +444,7 @@ export function StorefrontLiveCartDock({
                   height: '100%',
                   width: `${freeShippingPercent}%`,
                   background: isFreeShippingQualified ? '#22c55e' : 'var(--storefront-primary-color, #170e5e)',
-                  borderRadius: '999px',
+                  borderRadius: '4px',
                   transition: 'width 0.3s ease',
                 }}
               />
@@ -515,13 +515,14 @@ export function StorefrontLiveCartDock({
                       onClick={() => onAddToCart(p)}
                       style={{
                         padding: '4px 10px',
-                        borderRadius: '9999px',
+                        borderRadius: '8px',
                         background: '#eff6ff',
                         color: '#1d4ed8',
                         border: '1px solid #bfdbfe',
                         fontSize: '11px',
-                        fontWeight: 700,
+                        fontWeight: 600,
                         cursor: 'pointer',
+                        boxShadow: '0 1px 2px rgba(0, 0, 0, 0.04)',
                         display: 'flex',
                         alignItems: 'center',
                         gap: '3px',
@@ -633,26 +634,26 @@ export function StorefrontLiveCartDock({
               disabled={!isMinOrderMet}
               style={{
                 flex: 1.25,
-                height: '38px',
-                borderRadius: '9999px',
+                height: '36px',
+                borderRadius: '12px',
                 background: isMinOrderMet ? 'var(--storefront-primary-color, #170e5e)' : '#94a3b8',
                 color: 'var(--storefront-primary-contrast, #ffffff)',
-                border: 'none',
+                border: isMinOrderMet ? '1px solid var(--storefront-primary-color, #170e5e)' : '1px solid #94a3b8',
                 fontSize: '12.5px',
-                fontWeight: 800,
+                fontWeight: 600,
                 cursor: isMinOrderMet ? 'pointer' : 'not-allowed',
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '5px',
-                boxShadow: isMinOrderMet ? '0 3px 10px var(--storefront-primary-subtle, rgba(23, 14, 94, 0.22))' : 'none',
+                boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
                 transition: 'all 0.15s ease',
                 fontFamily: 'inherit',
                 whiteSpace: 'nowrap',
               }}
             >
               <span>{t('storefront.storefront_live_cart_dock.s21', "إتمام الطلب")}</span>
-              <span style={{ fontSize: '14px', lineHeight: 1 }}>←</span>
+              <span style={{ fontSize: '13px', lineHeight: 1 }}>←</span>
             </button>
 
             <button
@@ -660,17 +661,18 @@ export function StorefrontLiveCartDock({
               onClick={onClose}
               style={{
                 flex: 1,
-                height: '38px',
-                borderRadius: '9999px',
-                background: '#f0f4f9',
+                height: '36px',
+                borderRadius: '12px',
+                background: '#ffffff',
                 color: '#1f1f1f',
                 border: '1px solid #dadce0',
                 fontSize: '12px',
-                fontWeight: 700,
+                fontWeight: 600,
                 cursor: 'pointer',
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
+                boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
                 transition: 'all 0.15s ease',
                 fontFamily: 'inherit',
                 whiteSpace: 'nowrap',
