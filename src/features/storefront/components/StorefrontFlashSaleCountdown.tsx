@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import type { StorefrontProduct } from '../types/storefront.types';
 import { resolveProductPhoto } from '../lib/storefront-photo-matcher';
 import {

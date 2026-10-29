@@ -9,9 +9,7 @@ import {
   SUNGLASSES_PHOTO,
   JACKET_PHOTO,
   IPHONE_PHOTO,
-  LAPTOP_PHOTO,
   WATCH_CLASSIC_PHOTO,
-  SNEAKER_2_PHOTO,
 } from './product-photos-registry';
 
 function svgDataUri(svgContent: string): string {
