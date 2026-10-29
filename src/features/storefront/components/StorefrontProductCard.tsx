@@ -45,7 +45,6 @@ export const StorefrontProductCard = React.memo(function StorefrontProductCard({
   onAddToCart,
   onUpdateQuantity,
   isSmartDeal,
-  onOpenReviewModal,
   isFavorite: isFavoriteProp,
   onToggleFavorite: onToggleFavoriteProp,
   onQuickView,

@@ -6,7 +6,7 @@ function svgDataUri(svgContent: string): string {
 }
 
 // Bespoke Multi-Layered Studio Vector Illustrations for Categories (Rich Cover Artwork for Bento & Category Circles)
-const CAT_FASHION_SVG = svgDataUri(`
+export const CAT_FASHION_SVG = svgDataUri(`
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
   <rect width="400" height="400" fill="#ffffff"/>
   <path d="M125 95 L165 75 L235 75 L275 95 L335 145 L302 192 L265 168 L265 325 L135 325 L135 168 L98 192 L65 145 Z" fill="#1e293b" stroke="#0f172a" stroke-width="4" stroke-linejoin="round"/>
@@ -18,7 +18,7 @@ const CAT_FASHION_SVG = svgDataUri(`
 </svg>
 `);
 
-const CAT_TECH_SVG = svgDataUri(`
+export const CAT_TECH_SVG = svgDataUri(`
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
   <rect width="400" height="400" fill="#ffffff"/>
   <rect x="135" y="75" width="130" height="250" rx="26" fill="#0f172a" stroke="#475569" stroke-width="6"/>
@@ -29,7 +29,7 @@ const CAT_TECH_SVG = svgDataUri(`
 </svg>
 `);
 
-const CAT_SHOES_SVG = svgDataUri(`
+export const CAT_SHOES_SVG = svgDataUri(`
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
   <rect width="400" height="400" fill="#ffffff"/>
   <path d="M75 245 Q90 185 155 180 L215 135 Q235 125 250 155 L285 160 Q325 180 330 245 Z" fill="#e11d48"/>
@@ -40,7 +40,7 @@ const CAT_SHOES_SVG = svgDataUri(`
 </svg>
 `);
 
-const CAT_PERFUME_SVG = svgDataUri(`
+export const CAT_PERFUME_SVG = svgDataUri(`
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
   <rect width="400" height="400" fill="#ffffff"/>
   <rect x="176" y="76" width="48" height="28" rx="6" fill="#d97706"/>
@@ -52,7 +52,7 @@ const CAT_PERFUME_SVG = svgDataUri(`
 </svg>
 `);
 
-const CAT_WATCHES_SVG = svgDataUri(`
+export const CAT_WATCHES_SVG = svgDataUri(`
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
   <rect width="400" height="400" fill="#ffffff"/>
   <rect x="168" y="60" width="64" height="280" rx="16" fill="#78350f"/>
@@ -65,7 +65,7 @@ const CAT_WATCHES_SVG = svgDataUri(`
 `);
 
 // Bespoke Studio Product Illustrations on Pure #ffffff Seamless Background (600x600, 100% Pure Vector — Zero Bitmap Filters)
-const PROD_LINEN_SHIRT_SVG = svgDataUri(`
+export const PROD_LINEN_SHIRT_SVG = svgDataUri(`
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="100%" height="100%" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
   <defs>
     <linearGradient id="p1Fabric" x1="0" y1="0" x2="1" y2="1">
@@ -94,7 +94,7 @@ const PROD_LINEN_SHIRT_SVG = svgDataUri(`
 </svg>
 `);
 
-const PROD_SNEAKER_SVG = svgDataUri(`
+export const PROD_SNEAKER_SVG = svgDataUri(`
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="100%" height="100%" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
   <defs>
     <linearGradient id="p2Upper" x1="0" y1="0" x2="1" y2="1">
@@ -118,7 +118,7 @@ const PROD_SNEAKER_SVG = svgDataUri(`
 </svg>
 `);
 
-const PROD_SMARTWATCH_SVG = svgDataUri(`
+export const PROD_SMARTWATCH_SVG = svgDataUri(`
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="100%" height="100%" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
   <defs>
     <linearGradient id="p3Case" x1="0" y1="0" x2="1" y2="1">
@@ -147,7 +147,7 @@ const PROD_SMARTWATCH_SVG = svgDataUri(`
 </svg>
 `);
 
-const PROD_PERFUME_SVG = svgDataUri(`
+export const PROD_PERFUME_SVG = svgDataUri(`
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="100%" height="100%" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
   <defs>
     <linearGradient id="p4Bottle" x1="0" y1="0" x2="1" y2="1">
@@ -177,7 +177,7 @@ const PROD_PERFUME_SVG = svgDataUri(`
 </svg>
 `);
 
-const PROD_HEADPHONES_SVG = svgDataUri(`
+export const PROD_HEADPHONES_SVG = svgDataUri(`
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="100%" height="100%" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
   <defs>
     <linearGradient id="p5Metal" x1="0" y1="0" x2="1" y2="1">
@@ -200,7 +200,7 @@ const PROD_HEADPHONES_SVG = svgDataUri(`
 </svg>
 `);
 
-const PROD_BACKPACK_SVG = svgDataUri(`
+export const PROD_BACKPACK_SVG = svgDataUri(`
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="100%" height="100%" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
   <defs>
     <linearGradient id="p6Bag" x1="0" y1="0" x2="1" y2="1">
@@ -221,7 +221,7 @@ const PROD_BACKPACK_SVG = svgDataUri(`
 </svg>
 `);
 
-const PROD_SUNGLASSES_SVG = svgDataUri(`
+export const PROD_SUNGLASSES_SVG = svgDataUri(`
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="100%" height="100%" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
   <defs>
     <linearGradient id="p7Lens" x1="0" y1="0" x2="1" y2="1">
@@ -244,7 +244,7 @@ const PROD_SUNGLASSES_SVG = svgDataUri(`
 </svg>
 `);
 
-const PROD_JACKET_SVG = svgDataUri(`
+export const PROD_JACKET_SVG = svgDataUri(`
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="100%" height="100%" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
   <defs>
     <linearGradient id="p8Coat" x1="0" y1="0" x2="1" y2="1">

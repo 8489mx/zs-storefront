@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StorefrontInfo, StorefrontProduct } from '../types/storefront.types';
-import { IconCheckCircle, IconWhatsapp } from './StorefrontIcons';
 import { PackageIcon } from '@/shared/components/icons/AppIcons';
 import { StorefrontPredictiveSearch } from './StorefrontPredictiveSearch';
 import { getCurrencySymbol, isThreeDecimalCurrency } from '@/lib/currencies';
@@ -70,25 +69,33 @@ export function StorefrontHeader({
 
   useEffect(() => {
     let rafId = 0;
-    const onScroll = () => {
+    const onScroll = (e?: Event) => {
       if (rafId) return;
       rafId = window.requestAnimationFrame(() => {
-        const nextScrolled = window.scrollY > 18;
-        setIsScrolled((prev) => (prev !== nextScrolled ? nextScrolled : prev));
+        const target = e?.target as HTMLElement | null;
+        const targetTop = target && typeof target.scrollTop === 'number' ? target.scrollTop : 0;
+        const docTop = document.documentElement?.scrollTop || document.body?.scrollTop || 0;
+        const winTop = window.scrollY || window.pageYOffset || 0;
+        const scrollDistance = Math.max(winTop, docTop, targetTop);
+        setIsScrolled(scrollDistance > 18);
         rafId = 0;
       });
     };
-    window.addEventListener('scroll', onScroll, { passive: true });
+
+    window.addEventListener('scroll', onScroll, { passive: true, capture: true });
+    document.addEventListener('scroll', onScroll, { passive: true, capture: true });
+    document.body?.addEventListener('scroll', onScroll, { passive: true, capture: true });
     onScroll();
+
     return () => {
-      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('scroll', onScroll, { capture: true } as any);
+      document.removeEventListener('scroll', onScroll, { capture: true } as any);
+      document.body?.removeEventListener('scroll', onScroll, { capture: true } as any);
       if (rafId) window.cancelAnimationFrame(rafId);
     };
   }, []);
 
   const brand = resolveStorefrontBrand(info);
-  const whatsappNumber = info.whatsappPhone.replace(/[^0-9]/g, '');
-  const cleanPhone = whatsappNumber.startsWith('01') ? `2${whatsappNumber}` : whatsappNumber;
   const storeCurr = info?.currency || 'EGP';
   const currSymbol = getCurrencySymbol(storeCurr);
 
@@ -116,9 +123,9 @@ export function StorefrontHeader({
       <header
         className={`storefront-sticky-header ${isScrolled ? 'is-scrolled' : ''}`}
         style={{
-          background: isScrolled ? 'rgba(255, 255, 255, 0.94)' : 'transparent',
-          backdropFilter: isScrolled ? 'blur(14px) saturate(160%)' : 'none',
-          WebkitBackdropFilter: isScrolled ? 'blur(14px) saturate(160%)' : 'none',
+          background: isScrolled ? 'rgba(255, 255, 255, 0.96)' : 'transparent',
+          backdropFilter: isScrolled ? 'blur(20px) saturate(180%)' : 'none',
+          WebkitBackdropFilter: isScrolled ? 'blur(20px) saturate(180%)' : 'none',
           border: isScrolled ? '1px solid rgba(226, 232, 240, 0.92)' : '1px solid transparent',
           borderRadius: isScrolled ? '14px' : '0px',
           position: 'sticky',
@@ -126,14 +133,12 @@ export function StorefrontHeader({
           width: isScrolled ? '48%' : '100%',
           maxWidth: isScrolled ? '780px' : '100%',
           margin: '0 auto',
-          zIndex: 110,
-          transform: 'translate3d(0, 0, 0)',
-          backfaceVisibility: 'hidden',
+          zIndex: 9999,
           boxShadow: isScrolled
             ? '0 10px 30px -4px rgba(15, 23, 42, 0.12), 0 3px 10px -2px rgba(15, 23, 42, 0.05)'
             : 'none',
           transition:
-            'background-color 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease, border-radius 0.22s ease',
+            'top 0.32s cubic-bezier(0.16, 1, 0.3, 1), width 0.32s cubic-bezier(0.16, 1, 0.3, 1), max-width 0.32s cubic-bezier(0.16, 1, 0.3, 1), border-radius 0.32s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease',
         }}
       >
         <style>{`

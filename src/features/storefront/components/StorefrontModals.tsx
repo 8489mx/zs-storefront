@@ -103,11 +103,6 @@ export function StorefrontModals({
   onCloseMyOrders,
   onEditOrder,
   onReorder,
-
-  isReviewModalOpen,
-  reviewProduct,
-  onCloseReviewModal,
-  onReviewSubmitted,
 }: StorefrontModalsProps) {
   return (
     <>

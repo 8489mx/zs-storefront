@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useRef, useEffect } from 'react';
 import { StorefrontCategory } from '../types/storefront.types';
-import { getAutoProductPhoto, generatePremiumProductSvg } from '../lib/storefront-photo-matcher';
+import { generatePremiumProductSvg } from '../lib/storefront-photo-matcher';
 import { IconShoppingBag, IconFolder } from './StorefrontIcons';
 
 interface StorefrontCategoryShowcaseProps {
@@ -29,18 +29,6 @@ function formatSmartCategoryName(categoryName?: string): string {
   }
   return trimmed;
 }
-
-const CLEAN_FASHION_SQUARE_SVG = `data:image/svg+xml;utf8,${encodeURIComponent(
-  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
-    <rect width="400" height="400" fill="#ffffff"/>
-    <path d="M125 95 L165 75 L235 75 L275 95 L335 145 L302 192 L265 168 L265 325 L135 325 L135 168 L98 192 L65 145 Z" fill="#1e293b" stroke="#0f172a" stroke-width="4" stroke-linejoin="round"/>
-    <path d="M165 75 L200 125 L235 75" fill="#e2e8f0" stroke="#0f172a" stroke-width="3"/>
-    <circle cx="200" cy="155" r="4.5" fill="#f8fafc"/>
-    <circle cx="200" cy="195" r="4.5" fill="#f8fafc"/>
-    <circle cx="200" cy="235" r="4.5" fill="#f8fafc"/>
-    <circle cx="200" cy="275" r="4.5" fill="#f8fafc"/>
-  </svg>`.trim().replace(/\s+/g, ' ')
-)}`;
 
 export function StorefrontCategoryShowcase({
   categories,
