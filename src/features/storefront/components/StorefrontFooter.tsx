@@ -96,10 +96,12 @@ export function StorefrontFooter({
           margin: 0;
         }
         .sf-footer-links-grid-2 {
-          display: grid !important;
-          grid-template-columns: repeat(2, auto) !important;
-          gap: 10px 24px !important;
-          justify-content: start !important;
+          display: flex !important;
+          flex-direction: row !important;
+          align-items: center !important;
+          flex-wrap: nowrap !important;
+          gap: 16px !important;
+          justify-content: flex-start !important;
         }
         .sf-footer-link-item {
           background: none;

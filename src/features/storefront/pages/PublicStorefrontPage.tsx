@@ -622,6 +622,10 @@ export function PublicStorefrontPage() {
         onAddToCart={handleAddToCart}
         quickViewProduct={quickViewProduct}
         onCloseQuickView={closeProduct}
+        onSelectQuickViewProduct={openProduct}
+        favoriteIds={favoriteIds}
+        onToggleFavorite={handleToggleFavorite}
+        onOpenReviewModal={handleOpenReviewModal}
         isCategoriesModalOpen={isCategoriesModalOpen}
         onCloseCategoriesModal={() => setIsCategoriesModalOpen(false)}
         categories={categories}
