@@ -19,6 +19,11 @@ export default function App() {
           <Route path="/" element={<PublicStorefrontPage />} />
           <Route path="/st/:slug" element={<PublicStorefrontPage />} />
           <Route path="/store/:slug" element={<PublicStorefrontPage />} />
+          <Route path="/c/:categoryId" element={<PublicStorefrontPage />} />
+          <Route path="/st/:slug/c/:categoryId" element={<PublicStorefrontPage />} />
+          <Route path="/store/:slug/c/:categoryId" element={<PublicStorefrontPage />} />
+          <Route path="/category/:categoryId" element={<PublicStorefrontPage />} />
+          <Route path="/st/:slug/category/:categoryId" element={<PublicStorefrontPage />} />
           <Route path="/p/:productId" element={<PublicStorefrontPage />} />
           <Route path="/st/:slug/p/:productId" element={<PublicStorefrontPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />

@@ -66,14 +66,7 @@ function getFamilyIcon(groupName: string, size = 16) {
   );
 }
 
-const BADGE_THEMES = [
-  { bg: '#eff6ff', color: '#2d68c4', border: '#dbeafe' },
-  { bg: '#fef3c7', color: '#b45309', border: '#fde68a' },
-  { bg: '#ecfdf5', color: '#047857', border: '#d1fae5' },
-  { bg: '#f3e8ff', color: '#6d28d9', border: '#e9d5ff' },
-  { bg: '#fff1f2', color: '#be123c', border: '#ffe4e6' },
-  { bg: '#f1f5f9', color: '#334155', border: '#e2e8f0' },
-];
+
 
 export function StorefrontCategoriesModal({
   isOpen,
@@ -176,29 +169,18 @@ export function StorefrontCategoriesModal({
         <div className="storefront-cat-modal-header">
           {/* Title Area */}
           <div className="storefront-cat-modal-header-brand">
-            <div
-              style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: '13px',
-                background: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)',
-                border: '1px solid #bfdbfe',
-                color: 'var(--storefront-primary-color, #2d68c4)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
-                boxShadow: '0 2px 6px rgba(45, 104, 196, 0.1)',
-              }}
-            >
-              <IconFolder size={20} color="var(--storefront-primary-color, #2d68c4)" strokeWidth={2.2} />
-            </div>
             <div>
               <h2 style={{ margin: 0, fontSize: '16px', fontWeight: 900, color: '#0f172a', lineHeight: 1.25 }}>
                 {t('storefront.storefront_categories_modal.s1', 'تصفح أقسام المتجر')}
               </h2>
               <span style={{ fontSize: '11.5px', color: '#64748b', fontWeight: 600 }}>
-                {categories.length} {t('storefront.storefront_categories_modal.s2', 'قسماً وتصنيفاً معتمداً')}
+                {categories.length === 1
+                  ? t('storefront.storefront_categories_modal.s2_single', 'قسم وتصنيف معتمد')
+                  : categories.length === 2
+                    ? t('storefront.storefront_categories_modal.s2_dual', 'قسمان وتصنيفان معتمدان')
+                    : categories.length <= 10
+                      ? `${categories.length} ${t('storefront.storefront_categories_modal.s2_few', 'أقسام وتصنيفات معتمدة')}`
+                      : `${categories.length} ${t('storefront.storefront_categories_modal.s2_many', 'قسماً وتصنيفاً معتمداً')}`}
               </span>
             </div>
           </div>
@@ -741,12 +723,11 @@ export function StorefrontCategoriesModal({
             {/* Grid of Categories - Matching Storefront Quick Tiles & Luxury Product Cards */}
             {displayedCategories.length > 0 ? (
               <div className={`storefront-cat-modal-grid ${displayedCategories.length === 5 ? 'five-cols' : ''}`}>
-                {displayedCategories.map((cat, idx) => {
+                {displayedCategories.map((cat) => {
                   const count = categoryCounts.get(cat.id) || 0;
                   const isSelected = selectedCategoryId === cat.id;
                   const parsed = parseCategory(cat.name);
                   const photoUrl = getCategoryPhoto(cat);
-                  const badgeTheme = BADGE_THEMES[idx % BADGE_THEMES.length];
 
                   return (
                     <div
@@ -757,7 +738,7 @@ export function StorefrontCategoriesModal({
                       }}
                       className={`storefront-cat-modal-card ${isSelected ? 'selected' : ''}`}
                     >
-                      {/* Top Category Title */}
+                      {/* Category Title: 2-line auto-wrap with exact height to prevent layout jumps */}
                       <div
                         style={{
                           width: '100%',
@@ -771,9 +752,15 @@ export function StorefrontCategoriesModal({
                             fontWeight: 800,
                             color: isSelected ? 'var(--storefront-primary-color, #2d68c4)' : '#0f172a',
                             lineHeight: 1.35,
-                            whiteSpace: 'nowrap',
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical',
                             overflow: 'hidden',
-                            textOverflow: 'ellipsis',
+                            height: '38px',
+                            minHeight: '38px',
+                            whiteSpace: 'normal',
+                            textAlign: 'center',
+                            wordBreak: 'break-word',
                           }}
                           title={cat.name}
                         >
@@ -789,7 +776,7 @@ export function StorefrontCategoriesModal({
                               whiteSpace: 'nowrap',
                               overflow: 'hidden',
                               textOverflow: 'ellipsis',
-                              marginTop: '1px',
+                              marginTop: '2px',
                             }}
                           >
                             {parsed.group}
@@ -811,7 +798,7 @@ export function StorefrontCategoriesModal({
                         />
                       </div>
 
-                      {/* Bottom Soft Pill Badge */}
+                      {/* Bottom Clean Unified Count Badge */}
                       <div style={{ textAlign: 'center', width: '100%' }}>
                         <span
                           style={{
@@ -819,13 +806,13 @@ export function StorefrontCategoriesModal({
                             alignItems: 'center',
                             justifyContent: 'center',
                             gap: '4px',
-                            background: isSelected ? 'var(--storefront-primary-color, #2d68c4)' : badgeTheme.bg,
-                            color: isSelected ? '#ffffff' : badgeTheme.color,
-                            border: `1px solid ${isSelected ? 'var(--storefront-primary-color, #2d68c4)' : badgeTheme.border}`,
+                            background: isSelected ? 'var(--storefront-primary-color, #2d68c4)' : '#f8fafc',
+                            color: isSelected ? '#ffffff' : '#475569',
+                            border: `1px solid ${isSelected ? 'var(--storefront-primary-color, #2d68c4)' : '#e2e8f0'}`,
                             fontSize: '11px',
                             fontWeight: 700,
                             lineHeight: 1.3,
-                            padding: '3px 11px',
+                            padding: '3px 12px',
                             borderRadius: '8px',
                             whiteSpace: 'nowrap',
                             boxShadow: '0 1px 2px rgba(15, 23, 42, 0.03)',

@@ -29,11 +29,13 @@ import { setGlobalSystemCurrency } from '@/lib/currencies';
 
 export function PublicStorefrontPage() {
   const { t } = useTranslation();
-  const { slug, tableNo, productId, orderNumber: trackOrderNumber } = useParams<{ slug?: string; tableNo?: string; productId?: string; orderNumber?: string }>();
+  const { slug, tableNo, categoryId: paramCategoryId, productId, orderNumber: trackOrderNumber } = useParams<{ slug?: string; tableNo?: string; categoryId?: string; productId?: string; orderNumber?: string }>();
   const [searchParams] = useSearchParams();
   const location = useLocation();
   const navigate = useNavigate();
   const tableParam = (tableNo || searchParams.get('table') || '').trim();
+  const queryCat = searchParams.get('category') || searchParams.get('cat');
+  const activeCategoryParam = paramCategoryId || queryCat;
   // SF-10: on `<slug>.<root>` there is no slug in the path; the host is the store.
   const hostSlug = useMemo(() => (slug ? null : (import.meta.env.VITE_STOREFRONT_PREVIEW === 'true' ? 'demo' : getStoreHostSlug())), [slug]);
   const cleanSlug = String(slug || hostSlug || (import.meta.env.VITE_STOREFRONT_PREVIEW === 'true' ? 'demo' : 'default')).trim();
@@ -64,8 +66,14 @@ export function PublicStorefrontPage() {
   /** الإغلاق يرجع خطوة في التاريخ حتى يعمل زر الرجوع طبيعياً. */
   const closeProduct = useCallback(() => {
     setQuickViewProduct(null);
-    if (productId) navigate(storeHomePath, { replace: false });
-  }, [navigate, productId, storeHomePath]);
+    if (productId) {
+      if (paramCategoryId) {
+        navigate(`${storeBasePath}/c/${paramCategoryId}`, { replace: false });
+      } else {
+        navigate(storeHomePath, { replace: false });
+      }
+    }
+  }, [navigate, productId, paramCategoryId, storeBasePath, storeHomePath]);
 
   const {
     infoQuery,
@@ -130,14 +138,45 @@ export function PublicStorefrontPage() {
 
   const handleOpenCart = useCallback(() => setIsCartOpen(true), [setIsCartOpen]);
   const handleOpenOrders = useCallback(() => setIsMyOrdersOpen(true), [setIsMyOrdersOpen]);
-  const handleHeaderSelectCategory = useCallback(
+  // Handle Category Selection with full Browser History & URL sync (Amazon-grade UX)
+  const handleSelectCategory = useCallback(
     (id: number | 'all') => {
-      setSelectedCategory(id);
+      if (id === 'all') {
+        navigate(storeHomePath);
+      } else {
+        navigate(`${storeBasePath}/c/${id}`);
+      }
       setOnlyDeals(false);
       setOnlyFavorites(false);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     },
-    [setSelectedCategory, setOnlyDeals, setOnlyFavorites],
+    [navigate, storeBasePath, storeHomePath, setOnlyDeals, setOnlyFavorites],
   );
+
+  const handleCustomGoHome = useCallback(() => {
+    navigate(storeHomePath);
+    setSearchTerm('');
+    setOnlyDeals(false);
+    setOnlyFavorites(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [navigate, storeHomePath, setSearchTerm, setOnlyDeals, setOnlyFavorites]);
+
+  // Sync Category from URL parameters into store state
+  useEffect(() => {
+    if (activeCategoryParam) {
+      const parsed = Number(activeCategoryParam);
+      if (!isNaN(parsed) && parsed > 0) {
+        setSelectedCategory(parsed);
+        setOnlyDeals(false);
+        setOnlyFavorites(false);
+      }
+    } else {
+      const isCategoryRoute = location.pathname.includes('/c/') || location.pathname.includes('/category/');
+      if (!isCategoryRoute && !queryCat) {
+        setSelectedCategory('all');
+      }
+    }
+  }, [activeCategoryParam, location.pathname, queryCat, setSelectedCategory, setOnlyDeals, setOnlyFavorites]);
 
   const handleCallWaiter = async () => {
     if (!tableParam || isCallingService) return;
@@ -313,8 +352,8 @@ export function PublicStorefrontPage() {
         cartTotal={cartSubtotal}
         onOpenCart={handleOpenCart}
         onOpenOrders={handleOpenOrders}
-        onGoHome={handleGoHome}
-        onSelectCategory={handleHeaderSelectCategory}
+        onGoHome={handleCustomGoHome}
+        onSelectCategory={handleSelectCategory}
         onSelectProduct={openProduct}
         onAddToCart={handleAddToCart}
       />
@@ -448,26 +487,17 @@ export function PublicStorefrontPage() {
             setSelectedCategory('all');
             handleBannerClick();
           }}
-          onSelectCategory={(id) => {
-            setSelectedCategory(id);
-            setOnlyDeals(false);
-            setOnlyFavorites(false);
-            handleBannerClick();
-          }}
+          onSelectCategory={handleSelectCategory}
           onOpenCategoriesModal={() => setIsCategoriesModalOpen(true)}
         />
       )}
 
-      {/* Sub-Header Utility Navigation Bar (Shown when filtering/browsing specific view to avoid duplicating Hero CTAs) */}
+      {/* Sub-Header Utility Navigation Bar */}
       {!isHomepageMultiRow && (
         <StorefrontSubNav
           categories={categories}
           selectedCategoryId={selectedCategory}
-          onSelectCategory={(id) => {
-            setSelectedCategory(id);
-            setOnlyDeals(false);
-            setOnlyFavorites(false);
-          }}
+          onSelectCategory={handleSelectCategory}
           onOpenCategoriesModal={() => setIsCategoriesModalOpen(true)}
           onlyDeals={onlyDeals}
           onToggleDeals={() => {
@@ -481,30 +511,16 @@ export function PublicStorefrontPage() {
           onlyFavorites={onlyFavorites}
           onToggleFavorites={handleToggleFavorites}
           favoritesCount={favoriteIds.size}
-          onClearFilters={() => {
-            setOnlyDeals(false);
-            setOnlyFavorites(false);
-            setInStockOnly(false);
-            setSelectedCategory('all');
-          }}
+          onClearFilters={handleCustomGoHome}
         />
       )}
 
-      {/* Horizontal Circular Category Showcase - Always visible unless searching */}
-      {!searchTerm && (
+      {/* Horizontal Circular Category Showcase - Only shown on Home / All view to keep dedicated category page clean */}
+      {!searchTerm && selectedCategory === 'all' && !onlyDeals && !onlyFavorites && (
         <StorefrontCategoryShowcase
           categories={categories}
           selectedCategoryId={selectedCategory}
-          onSelectCategory={(id) => {
-            const nextId = id !== 'all' && selectedCategory === id ? 'all' : id;
-            setSelectedCategory(nextId);
-            setOnlyDeals(false);
-            setOnlyFavorites(false);
-            const mainEl = document.querySelector('.storefront-main-content');
-            if (mainEl) {
-              mainEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-          }}
+          onSelectCategory={handleSelectCategory}
           onOpenCategoriesModal={() => setIsCategoriesModalOpen(true)}
           categoryCounts={categoryCounts}
         />
@@ -536,7 +552,7 @@ export function PublicStorefrontPage() {
             onToggleFavorite={handleToggleFavorite}
             onQuickView={openProduct}
             onSelectDeals={() => setOnlyDeals(true)}
-            onSelectCategory={(id) => setSelectedCategory(id)}
+            onSelectCategory={handleSelectCategory}
             onOpenCategoriesModal={() => setIsCategoriesModalOpen(true)}
           />
         ) : (
@@ -548,7 +564,7 @@ export function PublicStorefrontPage() {
             categories={categories}
             sortBy={sortBy}
             onSortChange={setSortBy}
-            onGoHome={handleGoHome}
+            onGoHome={handleCustomGoHome}
             filteredProducts={filteredProducts}
             paginatedProducts={paginatedProducts}
             hasMore={hasMore}
@@ -565,8 +581,8 @@ export function PublicStorefrontPage() {
           />
         )}
 
-        {/* 🛡️ شريط مميزات وثقة المتجر (Value Proposition & Trust Bar) */}
-        {info && <StorefrontTrustBar info={info} />}
+        {/* 🛡️ شريط مميزات وثقة المتجر (Value Proposition & Trust Bar) - يظهر في الرئيسية فقط */}
+        {info && isHomepageMultiRow && <StorefrontTrustBar info={info} />}
       </main>
 
       {/* Corporate E-commerce Footer */}
@@ -575,7 +591,7 @@ export function PublicStorefrontPage() {
         onOpenCart={() => setIsCartOpen(true)}
         onOpenOrders={() => setIsMyOrdersOpen(true)}
         onOpenCategories={() => setIsCategoriesModalOpen(true)}
-        onGoHome={handleGoHome}
+        onGoHome={handleCustomGoHome}
         onToggleDeals={() => {
           setOnlyDeals(true);
           setSelectedCategory('all');
@@ -599,7 +615,7 @@ export function PublicStorefrontPage() {
         favoritesCount={favoriteIds.size}
         dealsCount={dealsProducts.length}
         onGoHome={() => {
-          handleGoHome();
+          handleCustomGoHome();
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
         onOpenCategories={() => setIsCategoriesModalOpen(true)}
@@ -631,11 +647,7 @@ export function PublicStorefrontPage() {
         categories={categories}
         categoryCounts={categoryCounts}
         selectedCategory={selectedCategory}
-        onSelectCategory={(id) => {
-          setSelectedCategory(id);
-          setOnlyDeals(false);
-          window.scrollTo({ top: 300, behavior: 'smooth' });
-        }}
+        onSelectCategory={handleSelectCategory}
         cartItems={cartItems}
         info={info}
         isCartOpen={isCartOpen}

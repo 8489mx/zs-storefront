@@ -657,7 +657,7 @@ body, button, input, select, textarea, [class*="storefront-"] {
   grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1100px) {
   .storefront-cat-modal-grid,
   .storefront-cat-modal-grid.five-cols {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -665,7 +665,7 @@ body, button, input, select, textarea, [class*="storefront-"] {
 }
 
 .storefront-cat-modal-card {
-  border-radius: 24px;
+  border-radius: 14px;
   border: 1px solid #edf1f7;
   background: #ffffff;
   padding: 14px 12px 12px;
@@ -674,11 +674,11 @@ body, button, input, select, textarea, [class*="storefront-"] {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 10px;
+  gap: 8px;
   transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.22s ease, border-color 0.2s ease;
-  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.03);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.02);
   position: relative;
-  height: 215px;
+  height: 228px;
   box-sizing: border-box;
   user-select: none;
 }
@@ -690,24 +690,25 @@ body, button, input, select, textarea, [class*="storefront-"] {
 }
 
 .storefront-cat-modal-card:hover {
-  transform: translate3d(0, -4px, 0);
-  box-shadow: 0 12px 26px -4px rgba(15, 23, 42, 0.1);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
   border-color: #cbd5e1;
 }
 
 .storefront-cat-modal-card:active {
-  transform: scale3d(0.97, 0.97, 1);
+  transform: scale(0.98);
 }
 
 .storefront-cat-modal-card-img-box {
   width: 100%;
   flex: 1;
   min-height: 0;
-  border-radius: 16px;
+  border-radius: 12px;
   position: relative;
   overflow: hidden;
-  background: #f4f6fa;
-  padding: 10px;
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+  padding: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -716,18 +717,18 @@ body, button, input, select, textarea, [class*="storefront-"] {
 
 .storefront-cat-modal-card-img {
   max-width: 100%;
-  max-height: 102px;
+  max-height: 98px;
   width: auto;
   height: auto;
   object-fit: contain;
   display: block;
   pointer-events: none;
-  filter: drop-shadow(0 6px 12px rgba(15, 23, 42, 0.1));
+  filter: drop-shadow(0 4px 10px rgba(15, 23, 42, 0.08));
   transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .storefront-cat-modal-card:hover .storefront-cat-modal-card-img {
-  transform: scale(1.07);
+  transform: scale(1.06);
 }
 
 /* Mobile Breakpoint (< 640px) */
@@ -735,7 +736,7 @@ body, button, input, select, textarea, [class*="storefront-"] {
   .storefront-cat-modal-shell {
     width: calc(100vw - 16px) !important;
     max-width: calc(100vw - 16px) !important;
-    border-radius: 22px !important;
+    border-radius: 16px !important;
     margin: auto !important;
     max-height: calc(100vh - 20px) !important;
   }
@@ -1450,12 +1451,12 @@ button.storefront-btn-pill,
   border: 1px solid #edf1f7 !important;
 }
 
-/* 6. Modal Shells & Large Popovers -> 28px Squircle */
+/* 6. Modal Shells & Large Popovers -> 18px Squircle */
 .storefront-checkout-modal-container,
 .sf-quickview-shell,
 .storefront-cat-modal-shell,
 .storefront-modal-shell {
-  border-radius: 28px !important;
+  border-radius: 18px !important;
 }
 
 /* 7. Predictive Search Dropdown Popover -> 22px Squircle */

@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import type { StorefrontInfo } from '../types/storefront.types';
-import { resolveStorefrontBrand } from './StorefrontHeader';
+import { resolveStorefrontBrand, StorefrontBrandLogo } from './StorefrontHeader';
 
 interface StorefrontFooterProps {
   info: StorefrontInfo;
@@ -248,18 +248,10 @@ export function StorefrontFooter({
           <div className="sf-footer-brand-col">
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
               {info.logo_url || info.logoUrl ? (
-                <img
-                  src={info.logo_url || info.logoUrl}
+                <StorefrontBrandLogo
+                  src={(info.logo_url || info.logoUrl)!}
                   alt={brand.title}
-                  style={{
-                    width: '34px',
-                    height: '34px',
-                    borderRadius: '10px',
-                    objectFit: 'contain',
-                    background: '#ffffff',
-                    border: '1px solid #E0E3E7',
-                    padding: '2px',
-                  }}
+                  size={34}
                 />
               ) : (
                 <div

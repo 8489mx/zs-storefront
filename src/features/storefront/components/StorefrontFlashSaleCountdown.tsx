@@ -190,20 +190,30 @@ export function StorefrontFlashSaleCountdown({
             zIndex: 3,
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'flex-start',
-            gap: '26px',
+            alignItems: 'center',
+            justifyContent: 'center',
+            transform: 'translateY(-14px)',
           }}
         >
           {/* Hurry! Limited Deals Heading + 4 Calm Light Countdown Boxes */}
-          <div>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              textAlign: 'center',
+            }}
+          >
             <h3
               style={{
                 fontSize: 'clamp(21px, 2.2vw, 26px)',
                 fontWeight: 800,
                 color: '#0f172a',
-                margin: '0 0 14px 0',
+                margin: '0 0 12px 0',
                 letterSpacing: '-0.3px',
                 lineHeight: 1.3,
+                textAlign: 'center',
+                width: '100%',
               }}
             >
               سارع الآن! عروض محدودة
@@ -214,6 +224,7 @@ export function StorefrontFlashSaleCountdown({
               style={{
                 display: 'flex',
                 alignItems: 'center',
+                justifyContent: 'center',
                 gap: '6px',
                 direction: 'rtl',
               }}
