@@ -171,14 +171,14 @@ export function DialogShell({
   return createPortal(
     <div
       ref={overlayRef}
-      className={`dialog-overlay ${overlayClassName}`.trim()}
+      className={`dialog-overlay sf-apple-modal-overlay ${overlayClassName}`.trim()}
       style={{
         position: 'fixed',
         inset: 0,
         zIndex: effectiveZIndex,
-        background: 'rgba(15, 23, 42, 0.52)',
-        backdropFilter: 'blur(4px)',
-        WebkitBackdropFilter: 'blur(4px)',
+        background: 'rgba(15, 23, 42, 0.45)',
+        backdropFilter: 'blur(8px)',
+        WebkitBackdropFilter: 'blur(8px)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -186,6 +186,7 @@ export function DialogShell({
         boxSizing: 'border-box',
         overflowY: 'auto',
         overscrollBehavior: 'contain',
+        animation: 'sfAppleBackdropIn 0.16s cubic-bezier(0.22, 1, 0.36, 1) forwards',
       }}
       onClick={(event) => {
         if (!closeOnBackdrop) return;
@@ -195,7 +196,7 @@ export function DialogShell({
     >
       <div
         ref={shellRef}
-        className={`dialog-shell ${shellClassName}`.trim()}
+        className={`dialog-shell sf-apple-modal-shell ${shellClassName}`.trim()}
         style={{
           position: 'relative',
           width: effectiveWidth,
@@ -211,6 +212,8 @@ export function DialogShell({
           boxSizing: 'border-box',
           outline: 'none',
           margin: 'auto',
+          willChange: 'transform, opacity',
+          animation: 'sfAppleSpringOpen 0.22s cubic-bezier(0.22, 1, 0.36, 1) forwards',
         }}
         role="dialog"
         aria-modal="true"
