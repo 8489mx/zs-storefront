@@ -534,7 +534,7 @@ export function PublicStorefrontPage() {
           maxWidth: 'var(--storefront-container, 1440px)',
           width: '100%',
           margin: '0 auto',
-          padding: '20px 20px 36px',
+          padding: '20px 20px 0',
         }}
       >
         {isHomepageMultiRow ? (
