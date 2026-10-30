@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import type { StorefrontInfo } from '../types/storefront.types';
 import { resolveStorefrontBrand, StorefrontBrandLogo } from './StorefrontHeader';
 
