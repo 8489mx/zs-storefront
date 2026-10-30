@@ -120,7 +120,7 @@ export function PublicStorefrontPage() {
     handleAddToCart,
     handleUpdateQuantity,
     handleClearCart,
-    handleGoHome,
+    handleGoHome: _handleGoHome,
     handleEditOrder,
     handleReorder,
     categories,
