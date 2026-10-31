@@ -17,7 +17,6 @@ import { trackStorefrontEvent } from '../lib/storefront-pixel-tracker';
 import { buildCartProduct, getProductVariants, resolveVariantUnitPrice } from '../lib/storefront-variant-pricing';
 import { generatePremiumProductSvg, resolveProductPhoto } from '../lib/storefront-photo-matcher';
 import { getContrastTextColor } from '../lib/storefront-theme-contrast';
-import { useBodyScrollLock } from '@/shared/components/dialog-shell';
 
 interface TapOriginMetrics {
   dx: number;
@@ -81,100 +80,6 @@ export interface StorefrontProductQuickViewModalProps {
   onOpenReviewModal?: (product: StorefrontProduct) => void;
 }
 
-const QUICKVIEW_STATIC_CSS = `
-  @keyframes sfIosBackdropIn {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
-  }
-  @keyframes sfIosBackdropOut {
-    0% { opacity: 1; }
-    100% { opacity: 0; }
-  }
-  @keyframes sfIosAppLaunchOpen {
-    0% {
-      opacity: 0;
-      transform: translate3d(var(--ios-origin-x, 0px), var(--ios-origin-y, 48px), 0) scale3d(var(--ios-init-scale, 0.36), var(--ios-init-scale, 0.36), 1);
-    }
-    66% {
-      opacity: 1;
-      transform: translate3d(0, 0, 0) scale3d(1.012, 1.012, 1);
-    }
-    100% {
-      opacity: 1;
-      transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
-    }
-  }
-  @keyframes sfIosAppLaunchClose {
-    0% {
-      opacity: 1;
-      transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
-    }
-    100% {
-      opacity: 0;
-      transform: translate3d(var(--ios-origin-x, 0px), var(--ios-origin-y, 48px), 0) scale3d(var(--ios-init-scale, 0.34), var(--ios-init-scale, 0.34), 1);
-    }
-  }
-  .sf-quickview-backdrop {
-    background-color: rgba(15, 23, 42, 0.48);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    backface-visibility: hidden;
-  }
-  .sf-quickview-backdrop.is-opening {
-    animation: sfIosBackdropIn 0.15s ease forwards;
-  }
-  .sf-quickview-backdrop.is-closing {
-    animation: sfIosBackdropOut 0.14s ease forwards;
-    pointer-events: none;
-  }
-  .sf-quickview-shell {
-    will-change: transform, opacity;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-    transform-origin: center center;
-  }
-  .sf-quickview-backdrop.is-opening .sf-quickview-shell {
-    animation: sfIosAppLaunchOpen 0.22s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  }
-  .sf-quickview-backdrop.is-closing .sf-quickview-shell {
-    animation: sfIosAppLaunchClose 0.14s cubic-bezier(0.32, 0.72, 0, 1) forwards;
-  }
-  .sf-quickview-ai-btn:active {
-    transform: scale3d(0.96, 0.96, 1);
-  }
-  .sf-quickview-photo-stage {
-    height: clamp(175px, 28dvh, 225px);
-  }
-  @media (max-width: 640px) {
-    .sf-quickview-backdrop {
-      padding: 10px !important;
-      align-items: center !important;
-    }
-    .sf-quickview-shell {
-      max-width: 100% !important;
-      width: 100% !important;
-      border-radius: 18px !important;
-      padding: 12px 13px 13px !important;
-      gap: 9px !important;
-      max-height: calc(100dvh - 20px) !important;
-    }
-    .sf-quickview-photo-stage {
-      height: clamp(148px, 24.5dvh, 192px) !important;
-      padding: 4px 6px 14px !important;
-    }
-  }
-  @media (max-height: 640px) {
-    .sf-quickview-photo-stage {
-      height: clamp(118px, 20dvh, 152px) !important;
-      padding: 4px 6px 12px !important;
-    }
-    .sf-quickview-shell {
-      gap: 7px !important;
-      padding: 10px 12px 11px !important;
-    }
-  }
-`;
-
 export function StorefrontProductQuickViewModal({
   product: propProduct,
   isOpen,
@@ -199,19 +104,6 @@ export function StorefrontProductQuickViewModal({
   const [copiedLink, setCopiedLink] = useState(false);
   const [localFavorite, setLocalFavorite] = useState(false);
 
-  // Fullscreen Image Lightbox & Interactive Zoom State
-  const [isZoomOpen, setIsZoomOpen] = useState(false);
-  const [zoomScale, setZoomScale] = useState(1);
-  const [panOffset, setPanOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
-  const isPanningRef = useRef(false);
-  const panStartRef = useRef<{ x: number; y: number; origX: number; origY: number }>({
-    x: 0,
-    y: 0,
-    origX: 0,
-    origY: 0,
-  });
-  const didPanMoveRef = useRef(false);
-
   useEffect(() => {
     if (isOpen && propProduct) {
       if (closeTimerRef.current) {
@@ -227,7 +119,6 @@ export function StorefrontProductQuickViewModal({
       setMountedProduct(propProduct);
       setIsClosing(false);
     } else if (!isOpen && mountedProduct) {
-      setIsZoomOpen(false);
       setIsClosing(true);
       closeTimerRef.current = window.setTimeout(() => {
         setMountedProduct(null);
@@ -244,7 +135,6 @@ export function StorefrontProductQuickViewModal({
 
   const handleAnimatedClose = useCallback(() => {
     if (isClosing) return;
-    setIsZoomOpen(false);
     setIsClosing(true);
     if (closeTimerRef.current) window.clearTimeout(closeTimerRef.current);
     closeTimerRef.current = window.setTimeout(() => {
@@ -259,19 +149,12 @@ export function StorefrontProductQuickViewModal({
     if (!isOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        if (isZoomOpen) {
-          e.stopPropagation();
-          setIsZoomOpen(false);
-          setZoomScale(1);
-          setPanOffset({ x: 0, y: 0 });
-        } else {
-          handleAnimatedClose();
-        }
+        handleAnimatedClose();
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, isZoomOpen, handleAnimatedClose]);
+  }, [isOpen, handleAnimatedClose]);
 
   const product = propProduct || mountedProduct;
 
@@ -281,9 +164,6 @@ export function StorefrontProductQuickViewModal({
       setAddedAnimation(false);
       setCopiedLink(false);
       setActivePhotoIndex(0);
-      setIsZoomOpen(false);
-      setZoomScale(1);
-      setPanOffset({ x: 0, y: 0 });
       const variants = (propProduct as any).variants || [];
       setSelectedVariantIndex(variants.length > 0 ? 0 : null);
       try {
@@ -293,9 +173,6 @@ export function StorefrontProductQuickViewModal({
       }
     }
   }, [propProduct]);
-
-  const isModalVisible = Boolean(product && (isOpen || mountedProduct));
-  useBodyScrollLock(isModalVisible);
 
   if (!product || (!isOpen && !mountedProduct)) return null;
 
@@ -359,40 +236,6 @@ export function StorefrontProductQuickViewModal({
 
   const activePhotoUrl =
     gallery[activePhotoIndex] || displayPrimaryPhoto || generatePremiumProductSvg(product.name, product.categoryName);
-  const isRealActivePhoto = Boolean(activePhotoUrl && !activePhotoUrl.startsWith('data:image/svg+xml'));
-
-  const openZoomViewer = () => {
-    setZoomScale(1);
-    setPanOffset({ x: 0, y: 0 });
-    setIsZoomOpen(true);
-  };
-
-  const closeZoomViewer = () => {
-    setIsZoomOpen(false);
-    setZoomScale(1);
-    setPanOffset({ x: 0, y: 0 });
-  };
-
-  const handleZoomStep = (delta: number) => {
-    setZoomScale((prev) => {
-      const next = Number(Math.min(3, Math.max(1, prev + delta)).toFixed(2));
-      if (next <= 1) setPanOffset({ x: 0, y: 0 });
-      return next;
-    });
-  };
-
-  const handleCycleZoom = () => {
-    if (didPanMoveRef.current) {
-      didPanMoveRef.current = false;
-      return;
-    }
-    setZoomScale((prev) => {
-      if (prev < 1.6) return 1.85;
-      if (prev < 2.4) return 2.6;
-      setPanOffset({ x: 0, y: 0 });
-      return 1;
-    });
-  };
 
   const variants = getProductVariants(product);
   const selectedVariant = selectedVariantIndex !== null ? variants[selectedVariantIndex] || null : null;
@@ -445,7 +288,7 @@ export function StorefrontProductQuickViewModal({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: '12px',
+          padding: '16px',
           '--ios-origin-x': `${originMetrics.dx}px`,
           '--ios-origin-y': `${originMetrics.dy}px`,
           '--ios-init-scale': `${originMetrics.scale}`,
@@ -453,29 +296,101 @@ export function StorefrontProductQuickViewModal({
       }
       onClick={handleAnimatedClose}
     >
-      <style>{QUICKVIEW_STATIC_CSS}</style>
+      <style>{`
+        @keyframes sfIosBackdropIn {
+          0% { opacity: 0; }
+          100% { opacity: 1; }
+        }
+        @keyframes sfIosBackdropOut {
+          0% { opacity: 1; }
+          100% { opacity: 0; }
+        }
+        @keyframes sfIosAppLaunchOpen {
+          0% {
+            opacity: 0;
+            transform: translate3d(var(--ios-origin-x, 0px), var(--ios-origin-y, 48px), 0) scale3d(var(--ios-init-scale, 0.36), var(--ios-init-scale, 0.36), 1);
+          }
+          66% {
+            opacity: 1;
+            transform: translate3d(0, 0, 0) scale3d(1.012, 1.012, 1);
+          }
+          100% {
+            opacity: 1;
+            transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+          }
+        }
+        @keyframes sfIosAppLaunchClose {
+          0% {
+            opacity: 1;
+            transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+          }
+          100% {
+            opacity: 0;
+            transform: translate3d(var(--ios-origin-x, 0px), var(--ios-origin-y, 48px), 0) scale3d(var(--ios-init-scale, 0.34), var(--ios-init-scale, 0.34), 1);
+          }
+        }
+        .sf-quickview-backdrop {
+          background-color: rgba(15, 23, 42, 0.45);
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+        }
+        .sf-quickview-backdrop.is-opening {
+          animation: sfIosBackdropIn 0.15s ease forwards;
+        }
+        .sf-quickview-backdrop.is-closing {
+          animation: sfIosBackdropOut 0.14s ease forwards;
+          pointer-events: none;
+        }
+        .sf-quickview-shell {
+          will-change: transform, opacity;
+          transform-origin: center center;
+        }
+        .sf-quickview-backdrop.is-opening .sf-quickview-shell {
+          animation: sfIosAppLaunchOpen 0.22s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        .sf-quickview-backdrop.is-closing .sf-quickview-shell {
+          animation: sfIosAppLaunchClose 0.14s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+        }
+        .sf-quickview-ai-btn:active {
+          transform: scale(0.96);
+        }
+        @media (max-width: 640px) {
+          .sf-quickview-backdrop {
+            padding: 10px !important;
+            align-items: flex-end !important;
+          }
+          .sf-quickview-shell {
+            max-width: 100% !important;
+            width: 100% !important;
+            border-radius: 20px !important;
+            padding: 16px 16px 18px !important;
+            gap: 12px !important;
+            max-height: 88vh !important;
+          }
+        }
+      `}</style>
 
       <div
         className="sf-quickview-shell"
         style={{
           backgroundColor: '#ffffff',
-          borderRadius: '20px',
+          borderRadius: '22px',
           border: '1px solid #edf1f7',
-          maxWidth: '430px',
+          maxWidth: '490px',
           width: '100%',
-          maxHeight: 'calc(100dvh - 24px)',
-          boxShadow: '0 24px 48px -12px rgba(15, 23, 42, 0.22)',
+          maxHeight: '90vh',
+          boxShadow: '0 24px 48px -12px rgba(15, 23, 42, 0.18)',
           position: 'relative',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
-          padding: '15px 18px 16px',
-          gap: '11px',
+          padding: '18px 22px 20px',
+          gap: '14px',
           boxSizing: 'border-box',
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* 1. Compact Luxury Top Bar */}
+        {/* 1. Minimal Top Bar with Storefront Border-Radius (10px) */}
         <div
           style={{
             display: 'flex',
@@ -490,28 +405,28 @@ export function StorefrontProductQuickViewModal({
             className="sf-quickview-ai-btn"
             aria-label="إغلاق"
             style={{
-              width: '30px',
-              height: '30px',
-              borderRadius: '9px',
-              background: '#f8fafc',
+              width: '34px',
+              height: '34px',
+              borderRadius: '10px',
+              background: '#ffffff',
               border: '1px solid #e2e8f0',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
               color: '#334155',
-              transition: 'transform 0.15s ease, background-color 0.15s ease',
+              boxShadow: '0 1px 2px rgba(15, 23, 42, 0.03)',
+              transition: 'all 0.15s ease',
             }}
           >
-            <XIcon size={14} strokeWidth={2.2} />
+            <XIcon size={15} strokeWidth={2} />
           </button>
 
           <span
             style={{
-              fontSize: '13.5px',
-              fontWeight: 700,
+              fontSize: '15px',
+              fontWeight: 600,
               color: '#0f172a',
-              letterSpacing: '-0.1px',
             }}
           >
             تفاصيل المنتج
@@ -523,152 +438,90 @@ export function StorefrontProductQuickViewModal({
             className="sf-quickview-ai-btn"
             title={copiedLink ? 'تم نسخ الرابط' : 'مشاركة المنتج'}
             style={{
-              width: '30px',
-              height: '30px',
-              borderRadius: '9px',
-              background: copiedLink ? '#ecfdf5' : '#f8fafc',
+              width: '34px',
+              height: '34px',
+              borderRadius: '10px',
+              background: copiedLink ? '#ecfdf5' : '#ffffff',
               border: `1px solid ${copiedLink ? '#a7f3d0' : '#e2e8f0'}`,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
               color: copiedLink ? '#059669' : '#334155',
-              transition: 'transform 0.15s ease, background-color 0.15s ease, border-color 0.15s ease',
+              boxShadow: '0 1px 2px rgba(15, 23, 42, 0.03)',
+              transition: 'all 0.15s ease',
             }}
           >
-            {copiedLink ? <CheckIcon size={14} color="#059669" /> : <Share2Icon size={14} color="#334155" strokeWidth={2} />}
+            {copiedLink ? <CheckIcon size={15} color="#059669" /> : <Share2Icon size={15} color="#334155" strokeWidth={1.9} />}
           </button>
         </div>
 
-        {/* Zero-Scroll Body Container */}
+        {/* Scrollable Content */}
         <div
+          className="thin-scrollbar"
           style={{
+            flex: 1,
+            overflowY: 'auto',
             display: 'flex',
             flexDirection: 'column',
-            gap: '9px',
-            overflow: 'hidden',
-            flexShrink: 1,
-            minHeight: 0,
+            gap: '14px',
           }}
         >
-          {/* 2. Studio Image Showcase Box (Fills Maximum Space + Click to Open Fullscreen Zoom) */}
-          <div
-            className="sf-quickview-photo-stage"
-            onClick={openZoomViewer}
-            title="اضغط لتكبير صورة المنتج"
-            style={{
-              width: '100%',
-              borderRadius: '14px',
-              background: 'linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)',
-              border: '1px solid #e2e8f0',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              position: 'relative',
-              overflow: 'hidden',
-              padding: '4px 8px 14px',
-              boxSizing: 'border-box',
-              flexShrink: 0,
-              cursor: 'zoom-in',
-            }}
-          >
-            <img
-              src={activePhotoUrl}
-              alt={product.name}
-              decoding="async"
-              draggable={false}
-              onError={(e) => {
-                e.currentTarget.src = generatePremiumProductSvg(product.name, product.categoryName);
-              }}
+          {/* 2. Product Image Box with Storefront Radius (14px) + Pagination Dots */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+            <div
               style={{
                 width: '100%',
-                height: '100%',
-                maxWidth: '100%',
-                maxHeight: '100%',
-                objectFit: 'contain',
-                transform: isRealActivePhoto ? 'scale(1.24)' : undefined,
-                mixBlendMode: isRealActivePhoto ? 'multiply' : undefined,
-                filter: 'drop-shadow(0 8px 16px rgba(15, 23, 42, 0.08))',
-                transition: 'transform 0.25s cubic-bezier(0.22, 1, 0.36, 1)',
-                pointerEvents: 'none',
-              }}
-            />
-
-            {discountPercentage > 0 && (
-              <span
-                style={{
-                  position: 'absolute',
-                  top: '9px',
-                  right: '9px',
-                  background: '#e11d48',
-                  color: '#ffffff',
-                  fontSize: '10.5px',
-                  fontWeight: 700,
-                  padding: '3px 9px',
-                  borderRadius: '8px',
-                  lineHeight: 1.25,
-                  boxShadow: '0 2px 8px rgba(225, 29, 72, 0.22)',
-                  zIndex: 2,
-                  pointerEvents: 'none',
-                }}
-              >
-                خصم {discountPercentage}%
-              </span>
-            )}
-
-            {/* Zoom Hint Pill (Bottom-Left of Image Box) */}
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                openZoomViewer();
-              }}
-              aria-label="تكبير الصورة"
-              style={{
-                position: 'absolute',
-                bottom: '7px',
-                left: '8px',
-                height: '24px',
-                padding: '0 8px',
-                borderRadius: '7px',
-                background: 'rgba(255, 255, 255, 0.9)',
-                border: '1px solid rgba(203, 213, 225, 0.85)',
-                color: '#334155',
-                fontSize: '10px',
-                fontWeight: 600,
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '4px',
-                cursor: 'zoom-in',
-                boxShadow: '0 2px 6px rgba(15, 23, 42, 0.06)',
-                zIndex: 2,
-                fontFamily: 'inherit',
-              }}
-            >
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                <line x1="11" y1="8" x2="11" y2="14" />
-                <line x1="8" y1="11" x2="14" y2="11" />
-              </svg>
-              <span>تكبير</span>
-            </button>
-
-            {/* Minimal Dot Indicator overlaid at bottom of image box */}
-            <div
-              onClick={(e) => e.stopPropagation()}
-              style={{
-                position: 'absolute',
-                bottom: '7px',
-                left: '50%',
-                transform: 'translateX(-50%)',
+                height: '245px',
+                borderRadius: '14px',
+                backgroundColor: '#f8fafc',
+                border: '1px solid #f1f5f9',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '4px',
-                zIndex: 2,
+                position: 'relative',
+                padding: '22px',
+                boxSizing: 'border-box',
               }}
             >
+              <img
+                src={activePhotoUrl}
+                alt={product.name}
+                decoding="async"
+                onError={(e) => {
+                  e.currentTarget.src = generatePremiumProductSvg(product.name, product.categoryName);
+                }}
+                style={{
+                  maxWidth: '100%',
+                  maxHeight: '100%',
+                  width: 'auto',
+                  height: 'auto',
+                  objectFit: 'contain',
+                  mixBlendMode: 'multiply',
+                }}
+              />
+
+              {discountPercentage > 0 && (
+                <span
+                  style={{
+                    position: 'absolute',
+                    top: '12px',
+                    right: '12px',
+                    background: '#e11d48',
+                    color: '#ffffff',
+                    fontSize: '11.5px',
+                    fontWeight: 600,
+                    padding: '3px 10px',
+                    borderRadius: '8px',
+                  }}
+                >
+                  خصم {discountPercentage}%
+                </span>
+              )}
+            </div>
+
+            {/* Minimal Dot Indicator */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px' }}>
               {gallery.length > 1 ? (
                 gallery.map((_, idx) => {
                   const isCurrent = idx === activePhotoIndex;
@@ -678,41 +531,38 @@ export function StorefrontProductQuickViewModal({
                       type="button"
                       onClick={() => setActivePhotoIndex(idx)}
                       style={{
-                        width: isCurrent ? '16px' : '5px',
-                        height: '5px',
-                        borderRadius: '5px',
+                        width: isCurrent ? '20px' : '6px',
+                        height: '6px',
+                        borderRadius: '6px',
                         background: isCurrent ? '#0f172a' : '#cbd5e1',
                         border: 'none',
                         padding: 0,
                         cursor: 'pointer',
-                        transition: 'width 0.2s ease, background-color 0.2s ease',
+                        transition: 'all 0.2s ease',
                       }}
                     />
                   );
                 })
               ) : (
                 <>
-                  <span style={{ width: '4px', height: '4px', borderRadius: '4px', background: '#cbd5e1' }} />
-                  <span style={{ width: '14px', height: '4px', borderRadius: '4px', background: '#0f172a' }} />
-                  <span style={{ width: '4px', height: '4px', borderRadius: '4px', background: '#cbd5e1' }} />
+                  <span style={{ width: '5px', height: '5px', borderRadius: '5px', background: '#e2e8f0' }} />
+                  <span style={{ width: '20px', height: '5px', borderRadius: '5px', background: '#0f172a' }} />
+                  <span style={{ width: '5px', height: '5px', borderRadius: '5px', background: '#e2e8f0' }} />
                 </>
               )}
             </div>
           </div>
 
-          {/* 3. Category + Title + Favorite Button */}
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '10px', flexShrink: 0 }}>
+          {/* 3. Category Label + Title + Favorite Button (No Star Ratings) */}
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '14px' }}>
             <div style={{ minWidth: 0, flex: 1 }}>
               {product.categoryName && (
                 <div
                   style={{
-                    fontSize: '11px',
-                    fontWeight: 600,
-                    color: '#64748b',
-                    marginBottom: '2px',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
+                    fontSize: '12px',
+                    fontWeight: 400,
+                    color: '#94a3b8',
+                    marginBottom: '4px',
                   }}
                 >
                   {product.categoryName}
@@ -721,44 +571,42 @@ export function StorefrontProductQuickViewModal({
 
               <h2
                 style={{
-                  fontSize: 'clamp(14px, 3.8vw, 16px)',
-                  fontWeight: 700,
+                  fontSize: '18px',
+                  fontWeight: 600,
                   color: '#0f172a',
                   margin: 0,
-                  lineHeight: 1.32,
-                  display: '-webkit-box',
-                  WebkitLineClamp: 2,
-                  WebkitBoxOrient: 'vertical',
-                  overflow: 'hidden',
+                  lineHeight: 1.4,
                 }}
               >
                 {product.name}
               </h2>
             </div>
 
-            {/* Favorite Button */}
+            {/* Favorite Button with Storefront Border-Radius (11px) */}
             <button
               type="button"
               onClick={handleFavoriteClick}
               className="sf-quickview-ai-btn"
               aria-label="المفضلة"
               style={{
-                width: '34px',
-                height: '34px',
-                borderRadius: '10px',
-                background: isFavorite ? '#fff1f2' : '#f8fafc',
+                width: '36px',
+                height: '36px',
+                borderRadius: '11px',
+                background: isFavorite ? '#fff1f2' : '#ffffff',
                 border: `1px solid ${isFavorite ? '#fecdd3' : '#e2e8f0'}`,
+                boxShadow: '0 1px 2px rgba(15, 23, 42, 0.04)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: 'pointer',
                 flexShrink: 0,
-                transition: 'transform 0.15s ease, background-color 0.15s ease, border-color 0.15s ease',
+                marginTop: '2px',
+                transition: 'all 0.15s ease',
               }}
             >
               <svg
-                width="15"
-                height="15"
+                width="16"
+                height="16"
                 viewBox="0 0 24 24"
                 fill={isFavorite ? '#e11d48' : 'none'}
                 stroke={isFavorite ? '#e11d48' : '#64748b'}
@@ -771,125 +619,88 @@ export function StorefrontProductQuickViewModal({
             </button>
           </div>
 
-          {/* 4. Compact Description (Clamped to 2 lines so it never triggers scroll) */}
-          {product.description && (
-            <p
-              style={{
-                margin: 0,
-                fontSize: '11.5px',
-                lineHeight: 1.45,
-                color: '#64748b',
-                fontWeight: 400,
-                display: '-webkit-box',
-                WebkitLineClamp: 2,
-                WebkitBoxOrient: 'vertical',
-                overflow: 'hidden',
-                flexShrink: 0,
-              }}
-            >
-              {product.description}
-            </p>
-          )}
-
-          {/* 5A. Full-Width Variant Selector Pills (when product has variants, so they never clip) */}
-          {variants.length > 0 && (
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                overflowX: 'auto',
-                scrollbarWidth: 'none',
-                paddingBottom: '1px',
-                flexShrink: 0,
-              }}
-            >
-              {variants.map((v, idx) => {
-                const isSelected = selectedVariantIndex === idx;
-                return (
-                  <button
-                    key={idx}
-                    type="button"
-                    onClick={() => setSelectedVariantIndex(idx)}
-                    style={{
-                      height: '29px',
-                      padding: '0 11px',
-                      borderRadius: '8px',
-                      border: isSelected ? `1px solid ${brandColor}` : '1px solid #e2e8f0',
-                      background: isSelected ? brandColor : '#f8fafc',
-                      color: isSelected ? '#ffffff' : '#334155',
-                      fontSize: '11px',
-                      fontWeight: 600,
-                      cursor: 'pointer',
-                      fontFamily: 'inherit',
-                      whiteSpace: 'nowrap',
-                      flexShrink: 0,
-                      transition: 'background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease',
-                    }}
-                  >
-                    {v.name}
-                  </button>
-                );
-              })}
-            </div>
-          )}
-
-          {/* 5B. Unified Stock Status & Quantity Stepper Row */}
+          {/* 4. Options / Status & Quantity Stepper Row (Storefront 10px-12px Radius) */}
           <div
             style={{
               display: 'flex',
-              alignItems: 'center',
+              alignItems: 'flex-end',
               justifyContent: 'space-between',
-              gap: '8px',
-              background: '#f8fafc',
-              border: '1px solid #edf1f7',
-              borderRadius: '11px',
-              padding: '6px 10px',
-              flexShrink: 0,
+              gap: '12px',
+              flexWrap: 'wrap',
             }}
           >
-            {/* Right side in RTL: Stock Status Badge */}
-            <span
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '5px',
-                height: '26px',
-                padding: '0 9px',
-                borderRadius: '7px',
-                background: inStock ? '#ecfdf5' : '#fef2f2',
-                border: `1px solid ${inStock ? '#d1fae5' : '#fee2e2'}`,
-                color: inStock ? '#15803d' : '#dc2626',
-                fontSize: '11px',
-                fontWeight: 600,
-                whiteSpace: 'nowrap',
-              }}
-            >
-              <span
-                style={{
-                  width: '6px',
-                  height: '6px',
-                  borderRadius: '50%',
-                  background: inStock ? '#16a34a' : '#dc2626',
-                  flexShrink: 0,
-                }}
-              />
-              {inStock ? 'متوفر وجاهز للشحن' : 'نفدت الكمية'}
-            </span>
+            {/* Right side: Variants (or Stock status if no variants) */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1, minWidth: '150px' }}>
+              <span style={{ fontSize: '12px', fontWeight: 400, color: '#94a3b8' }}>
+                {variants.length > 0 ? 'اختر الخيار' : 'الحالة'}
+              </span>
 
-            {/* Left side in RTL: QTY Stepper [ + ] 1 [ - ] */}
+              {variants.length > 0 ? (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                  {variants.map((v, idx) => {
+                    const isSelected = selectedVariantIndex === idx;
+                    return (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => setSelectedVariantIndex(idx)}
+                        style={{
+                          height: '36px',
+                          padding: '0 14px',
+                          borderRadius: '10px',
+                          border: isSelected ? `1px solid ${brandColor}` : '1px solid #e2e8f0',
+                          background: isSelected ? brandColor : '#ffffff',
+                          color: isSelected ? '#ffffff' : '#334155',
+                          fontSize: '12.5px',
+                          fontWeight: 500,
+                          cursor: 'pointer',
+                          fontFamily: 'inherit',
+                          transition: 'all 0.15s ease',
+                        }}
+                      >
+                        {v.name}
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div>
+                  <span
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      height: '36px',
+                      padding: '0 13px',
+                      borderRadius: '10px',
+                      background: inStock ? '#f0fdf4' : '#fef2f2',
+                      border: `1px solid ${inStock ? '#dcfce7' : '#fee2e2'}`,
+                      color: inStock ? '#15803d' : '#dc2626',
+                      fontSize: '12.5px',
+                      fontWeight: 500,
+                    }}
+                  >
+                    {inStock ? 'متوفر وجاهز للشحن' : 'نفدت الكمية حالياً'}
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {/* Left side: QTY Stepper [ + ] 1 [ - ] (RTL Standard with 10px Radius) */}
             {!isZeroPrice && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
-                <span style={{ fontSize: '11px', fontWeight: 600, color: '#64748b' }}>الكمية</span>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '6px', flexShrink: 0 }}>
+                <span style={{ fontSize: '12px', fontWeight: 400, color: '#94a3b8' }}>
+                  الكمية
+                </span>
+
                 <div
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',
-                    height: '28px',
-                    borderRadius: '8px',
+                    height: '36px',
+                    borderRadius: '10px',
                     border: '1px solid #e2e8f0',
-                    background: '#ffffff',
-                    padding: '0 2px',
+                    background: '#f8fafc',
+                    padding: '0 3px',
                     gap: '2px',
                   }}
                 >
@@ -898,29 +709,29 @@ export function StorefrontProductQuickViewModal({
                     disabled={!inStock || (product.stockQty > 0 && product.stockQty < 999 && qty >= product.stockQty)}
                     onClick={() => setQty((prev) => prev + 1)}
                     style={{
-                      width: '23px',
-                      height: '22px',
-                      borderRadius: '6px',
-                      border: 'none',
-                      background: '#f1f5f9',
+                      width: '28px',
+                      height: '28px',
+                      borderRadius: '8px',
+                      border: '1px solid #e2e8f0',
+                      background: '#ffffff',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       cursor: 'pointer',
-                      color: '#0f172a',
+                      color: '#1e293b',
+                      boxShadow: '0 1px 2px rgba(0, 0, 0, 0.02)',
                     }}
                   >
-                    <PlusIcon size={11} color="#0f172a" />
+                    <PlusIcon size={13} color="#1e293b" />
                   </button>
 
                   <span
                     style={{
-                      minWidth: '22px',
+                      minWidth: '28px',
                       textAlign: 'center',
-                      fontSize: '12.5px',
-                      fontWeight: 700,
+                      fontSize: '13.5px',
+                      fontWeight: 600,
                       color: '#0f172a',
-                      fontVariantNumeric: 'tabular-nums',
                     }}
                   >
                     {qty}
@@ -931,19 +742,19 @@ export function StorefrontProductQuickViewModal({
                     disabled={qty <= 1 || !inStock}
                     onClick={() => setQty((prev) => Math.max(1, prev - 1))}
                     style={{
-                      width: '23px',
-                      height: '22px',
-                      borderRadius: '6px',
-                      border: 'none',
-                      background: '#f1f5f9',
+                      width: '28px',
+                      height: '28px',
+                      borderRadius: '8px',
+                      border: '1px solid #e2e8f0',
+                      background: '#ffffff',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       cursor: qty <= 1 ? 'not-allowed' : 'pointer',
-                      opacity: qty <= 1 ? 0.38 : 1,
-                      color: '#0f172a',
-                      fontSize: '14px',
-                      fontWeight: 600,
+                      opacity: qty <= 1 ? 0.4 : 1,
+                      color: '#1e293b',
+                      fontSize: '15px',
+                      boxShadow: '0 1px 2px rgba(0, 0, 0, 0.02)',
                     }}
                   >
                     −
@@ -952,20 +763,40 @@ export function StorefrontProductQuickViewModal({
               </div>
             )}
           </div>
+
+          {/* 5. Clean Description */}
+          {product.description && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', paddingTop: '2px' }}>
+              <span style={{ fontSize: '12px', fontWeight: 400, color: '#94a3b8' }}>
+                الوصف
+              </span>
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: '13.5px',
+                  lineHeight: 1.6,
+                  color: '#475569',
+                  fontWeight: 400,
+                }}
+              >
+                {product.description}
+              </p>
+            </div>
+          )}
         </div>
 
-        {/* 6. Bottom Action Bar (Stacked Old/New Price + Balanced Primary CTA Button) */}
+        {/* 6. Bottom Bar with Storefront Border-Radius (14px container, 12px button) */}
         <div
           style={{
             flexShrink: 0,
             background: '#f8fafc',
-            border: '1px solid #edf1f7',
+            border: '1px solid #f1f5f9',
             borderRadius: '14px',
-            padding: '10px 12px',
+            padding: '12px 16px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            gap: '12px',
+            gap: '14px',
           }}
         >
           {isZeroPrice ? (
@@ -975,50 +806,48 @@ export function StorefrontProductQuickViewModal({
               rel="noopener noreferrer"
               style={{
                 width: '100%',
-                height: '40px',
-                borderRadius: '11px',
+                height: '42px',
+                borderRadius: '12px',
                 backgroundColor: '#25d366',
                 color: '#ffffff',
-                fontSize: '12.5px',
-                fontWeight: 700,
+                fontSize: '13.5px',
+                fontWeight: 600,
                 textDecoration: 'none',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '7px',
+                gap: '8px',
               }}
             >
-              <IconWhatsapp size={16} color="#ffffff" />
+              <IconWhatsapp size={17} color="#ffffff" />
               <span>{t('storefront.storefront_product_quick_view_modal.s23', 'استفسر عن السعر عبر واتساب')}</span>
             </a>
           ) : (
             <>
-              {/* Primary CTA Button (Right side in RTL: Icon + Concise 'أضف للسلة') */}
+              {/* Storefront-styled Add to Cart Button (Right side in RTL) */}
               <button
                 type="button"
                 className="sf-quickview-ai-btn"
                 disabled={!inStock}
                 onClick={handleAdd}
                 style={{
-                  flex: '1 1 auto',
-                  minWidth: 0,
                   height: '42px',
-                  padding: '0 16px',
-                  borderRadius: '11px',
+                  padding: '0 24px',
+                  borderRadius: '12px',
                   backgroundColor: inStock ? brandColor : '#e2e8f0',
                   color: inStock ? brandColorContrast || '#ffffff' : '#64748b',
                   border: 'none',
                   fontSize: '13.5px',
-                  fontWeight: 700,
+                  fontWeight: 600,
                   cursor: inStock ? 'pointer' : 'not-allowed',
                   display: 'inline-flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  gap: '7px',
+                  gap: '8px',
                   fontFamily: 'inherit',
-                  whiteSpace: 'nowrap',
-                  boxShadow: inStock ? '0 4px 12px rgba(37, 99, 235, 0.22)' : 'none',
-                  transition: 'transform 0.16s ease, background-color 0.16s ease',
+                  boxShadow: inStock ? '0 3px 10px rgba(37, 99, 235, 0.18)' : 'none',
+                  transition: 'all 0.16s ease',
+                  flexShrink: 0,
                 }}
               >
                 {addedAnimation ? (
@@ -1028,8 +857,8 @@ export function StorefrontProductQuickViewModal({
                   </>
                 ) : inStock ? (
                   <>
-                    <IconShoppingBag size={16} color="#ffffff" strokeWidth={2.1} />
-                    <span>أضف للسلة</span>
+                    <IconShoppingBag size={16} color="#ffffff" strokeWidth={2} />
+                    <span>إضافة إلى السلة</span>
                   </>
                 ) : (
                   <>
@@ -1039,389 +868,46 @@ export function StorefrontProductQuickViewModal({
                 )}
               </button>
 
-              {/* Stacked Total Price Column (Left side in RTL: Old Strikethrough Above Final Price) */}
-              <div
-                style={{
-                  flex: '0 0 auto',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-end',
-                  justifyContent: 'center',
-                  textAlign: 'left',
-                  paddingRight: '4px',
-                }}
-              >
-                {hasOriginalDiscount && product.originalPrice ? (
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '5px',
-                      lineHeight: 1.1,
-                      marginBottom: '2px',
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontSize: '11.5px',
-                        color: '#94a3b8',
-                        textDecoration: 'line-through',
-                        fontWeight: 500,
-                        fontVariantNumeric: 'tabular-nums',
-                      }}
-                    >
-                      {(product.originalPrice * qty).toLocaleString()} <CurrencySymbol />
-                    </span>
-                  </div>
-                ) : (
+              {/* Total Price Column (Left side in RTL) */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', textAlign: 'left', minWidth: 0 }}>
+                <span style={{ fontSize: '11.5px', fontWeight: 400, color: '#94a3b8' }}>
+                  السعر الإجمالي
+                </span>
+                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'flex-end', gap: '6px', marginTop: '2px' }}>
                   <span
                     style={{
-                      fontSize: '10.5px',
-                      fontWeight: 500,
-                      color: '#94a3b8',
-                      lineHeight: 1.1,
-                      marginBottom: '2px',
+                      fontSize: '20px',
+                      fontWeight: 700,
+                      color: '#0f172a',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '3px',
                     }}
                   >
-                    السعر الإجمالي
+                    <span>{(basePrice * qty).toLocaleString()}</span>
+                    <span style={{ fontSize: '13px', fontWeight: 500 }}>
+                      <CurrencySymbol />
+                    </span>
                   </span>
-                )}
 
-                <span
-                  style={{
-                    fontSize: '18.5px',
-                    fontWeight: 800,
-                    color: '#0f172a',
-                    display: 'inline-flex',
-                    alignItems: 'baseline',
-                    gap: '3px',
-                    lineHeight: 1.1,
-                    fontVariantNumeric: 'tabular-nums',
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  <span>{(basePrice * qty).toLocaleString()}</span>
-                  <span style={{ fontSize: '12px', fontWeight: 700, color: '#334155' }}>
-                    <CurrencySymbol />
-                  </span>
-                </span>
+                  {hasOriginalDiscount && product.originalPrice && (
+                    <span
+                      style={{
+                        fontSize: '12.5px',
+                        color: '#94a3b8',
+                        textDecoration: 'line-through',
+                        fontWeight: 400,
+                      }}
+                    >
+                      {(product.originalPrice * qty).toLocaleString()}
+                    </span>
+                  )}
+                </div>
               </div>
             </>
           )}
         </div>
       </div>
-
-      {/* Fullscreen Interactive Product Photo Zoom Lightbox */}
-      {isZoomOpen && (
-        <div
-          dir="rtl"
-          onClick={(e) => {
-            e.stopPropagation();
-            closeZoomViewer();
-          }}
-          style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 10050,
-            backgroundColor: 'rgba(15, 23, 42, 0.92)',
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '16px',
-            boxSizing: 'border-box',
-            userSelect: 'none',
-            animation: 'sfIosBackdropIn 0.16s ease forwards',
-          }}
-        >
-          {/* Lightbox Top Bar: Close Button + Title + Zoom Stepper [ + ] 100% [ - ] */}
-          <div
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              width: '100%',
-              maxWidth: '560px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: '10px',
-              zIndex: 3,
-            }}
-          >
-            <button
-              type="button"
-              onClick={closeZoomViewer}
-              aria-label="إغلاق التكبير"
-              style={{
-                width: '36px',
-                height: '36px',
-                borderRadius: '11px',
-                background: 'rgba(255, 255, 255, 0.14)',
-                border: '1px solid rgba(255, 255, 255, 0.22)',
-                color: '#ffffff',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                flexShrink: 0,
-              }}
-            >
-              <XIcon size={16} strokeWidth={2.4} color="#ffffff" />
-            </button>
-
-            <span
-              style={{
-                fontSize: '13px',
-                fontWeight: 700,
-                color: '#ffffff',
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                flex: 1,
-                textAlign: 'center',
-              }}
-            >
-              {product.name}
-            </span>
-
-            {/* Zoom Stepper: [ + ] (الزوم) [ - ] following RTL rule */}
-            <div
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                height: '36px',
-                borderRadius: '11px',
-                background: 'rgba(255, 255, 255, 0.14)',
-                border: '1px solid rgba(255, 255, 255, 0.22)',
-                padding: '0 4px',
-                gap: '4px',
-                flexShrink: 0,
-              }}
-            >
-              <button
-                type="button"
-                onClick={() => handleZoomStep(0.5)}
-                disabled={zoomScale >= 3}
-                aria-label="تكبير"
-                style={{
-                  width: '28px',
-                  height: '28px',
-                  borderRadius: '8px',
-                  border: 'none',
-                  background: 'rgba(255, 255, 255, 0.16)',
-                  color: '#ffffff',
-                  fontSize: '15px',
-                  fontWeight: 700,
-                  cursor: zoomScale >= 3 ? 'not-allowed' : 'pointer',
-                  opacity: zoomScale >= 3 ? 0.45 : 1,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                +
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setZoomScale(1);
-                  setPanOffset({ x: 0, y: 0 });
-                }}
-                title="إعادة ضبط الحجم"
-                style={{
-                  minWidth: '42px',
-                  height: '28px',
-                  borderRadius: '7px',
-                  border: 'none',
-                  background: 'transparent',
-                  color: '#ffffff',
-                  fontSize: '11.5px',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  fontVariantNumeric: 'tabular-nums',
-                  padding: '0 4px',
-                }}
-              >
-                {Math.round(zoomScale * 100)}%
-              </button>
-              <button
-                type="button"
-                onClick={() => handleZoomStep(-0.5)}
-                disabled={zoomScale <= 1}
-                aria-label="تصغير"
-                style={{
-                  width: '28px',
-                  height: '28px',
-                  borderRadius: '8px',
-                  border: 'none',
-                  background: 'rgba(255, 255, 255, 0.16)',
-                  color: '#ffffff',
-                  fontSize: '15px',
-                  fontWeight: 700,
-                  cursor: zoomScale <= 1 ? 'not-allowed' : 'pointer',
-                  opacity: zoomScale <= 1 ? 0.45 : 1,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                −
-              </button>
-            </div>
-          </div>
-
-          {/* Center Interactive Fullscreen Studio Canvas */}
-          <div
-            data-allow-wheel="true"
-            onWheel={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              handleZoomStep(e.deltaY < 0 ? 0.25 : -0.25);
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleCycleZoom();
-            }}
-            onPointerDown={(e) => {
-              if (zoomScale <= 1) return;
-              isPanningRef.current = true;
-              didPanMoveRef.current = false;
-              panStartRef.current = {
-                x: e.clientX,
-                y: e.clientY,
-                origX: panOffset.x,
-                origY: panOffset.y,
-              };
-              try {
-                e.currentTarget.setPointerCapture(e.pointerId);
-              } catch {}
-            }}
-            onPointerMove={(e) => {
-              if (!isPanningRef.current || zoomScale <= 1) return;
-              const dx = e.clientX - panStartRef.current.x;
-              const dy = e.clientY - panStartRef.current.y;
-              if (Math.abs(dx) > 4 || Math.abs(dy) > 4) {
-                didPanMoveRef.current = true;
-              }
-              const maxPan = (zoomScale - 1) * 160;
-              setPanOffset({
-                x: Math.max(-maxPan, Math.min(maxPan, panStartRef.current.origX + dx)),
-                y: Math.max(-maxPan, Math.min(maxPan, panStartRef.current.origY + dy)),
-              });
-            }}
-            onPointerUp={(e) => {
-              isPanningRef.current = false;
-              try {
-                e.currentTarget.releasePointerCapture(e.pointerId);
-              } catch {}
-            }}
-            onPointerCancel={() => {
-              isPanningRef.current = false;
-            }}
-            style={{
-              width: 'min(94vw, 520px)',
-              height: 'min(70dvh, 520px)',
-              borderRadius: '22px',
-              background: '#ffffff',
-              boxShadow: '0 28px 60px rgba(0, 0, 0, 0.45)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              overflow: 'hidden',
-              position: 'relative',
-              cursor: zoomScale > 1 ? 'grab' : 'zoom-in',
-              touchAction: 'none',
-              padding: '10px',
-              boxSizing: 'border-box',
-            }}
-          >
-            <img
-              src={activePhotoUrl}
-              alt={product.name}
-              draggable={false}
-              onError={(e) => {
-                e.currentTarget.src = generatePremiumProductSvg(product.name, product.categoryName);
-              }}
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'contain',
-                transform: `translate3d(${panOffset.x}px, ${panOffset.y}px, 0) scale(${
-                  (isRealActivePhoto ? 1.16 : 1) * zoomScale
-                })`,
-                transition: isPanningRef.current ? 'none' : 'transform 0.22s cubic-bezier(0.22, 1, 0.36, 1)',
-                pointerEvents: 'none',
-              }}
-            />
-          </div>
-
-          {/* Bottom Helper & Gallery Switcher */}
-          <div
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '10px',
-              zIndex: 3,
-            }}
-          >
-            {gallery.length > 1 && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                {gallery.map((imgUrl, idx) => {
-                  const isCurrent = idx === activePhotoIndex;
-                  return (
-                    <button
-                      key={idx}
-                      type="button"
-                      onClick={() => {
-                        setActivePhotoIndex(idx);
-                        setZoomScale(1);
-                        setPanOffset({ x: 0, y: 0 });
-                      }}
-                      style={{
-                        width: '44px',
-                        height: '44px',
-                        borderRadius: '10px',
-                        border: isCurrent ? '2px solid #ffffff' : '1px solid rgba(255,255,255,0.28)',
-                        background: '#ffffff',
-                        padding: '3px',
-                        cursor: 'pointer',
-                        overflow: 'hidden',
-                        opacity: isCurrent ? 1 : 0.65,
-                      }}
-                    >
-                      <img
-                        src={imgUrl}
-                        alt=""
-                        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                      />
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-
-            <span
-              style={{
-                fontSize: '11.5px',
-                fontWeight: 500,
-                color: 'rgba(255, 255, 255, 0.82)',
-                background: 'rgba(255, 255, 255, 0.1)',
-                border: '1px solid rgba(255, 255, 255, 0.16)',
-                padding: '5px 12px',
-                borderRadius: '9px',
-              }}
-            >
-              {zoomScale > 1
-                ? 'اسحب الصورة للتحريك • اضغط لتصغير أو تكبير إضافي'
-                : 'اضغط على الصورة أو زر (+) للتكبير والتقريب'}
-            </span>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
-

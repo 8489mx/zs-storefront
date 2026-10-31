@@ -1,5 +1,5 @@
-import React, { useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useRef, useEffect } from 'react';
 import { StorefrontCategory } from '../types/storefront.types';
 import { generatePremiumProductSvg } from '../lib/storefront-photo-matcher';
 import { IconFolder, IconGrid, IconArrowUpRight } from './StorefrontIcons';
@@ -31,164 +31,19 @@ function formatSmartCategoryName(categoryName?: string): string {
 }
 
 function formatConciseMobileCategoryName(categoryName?: string): string {
-  return formatSmartCategoryName(categoryName);
+  const base = formatSmartCategoryName(categoryName);
+  return base
+    .replace('العطور ومستحضرات التجميل', 'العطور والتجميل')
+    .replace('الهواتف والصوتيات الذكية', 'الهواتف والصوتيات')
+    .replace('الساعات الفاخرة والذكية', 'الساعات الفاخرة')
+    .replace('الحقائب والنظارات الفاخرة', 'الحقائب والنظارات')
+    .replace('الحقائب والنظارات الشمسية', 'الحقائب والنظارات')
+    .replace('الأحذية الرياضية والكاجوال', 'الأحذية الرياضية')
+    .replace('الأزياء والملابس الرجالية', 'الأزياء الرجالية')
+    .replace('الأزياء والملابس النسائية', 'الأزياء النسائية');
 }
 
-const CAT_SHOWCASE_STATIC_CSS = `
-  .sf-mobile-cat-header {
-    display: none;
-  }
-  .sf-mobile-cat-pills-row {
-    display: none;
-  }
-  .storefront-cat-scroll-viewport {
-    scrollbar-width: none !important;
-    -ms-overflow-style: none !important;
-  }
-  .storefront-cat-scroll-viewport::-webkit-scrollbar {
-    display: none !important;
-    width: 0 !important;
-    height: 0 !important;
-  }
-  .storefront-cat-nav-btn {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    border: 1px solid #e2e8f0;
-    background: #ffffff;
-    color: #1e293b;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    flex-shrink: 0;
-    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05);
-    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
-    padding: 0;
-  }
-  .storefront-cat-nav-btn:hover {
-    background: var(--storefront-primary-color, #2d68c4);
-    border-color: var(--storefront-primary-color, #2d68c4);
-    color: #ffffff;
-    box-shadow: 0 4px 12px rgba(45, 104, 196, 0.2);
-  }
-  .storefront-cat-nav-btn:active {
-    transform: scale(0.96);
-  }
-  @media (max-width: 920px) {
-    .storefront-cat-showcase {
-      margin: 14px auto 10px !important;
-    }
-  }
-  @media (max-width: 768px) {
-    .storefront-cat-showcase {
-      width: 100% !important;
-      margin: 6px auto 6px !important;
-      border-radius: 0 !important;
-      background: transparent !important;
-      border: none !important;
-      box-shadow: none !important;
-      padding: 4px 14px 2px !important;
-      display: flex !important;
-      flex-direction: column !important;
-      align-items: stretch !important;
-      gap: 10px !important;
-      box-sizing: border-box !important;
-    }
-    .storefront-cat-nav-btn,
-    .storefront-cat-scroll-viewport {
-      display: none !important;
-    }
-    .sf-mobile-cat-header {
-      display: flex !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      width: 100% !important;
-      padding: 0 2px !important;
-      box-sizing: border-box !important;
-    }
-    .sf-mobile-cat-pills-row {
-      display: flex !important;
-      align-items: flex-start !important;
-      gap: 10px !important;
-      overflow-x: auto !important;
-      scrollbar-width: none !important;
-      -ms-overflow-style: none !important;
-      -webkit-overflow-scrolling: touch !important;
-      scroll-snap-type: x proximity !important;
-      touch-action: pan-x pan-y !important;
-      padding: 2px 2px 6px !important;
-      margin: 0 -2px !important;
-    }
-    .sf-mobile-cat-pills-row::-webkit-scrollbar {
-      display: none !important;
-      width: 0 !important;
-      height: 0 !important;
-    }
-    .sf-mobile-cat-circle-item {
-      display: flex !important;
-      flex-direction: column !important;
-      align-items: center !important;
-      justify-content: flex-start !important;
-      gap: 6px !important;
-      width: 74px !important;
-      min-width: 74px !important;
-      max-width: 78px !important;
-      flex-shrink: 0 !important;
-      background: transparent !important;
-      border: none !important;
-      padding: 0 !important;
-      cursor: pointer !important;
-      scroll-snap-align: start !important;
-      font-family: inherit !important;
-      transition: transform 0.16s ease !important;
-    }
-    .sf-mobile-cat-circle-item:active {
-      transform: scale(0.95) !important;
-    }
-    .sf-mobile-cat-circle-avatar {
-      width: 62px !important;
-      height: 62px !important;
-      border-radius: 14px !important;
-      background: #ffffff !important;
-      border: 1.5px solid #e8edf4 !important;
-      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04) !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      padding: 3px !important;
-      box-sizing: border-box !important;
-      overflow: hidden !important;
-      transition: border-color 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease !important;
-    }
-    .sf-mobile-cat-circle-item.is-active .sf-mobile-cat-circle-avatar {
-      border: 2px solid var(--storefront-primary-color, #2d68c4) !important;
-      background: var(--storefront-primary-subtle, #eff6ff) !important;
-      box-shadow: 0 6px 14px rgba(45, 104, 196, 0.18) !important;
-    }
-    .sf-mobile-cat-circle-label {
-      font-size: 10.5px !important;
-      font-weight: 500 !important;
-      color: #0f172a !important;
-      line-height: 1.48 !important;
-      text-align: center !important;
-      width: 100% !important;
-      display: -webkit-box !important;
-      -webkit-line-clamp: 2 !important;
-      -webkit-box-orient: vertical !important;
-      overflow: hidden !important;
-      text-overflow: ellipsis !important;
-      white-space: normal !important;
-      word-break: break-word !important;
-    }
-    .sf-mobile-cat-circle-item.is-active .sf-mobile-cat-circle-label {
-      color: var(--storefront-primary-color, #2d68c4) !important;
-      font-weight: 600 !important;
-    }
-  }
-`;
-
-export const StorefrontCategoryShowcase = React.memo(function StorefrontCategoryShowcase({
+export function StorefrontCategoryShowcase({
   categories,
   selectedCategoryId,
   onSelectCategory,
@@ -250,7 +105,159 @@ export const StorefrontCategoryShowcase = React.memo(function StorefrontCategory
         position: 'relative',
       }}
     >
-      <style>{CAT_SHOWCASE_STATIC_CSS}</style>
+      <style>{`
+        .sf-mobile-cat-header {
+          display: none;
+        }
+        .sf-mobile-cat-pills-row {
+          display: none;
+        }
+        .storefront-cat-scroll-viewport {
+          scrollbar-width: none !important;
+          -ms-overflow-style: none !important;
+        }
+        .storefront-cat-scroll-viewport::-webkit-scrollbar {
+          display: none !important;
+          width: 0 !important;
+          height: 0 !important;
+        }
+        .storefront-cat-nav-btn {
+          width: 36px;
+          height: 36px;
+          border-radius: 10px;
+          border: 1px solid #e2e8f0;
+          background: #ffffff;
+          color: #1e293b;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          flex-shrink: 0;
+          box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05);
+          transition: all 0.2s ease;
+          padding: 0;
+        }
+        .storefront-cat-nav-btn:hover {
+          background: var(--storefront-primary-color, #2d68c4);
+          border-color: var(--storefront-primary-color, #2d68c4);
+          color: #ffffff;
+          box-shadow: 0 4px 12px rgba(45, 104, 196, 0.2);
+        }
+        .storefront-cat-nav-btn:active {
+          transform: scale(0.96);
+        }
+        @media (max-width: 920px) {
+          .storefront-cat-showcase {
+            margin: 14px auto 10px !important;
+          }
+        }
+        @media (max-width: 768px) {
+          .storefront-cat-showcase {
+            width: 100% !important;
+            margin: 6px auto 6px !important;
+            border-radius: 0 !important;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 4px 14px 2px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 10px !important;
+            box-sizing: border-box !important;
+          }
+          .storefront-cat-nav-btn,
+          .storefront-cat-scroll-viewport {
+            display: none !important;
+          }
+          .sf-mobile-cat-header {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            width: 100% !important;
+            padding: 0 2px !important;
+            box-sizing: border-box !important;
+          }
+          .sf-mobile-cat-pills-row {
+            display: flex !important;
+            align-items: flex-start !important;
+            gap: 10px !important;
+            overflow-x: auto !important;
+            scrollbar-width: none !important;
+            -ms-overflow-style: none !important;
+            -webkit-overflow-scrolling: touch !important;
+            scroll-snap-type: x proximity !important;
+            touch-action: pan-x pan-y !important;
+            padding: 2px 2px 6px !important;
+            margin: 0 -2px !important;
+          }
+          .sf-mobile-cat-pills-row::-webkit-scrollbar {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+          }
+          .sf-mobile-cat-circle-item {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: flex-start !important;
+            gap: 6px !important;
+            width: 74px !important;
+            min-width: 74px !important;
+            max-width: 78px !important;
+            flex-shrink: 0 !important;
+            background: transparent !important;
+            border: none !important;
+            padding: 0 !important;
+            cursor: pointer !important;
+            scroll-snap-align: start !important;
+            font-family: inherit !important;
+            transition: transform 0.16s ease !important;
+          }
+          .sf-mobile-cat-circle-item:active {
+            transform: scale(0.95) !important;
+          }
+          .sf-mobile-cat-circle-avatar {
+            width: 62px !important;
+            height: 62px !important;
+            border-radius: 14px !important;
+            background: #ffffff !important;
+            border: 1.5px solid #e8edf4 !important;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 9px !important;
+            box-sizing: border-box !important;
+            overflow: hidden !important;
+            transition: all 0.18s cubic-bezier(0.22, 1, 0.36, 1) !important;
+          }
+          .sf-mobile-cat-circle-item.is-active .sf-mobile-cat-circle-avatar {
+            border: 2px solid var(--storefront-primary-color, #2d68c4) !important;
+            background: var(--storefront-primary-subtle, #eff6ff) !important;
+            box-shadow: 0 6px 14px rgba(45, 104, 196, 0.18) !important;
+          }
+          .sf-mobile-cat-circle-label {
+            font-size: 10.5px !important;
+            font-weight: 500 !important;
+            color: #0f172a !important;
+            line-height: 1.48 !important;
+            text-align: center !important;
+            width: 100% !important;
+            display: -webkit-box !important;
+            -webkit-line-clamp: 2 !important;
+            -webkit-box-orient: vertical !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            white-space: normal !important;
+            word-break: break-word !important;
+          }
+          .sf-mobile-cat-circle-item.is-active .sf-mobile-cat-circle-label {
+            color: var(--storefront-primary-color, #2d68c4) !important;
+            font-weight: 600 !important;
+          }
+        }
+      `}</style>
 
       {/* Mobile-Only Header Row ("الأقسام" + "عرض الكل") */}
       <div className="sf-mobile-cat-header">
@@ -337,8 +344,6 @@ export const StorefrontCategoryShowcase = React.memo(function StorefrontCategory
                     height: '100%',
                     objectFit: 'contain',
                     borderRadius: '10px',
-                    transform: photoUrl.startsWith('data:image/svg+xml') ? undefined : 'scale(1.12)',
-                    mixBlendMode: photoUrl.startsWith('data:image/svg+xml') ? undefined : 'multiply',
                   }}
                 />
               </span>
@@ -424,7 +429,7 @@ export const StorefrontCategoryShowcase = React.memo(function StorefrontCategory
                 marginBottom: '6px',
                 boxSizing: 'border-box',
                 boxShadow: '0 2px 6px rgba(15, 23, 42, 0.04)',
-                transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+                transition: 'all 0.2s ease',
               }}
             >
               <IconGrid size={22} />
@@ -485,7 +490,7 @@ export const StorefrontCategoryShowcase = React.memo(function StorefrontCategory
                       : '0 2px 6px rgba(15, 23, 42, 0.04)',
                     position: 'relative',
                     background: '#f8fafc',
-                    padding: '3px',
+                    padding: '5px',
                     boxSizing: 'border-box',
                     transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
                   }}
@@ -505,14 +510,10 @@ export const StorefrontCategoryShowcase = React.memo(function StorefrontCategory
                       objectFit: 'contain',
                       borderRadius: '10px',
                       pointerEvents: 'none',
-                      transform: photoUrl.startsWith('data:image/svg+xml') ? undefined : 'scale(1.1)',
-                      mixBlendMode: photoUrl.startsWith('data:image/svg+xml') ? undefined : 'multiply',
                       transition: 'transform 0.3s ease',
                     }}
-                    onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.16)')}
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.transform = photoUrl.startsWith('data:image/svg+xml') ? 'scale(1)' : 'scale(1.1)')
-                    }
+                    onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.08)')}
+                    onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
                   />
                 </div>
                 <span
@@ -564,51 +565,51 @@ export const StorefrontCategoryShowcase = React.memo(function StorefrontCategory
                   alignItems: 'center',
                   justifyContent: 'center',
                   marginBottom: '6px',
-                boxSizing: 'border-box',
-                boxShadow: '0 2px 6px rgba(15, 23, 42, 0.04)',
-                transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
-              }}
-            >
-              <IconFolder size={20} color="#0f172a" strokeWidth={1.8} />
+                  boxSizing: 'border-box',
+                  boxShadow: '0 2px 6px rgba(15, 23, 42, 0.04)',
+                  transition: 'all 0.2s ease',
+                }}
+              >
+                <IconFolder size={20} color="#0f172a" strokeWidth={1.8} />
+              </div>
+              <span
+                className="storefront-cat-label"
+                style={{
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  lineHeight: 1.3,
+                  color: '#0f172a',
+                  textAlign: 'center',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {t('storefront.storefront_category_showcase.s2', 'باقي الأقسام')}
+              </span>
             </div>
-            <span
-              className="storefront-cat-label"
-              style={{
-                fontSize: '12px',
-                fontWeight: 600,
-                lineHeight: 1.3,
-                color: '#0f172a',
-                textAlign: 'center',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {t('storefront.storefront_category_showcase.s2', 'باقي الأقسام')}
-            </span>
-          </div>
-        )}
+          )}
+        </div>
       </div>
-    </div>
 
-    {/* زر التمرير لليسار (للديسكتوب فقط) */}
-    <button
-      type="button"
-      aria-label="التمرير لليسار"
-      className="storefront-cat-nav-btn"
-      onClick={() => scrollByDirection('left')}
-    >
-      <svg
-        width="17"
-        height="17"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+      {/* زر التمرير لليسار (للديسكتوب فقط) */}
+      <button
+        type="button"
+        aria-label="التمرير لليسار"
+        className="storefront-cat-nav-btn"
+        onClick={() => scrollByDirection('left')}
       >
-        <polyline points="15 18 9 12 15 6" />
-      </svg>
-    </button>
-  </div>
+        <svg
+          width="17"
+          height="17"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <polyline points="15 18 9 12 15 6" />
+        </svg>
+      </button>
+    </div>
   );
-});
+}

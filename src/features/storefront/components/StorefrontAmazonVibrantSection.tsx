@@ -1,10 +1,12 @@
 import React, { useRef } from 'react';
 import type { StorefrontProduct, StorefrontCategory } from '../types/storefront.types';
-import { resolveProductPhoto, generatePremiumProductSvg, isRealProductPhotoUrl } from '../lib/storefront-photo-matcher';
+import { resolveProductPhoto, generatePremiumProductSvg } from '../lib/storefront-photo-matcher';
 
 function getProductPhotoUrl(p?: StorefrontProduct | null): string {
-  if (!p) return generatePremiumProductSvg('عرض مميز', 'عروض المتجر');
-  if (isRealProductPhotoUrl(p.imageUrl)) return p.imageUrl!;
+  if (!p) return '';
+  if (p.imageUrl) return p.imageUrl;
+  const matched = resolveProductPhoto(p.name, p.categoryName);
+  if (matched?.url) return matched.url;
   return generatePremiumProductSvg(p.name, p.categoryName);
 }
 
@@ -36,37 +38,44 @@ export const StorefrontAmazonVibrantSection = React.memo(function StorefrontAmaz
 }: StorefrontAmazonVibrantSectionProps) {
   const quickRowRef = useRef<HTMLDivElement>(null);
 
-  // Prioritize tenant products that have real uploaded photos, followed by the rest of the tenant's catalog
-  const prioritizedProducts = React.useMemo(() => {
-    if (!products || products.length === 0) return [];
-    const withRealPhoto = products.filter((p) => isRealProductPhotoUrl(p.imageUrl));
-    const withoutRealPhoto = products.filter((p) => !isRealProductPhotoUrl(p.imageUrl));
-    return [...withRealPhoto, ...withoutRealPhoto];
-  }, [products]);
-
   const quickProducts = React.useMemo(() => {
-    if (prioritizedProducts.length === 0) return [];
+    if (!products || products.length === 0) return [];
     const list: StorefrontProduct[] = [];
-    for (let i = 0; i < Math.min(8, Math.max(6, prioritizedProducts.length)); i++) {
-      list.push(prioritizedProducts[i % prioritizedProducts.length]);
+    for (let i = 0; i < Math.min(8, Math.max(6, products.length)); i++) {
+      list.push(products[i % products.length]);
     }
     return list;
-  }, [prioritizedProducts]);
+  }, [products]);
 
-  const stageProdCenter = prioritizedProducts[0] || null;
-  const stageProdRight = prioritizedProducts[1] || prioritizedProducts[0] || null;
-  const stageProdLeft = prioritizedProducts[2] || prioritizedProducts[0] || null;
+  const stageProdCenter = React.useMemo(
+    () => products.find((p) => p.imageUrl?.includes('iphone-13-pro')) || products[0] || null,
+    [products]
+  );
+  const stageProdRight = React.useMemo(
+    () => products.find((p) => p.imageUrl?.includes('airpods-max')) || products[2] || products[0] || null,
+    [products]
+  );
+  const stageProdLeft = React.useMemo(
+    () => products.find((p) => p.imageUrl?.includes('bag-prada')) || products[5] || products[1] || products[0] || null,
+    [products]
+  );
 
-  const card1Prod = prioritizedProducts[0] || null;
+  const card1Prod = products[0] || null;
   const card2Prods = React.useMemo(() => {
-    if (prioritizedProducts.length === 0) return [];
-    const p1 = prioritizedProducts[1] || prioritizedProducts[0];
-    const p2 = prioritizedProducts[2] || prioritizedProducts[0];
-    const p3 = prioritizedProducts[3] || prioritizedProducts[0];
+    if (!products || products.length === 0) return [];
+    const p1 = products.find((p) => p.imageUrl?.includes('jordan-1')) || products[4] || products[1];
+    const p2 = products.find((p) => p.imageUrl?.includes('apple-watch-gold')) || products[1] || products[2];
+    const p3 = products.find((p) => p.imageUrl?.includes('echo-plus') || p.imageUrl?.includes('homepod')) || products[2] || products[3];
     return [p1, p2, p3].filter(Boolean) as StorefrontProduct[];
-  }, [prioritizedProducts]);
-  const card3Prod = prioritizedProducts[4] || prioritizedProducts[1] || prioritizedProducts[0] || null;
-  const card4Prod = prioritizedProducts[5] || prioritizedProducts[2] || prioritizedProducts[0] || null;
+  }, [products]);
+  const card3Prod = React.useMemo(
+    () => products.find((p) => p.imageUrl?.includes('puma-rider')) || products[4] || products[0] || null,
+    [products]
+  );
+  const card4Prod = React.useMemo(
+    () => products.find((p) => p.imageUrl?.includes('perfume-jadore')) || products[3] || products[0] || null,
+    [products]
+  );
 
   const scrollQuickRow = (dir: 'left' | 'right') => {
     if (!quickRowRef.current) return;

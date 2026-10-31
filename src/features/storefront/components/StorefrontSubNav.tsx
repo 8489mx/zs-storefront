@@ -1,4 +1,3 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { StorefrontCategory } from '../types/storefront.types';
 import { IconGrid, IconTag, IconCheckCircle, IconClose } from './StorefrontIcons';
@@ -19,66 +18,7 @@ interface StorefrontSubNavProps {
   onClearFilters?: () => void;
 }
 
-const SUBNAV_STATIC_CSS = `
-  @media (max-width: 640px) {
-    .storefront-subnav {
-      padding: 3px 10px !important;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-      width: 100% !important;
-      max-width: 100vw !important;
-      box-sizing: border-box !important;
-    }
-    .storefront-subnav::-webkit-scrollbar {
-      display: none;
-    }
-    .storefront-subnav-inner {
-      flex-wrap: nowrap !important;
-      gap: 5px !important;
-      width: max-content !important;
-      min-width: 100% !important;
-      padding-inline-end: 8px !important;
-      padding-top: 2px !important;
-      padding-bottom: 2px !important;
-    }
-    .storefront-subnav-pills {
-      flex-wrap: nowrap !important;
-      gap: 5px !important;
-      flex-shrink: 0 !important;
-      padding-inline-end: 8px !important;
-    }
-    .storefront-subnav-active-cat {
-      flex-shrink: 0 !important;
-    }
-    .storefront-subnav-pill {
-      padding: 0 10px !important;
-      font-size: 11px !important;
-      font-weight: 600 !important;
-      white-space: nowrap;
-      height: 28px !important;
-      min-height: 28px !important;
-      border-radius: 9px !important;
-      gap: 4px !important;
-    }
-    .storefront-subnav-pill svg {
-      width: 12px !important;
-      height: 12px !important;
-    }
-    .storefront-subnav-pill span[style*="padding"] {
-      font-size: 9.5px !important;
-      padding: 1px 5px !important;
-      border-radius: 5px !important;
-      font-weight: 600 !important;
-    }
-    .storefront-subnav-hint {
-      display: none !important;
-    }
-  }
-`;
-
-export const StorefrontSubNav = React.memo(function StorefrontSubNav({
+export function StorefrontSubNav({
   categories,
   onOpenCategoriesModal,
   onlyDeals,
@@ -109,7 +49,50 @@ export const StorefrontSubNav = React.memo(function StorefrontSubNav({
         boxSizing: 'border-box',
       }}
     >
-      <style>{SUBNAV_STATIC_CSS}</style>
+      <style>{`
+        @media (max-width: 640px) {
+          .storefront-subnav {
+            padding: 5px 8px !important;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            width: 100% !important;
+            max-width: 100vw !important;
+            box-sizing: border-box !important;
+          }
+          .storefront-subnav::-webkit-scrollbar {
+            display: none;
+          }
+          .storefront-subnav-inner {
+            flex-wrap: nowrap !important;
+            gap: 6px !important;
+            width: max-content !important;
+            min-width: 100% !important;
+            padding-inline-end: 10px !important;
+          }
+          .storefront-subnav-pills {
+            flex-wrap: nowrap !important;
+            gap: 5px !important;
+            flex-shrink: 0 !important;
+            padding-inline-end: 10px !important;
+          }
+          .storefront-subnav-active-cat {
+            flex-shrink: 0 !important;
+          }
+          .storefront-subnav-pill {
+            padding: 0 14px !important;
+            font-size: clamp(10.5px, 2.7vw, 12px) !important;
+            white-space: nowrap;
+            height: 35px !important;
+            min-height: 35px !important;
+            border-radius: 12px !important;
+          }
+          .storefront-subnav-hint {
+            display: none !important;
+          }
+        }
+      `}</style>
       <div
         className="storefront-subnav-inner storefront-subnav-shell"
         style={{
@@ -143,7 +126,7 @@ export const StorefrontSubNav = React.memo(function StorefrontSubNav({
               fontWeight: 600,
               cursor: 'pointer',
               boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
-              transition: 'transform 0.15s ease, filter 0.15s ease',
+              transition: 'all 0.15s ease',
               boxSizing: 'border-box',
             }}
             onMouseEnter={(e) => (e.currentTarget.style.filter = 'brightness(1.15)')}
@@ -184,7 +167,7 @@ export const StorefrontSubNav = React.memo(function StorefrontSubNav({
                 fontWeight: 600,
                 cursor: 'pointer',
                 boxShadow: onlyDeals ? '0 1px 3px rgba(225, 29, 72, 0.12)' : '0 1px 2px rgba(15, 23, 42, 0.05)',
-                transition: 'background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.12s ease',
+                transition: 'all 0.15s ease',
                 boxSizing: 'border-box',
               }}
             >
@@ -226,7 +209,7 @@ export const StorefrontSubNav = React.memo(function StorefrontSubNav({
               fontWeight: 600,
               cursor: 'pointer',
               boxShadow: '0 1px 2px rgba(15, 23, 42, 0.05)',
-              transition: 'background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.12s ease',
+              transition: 'all 0.15s ease',
               boxSizing: 'border-box',
             }}
           >
@@ -254,7 +237,7 @@ export const StorefrontSubNav = React.memo(function StorefrontSubNav({
                 fontWeight: 600,
                 cursor: 'pointer',
                 boxShadow: '0 1px 2px rgba(15, 23, 42, 0.05)',
-                transition: 'background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.12s ease',
+                transition: 'all 0.15s ease',
                 boxSizing: 'border-box',
               }}
             >
@@ -308,7 +291,7 @@ export const StorefrontSubNav = React.memo(function StorefrontSubNav({
               boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
               cursor: 'pointer',
               whiteSpace: 'nowrap',
-              transition: 'background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease',
+              transition: 'all 0.15s ease',
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.background = '#fee2e2';
@@ -328,5 +311,4 @@ export const StorefrontSubNav = React.memo(function StorefrontSubNav({
       </div>
     </div>
   );
-});
-
+}

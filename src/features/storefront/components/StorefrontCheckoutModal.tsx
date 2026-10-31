@@ -11,7 +11,6 @@ import { getCustomerOrderToken, saveCustomerOrderRef } from '../lib/customer-ord
 import { saveLocalOrderRecord } from './StorefrontMyOrdersModal';
 import { calculateCartSubtotal } from '../lib/storefront-cart-pricing';
 import { getContrastTextColor } from '../lib/storefront-theme-contrast';
-import { useBodyScrollLock } from '@/shared/components/dialog-shell';
 
 const STOREFRONT_SAVED_CUSTOMER_KEY = 'zsystems.storefront.saved_customer';
 
@@ -213,7 +212,6 @@ export function StorefrontCheckoutModal({
   onSubmitOrder,
 }: StorefrontCheckoutModalProps) {
   const { t } = useTranslation();
-  useBodyScrollLock(isOpen);
   const isDineIn = Boolean(tableNumber) || orderType === 'dine_in';
   const [fulfillmentType, setFulfillmentType] = useState<'delivery' | 'pickup'>('delivery');
   const [selectedCountry, setSelectedCountry] = useState<string>(() => {

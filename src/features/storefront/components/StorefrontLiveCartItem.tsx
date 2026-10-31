@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useState } from 'react';
 import { Trash2Icon } from '@/shared/components/icons/AppIcons';
 import { CartItem } from '../types/storefront.types';
 import { ProductIcon } from '@/shared/components/icons/product-svg-catalog';
@@ -12,7 +12,7 @@ interface StorefrontLiveCartItemProps {
   onUpdateQuantity: (productId: number, qty: number) => void;
 }
 
-export const StorefrontLiveCartItem = React.memo(function StorefrontLiveCartItem({ item, onUpdateQuantity }: StorefrontLiveCartItemProps) {
+export function StorefrontLiveCartItem({ item, onUpdateQuantity }: StorefrontLiveCartItemProps) {
   const { t } = useTranslation();
   const currCode = getGlobalSystemCurrency();
   const isThreeDec = isThreeDecimalCurrency(currCode);
@@ -36,8 +36,8 @@ export const StorefrontLiveCartItem = React.memo(function StorefrontLiveCartItem
       style={{
         display: 'flex',
         alignItems: 'center',
-        gap: '10px',
-        padding: '9px 2px',
+        gap: '12px',
+        padding: '14px 2px',
         borderBottom: '1px solid #f1f5f9',
         background: '#ffffff',
         position: 'relative',
@@ -47,17 +47,16 @@ export const StorefrontLiveCartItem = React.memo(function StorefrontLiveCartItem
       {/* Soft-Rounded Product Thumbnail (Right in RTL) */}
       <div
         style={{
-          width: '52px',
-          height: '52px',
-          borderRadius: '11px',
+          width: '62px',
+          height: '62px',
+          borderRadius: '14px',
           background: '#f8fafc',
-          border: '1px solid #f1f5f9',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           overflow: 'hidden',
           flexShrink: 0,
-          padding: '3px',
+          padding: '5px',
           boxSizing: 'border-box',
         }}
       >
@@ -65,32 +64,26 @@ export const StorefrontLiveCartItem = React.memo(function StorefrontLiveCartItem
           <img
             src={photo}
             alt={item.product.name}
-            loading="lazy"
-            decoding="async"
-            style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '8px' }}
+            style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '10px' }}
             onError={() => setImageError(true)}
           />
         ) : (
-          <ProductIcon name={item.product.icon || 'box-package'} size={22} color="#0f172a" />
+          <ProductIcon name={item.product.icon || 'box-package'} size={24} color="#0f172a" />
         )}
       </div>
 
-      {/* Product Info Column: 2-line Title on top, Price + Stepper on bottom row */}
+      {/* Product Info Column: Full width for Title on top, Price + Stepper on bottom row */}
       <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '2px' }}>
-        {/* 2-Line Product Name */}
+        {/* Full-Width Single-Line Product Name (Not Bold) */}
         <div
           style={{
-            fontSize: '12.5px',
-            fontWeight: 600,
+            fontSize: '13.5px',
+            fontWeight: 500,
             color: '#0f172a',
-            display: '-webkit-box',
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: 'vertical',
+            whiteSpace: 'nowrap',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
-            whiteSpace: 'normal',
-            wordBreak: 'break-word',
-            lineHeight: 1.28,
+            lineHeight: 1.35,
             letterSpacing: '0px',
           }}
           title={item.product.name}
@@ -98,35 +91,40 @@ export const StorefrontLiveCartItem = React.memo(function StorefrontLiveCartItem
           {item.product.name}
         </div>
 
-        {/* Bottom Row: Price on Right + Compact Stepper on Left */}
+        {/* Subtle Category Label */}
+        <div style={{ fontSize: '11.5px', color: '#94a3b8', fontWeight: 400, letterSpacing: '0px' }}>
+          {item.product.categoryName || t('storefront.storefront_live_cart_item.default_cat', 'منتج أصلي')}
+        </div>
+
+        {/* Bottom Row: Price on Right + Circular Stepper on Left */}
         <div
           style={{
-            marginTop: '2px',
+            marginTop: '4px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            gap: '6px',
+            gap: '8px',
           }}
         >
           {/* Price & Savings */}
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '5px', flexWrap: 'nowrap', whiteSpace: 'nowrap', letterSpacing: '0px' }}>
-            <span style={{ fontSize: '13px', color: '#0f172a', fontWeight: 700, letterSpacing: '0px' }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', flexWrap: 'wrap', letterSpacing: '0px' }}>
+            <span style={{ fontSize: '14px', color: '#0f172a', fontWeight: 600, letterSpacing: '0px' }}>
               {formatPriceNumber(lineTotal)} {activeSymbol}
             </span>
             {linePricing.savings > 0 && (
-              <span style={{ textDecoration: 'line-through', color: '#94a3b8', fontSize: '10.5px', fontWeight: 400, letterSpacing: '0px' }}>
+              <span style={{ textDecoration: 'line-through', color: '#cbd5e1', fontSize: '11.5px', fontWeight: 400, letterSpacing: '0px' }}>
                 {formatPriceNumber(linePricing.originalLineTotal)} {activeSymbol}
               </span>
             )}
             {linePricing.isBogoApplied && (
               <span
                 style={{
-                  fontSize: '9.5px',
+                  fontSize: '10px',
                   background: '#dcfce7',
                   color: '#166534',
-                  padding: '1px 5px',
-                  borderRadius: '5px',
-                  fontWeight: 600,
+                  padding: '1px 6px',
+                  borderRadius: '6px',
+                  fontWeight: 500,
                   letterSpacing: '0px',
                 }}
               >
@@ -135,13 +133,13 @@ export const StorefrontLiveCartItem = React.memo(function StorefrontLiveCartItem
             )}
           </div>
 
-          {/* Modern Compact Stepper Controls (Left in RTL) */}
-          {/* CRITICAL: Follow RULE[AGENTS_md] Section 2 for RTL: [+] on Right, Quantity in Center, [-] on Left */}
+          {/* Modern Circular Stepper Controls (Left in RTL) */}
+          {/* CRITICAL: Follow RULE[AGENTS_md] Section 5 for RTL: [+] on Right, Quantity in Center, [-] on Left */}
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '5px',
+              gap: '7px',
               flexShrink: 0,
             }}
           >
@@ -154,9 +152,9 @@ export const StorefrontLiveCartItem = React.memo(function StorefrontLiveCartItem
               }}
               title={t('storefront.storefront_live_cart_item.s1', 'زيادة الكمية')}
               style={{
-                width: '24px',
-                height: '24px',
-                borderRadius: '7px',
+                width: '28px',
+                height: '28px',
+                borderRadius: '8px',
                 border: 'none',
                 background: '#0f172a',
                 color: '#ffffff',
@@ -164,7 +162,7 @@ export const StorefrontLiveCartItem = React.memo(function StorefrontLiveCartItem
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '13px',
+                fontSize: '14px',
                 fontWeight: 600,
                 padding: 0,
                 boxShadow: '0 1px 2px rgba(0, 0, 0, 0.06)',
@@ -179,10 +177,10 @@ export const StorefrontLiveCartItem = React.memo(function StorefrontLiveCartItem
             {/* Quantity in CENTER */}
             <span
               style={{
-                minWidth: '15px',
+                minWidth: '18px',
                 textAlign: 'center',
-                fontSize: '12px',
-                fontWeight: 700,
+                fontSize: '13px',
+                fontWeight: 600,
                 color: '#0f172a',
                 fontVariantNumeric: 'tabular-nums',
               }}
@@ -203,9 +201,9 @@ export const StorefrontLiveCartItem = React.memo(function StorefrontLiveCartItem
                   : t('storefront.storefront_live_cart_item.s3', 'تقليل الكمية')
               }
               style={{
-                width: '24px',
-                height: '24px',
-                borderRadius: '7px',
+                width: '28px',
+                height: '28px',
+                borderRadius: '8px',
                 border: item.quantity === 1 ? '1px solid #fecaca' : '1px solid #cbd5e1',
                 background: item.quantity === 1 ? '#fef2f2' : '#ffffff',
                 color: item.quantity === 1 ? '#ef4444' : '#0f172a',
@@ -213,11 +211,11 @@ export const StorefrontLiveCartItem = React.memo(function StorefrontLiveCartItem
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '13px',
+                fontSize: '14px',
                 fontWeight: 600,
                 padding: 0,
                 boxShadow: '0 1px 2px rgba(0, 0, 0, 0.04)',
-                transition: 'border-color 0.15s ease, background-color 0.15s ease, transform 0.12s ease',
+                transition: 'all 0.15s ease',
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.borderColor = item.quantity === 1 ? '#f87171' : '#0f172a';
@@ -226,14 +224,13 @@ export const StorefrontLiveCartItem = React.memo(function StorefrontLiveCartItem
                 e.currentTarget.style.borderColor = item.quantity === 1 ? '#fecaca' : '#cbd5e1';
               }}
             >
-              {item.quantity === 1 ? <Trash2Icon size={11.5} /> : '−'}
+              {item.quantity === 1 ? <Trash2Icon size={12.5} /> : '−'}
             </button>
           </div>
         </div>
       </div>
     </div>
   );
-});
-
+}
 
 

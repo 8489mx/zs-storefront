@@ -6,7 +6,6 @@ import { storefrontApi } from '../api/storefront.api';
 import { IconStar, IconClose } from './StorefrontIcons';
 import { getAutoProductPhoto, generatePremiumProductSvg } from '../lib/storefront-photo-matcher';
 import { CheckCircleIcon, AlertCircleIcon } from '@/shared/components/icons/AppIcons';
-import { useBodyScrollLock } from '@/shared/components/dialog-shell';
 
 interface StorefrontReviewModalProps {
   isOpen: boolean;
@@ -68,8 +67,6 @@ export function StorefrontReviewModal({
         });
     }
   }, [isOpen, product, slug]);
-
-  useBodyScrollLock(Boolean(isOpen && product));
 
   if (!isOpen || !product) return null;
 

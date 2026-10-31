@@ -189,7 +189,6 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
   onOpenCategoriesModal,
 }: StorefrontHeroEditorialProps) {
   const [justAddedId, setJustAddedId] = useState<number | null>(null);
-  const [activeMobileSlide, setActiveMobileSlide] = useState<number>(0);
 
   // Build a 7-card deck for the symmetrical 3D Coverflow (3 Left + 1 Center + 3 Right)
   const deckProducts = useMemo(() => {
@@ -238,7 +237,7 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
     const slideThemes = [
       {
         kicker: 'وصل حديثاً',
-        headline: 'تشكيلة مختارة بأعلى جودة',
+        headline: info?.heroHeadline?.trim() || 'تشكيلة مختارة بأعلى جودة',
         cta: 'تسوق الآن',
         bg: 'linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)',
         border: '#e2e8f0',
@@ -441,23 +440,7 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
       `}</style>
 
       {/* Mobile-Only Full-Width Swipeable Hero Promo Cards */}
-      <div
-        className="sf-mobile-editorial-carousel"
-        dir="rtl"
-        onScroll={(e) => {
-          const el = e.currentTarget;
-          const width = el.clientWidth;
-          if (width > 0) {
-            const idx = Math.min(
-              mobileHeroSlides.length - 1,
-              Math.max(0, Math.round(Math.abs(el.scrollLeft) / width))
-            );
-            if (idx !== activeMobileSlide) {
-              setActiveMobileSlide(idx);
-            }
-          }
-        }}
-      >
+      <div className="sf-mobile-editorial-carousel" dir="rtl">
         {mobileHeroSlides.map((slide, idx) => (
           <div
             key={idx}
@@ -557,16 +540,15 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
             {slide.photoUrl && (
               <div
                 style={{
-                  width: '116px',
-                  height: '124px',
+                  width: '108px',
+                  height: '120px',
                   flexShrink: 0,
                   borderRadius: '12px',
                   background: slide.textDark ? '#ffffff' : 'rgba(255, 255, 255, 0.96)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  padding: '3px',
-                  overflow: 'hidden',
+                  padding: '8px',
                   boxSizing: 'border-box',
                   boxShadow: '0 4px 12px rgba(15, 23, 42, 0.06)',
                 }}
@@ -586,8 +568,6 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
                     width: '100%',
                     height: '100%',
                     objectFit: 'contain',
-                    transform: slide.photoUrl.startsWith('data:image/svg+xml') ? undefined : 'scale(1.16)',
-                    mixBlendMode: slide.photoUrl.startsWith('data:image/svg+xml') ? undefined : 'multiply',
                   }}
                 />
               </div>
@@ -602,10 +582,10 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
           <span
             key={idx}
             style={{
-              width: idx === activeMobileSlide ? '18px' : '6px',
+              width: idx === 0 ? '18px' : '6px',
               height: '5px',
               borderRadius: '3px',
-              background: idx === activeMobileSlide ? 'var(--storefront-primary-color, #2d68c4)' : '#cbd5e1',
+              background: idx === 0 ? 'var(--storefront-primary-color, #2d68c4)' : '#cbd5e1',
               transition: 'width 0.2s ease, background-color 0.2s ease',
             }}
           />
@@ -653,8 +633,22 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
           }
         `}</style>
         <h1 className="sf-hero-glass-headline" style={{ color: '#132032' }}>
-          أفضل المنتجات بأحسن سعر
+          {info?.heroHeadline?.trim() || 'أفضل المنتجات بأحسن سعر'}
         </h1>
+        {info?.heroSubtitle?.trim() && (
+          <p
+            style={{
+              margin: '6px auto 0',
+              fontSize: '13px',
+              fontWeight: 500,
+              color: '#64748b',
+              lineHeight: 1.5,
+              maxWidth: '650px',
+            }}
+          >
+            {info.heroSubtitle.trim()}
+          </p>
+        )}
       </div>
 
       {/* Centerpiece: Crisp 2D Vector Perspective Coverflow Stage (Zero bitmap blur on cards, text, or images) */}
@@ -684,7 +678,11 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
           const autoPhoto = resolveProductPhoto(product.name, product.categoryName);
           const photoUrl = product.imageUrl || autoPhoto.url;
           const isOutOfStock = !product.inStock || product.stockQty <= 0;
-          const badgeText = isOutOfStock ? 'نفدت الكمية' : CARD_BADGES[originalIdx % CARD_BADGES.length];
+          const realBadge = product.offerBadge || (product.hasDiscount && product.discountPercent ? `خصم ${product.discountPercent}%` : '');
+          const fallbackBadge = info?.smartDealsEnabled
+            ? CARD_BADGES[originalIdx % CARD_BADGES.length]
+            : (isHighlighted ? 'مختاراتنا' : '');
+          const badgeText = isOutOfStock ? 'نفدت الكمية' : (realBadge || fallbackBadge);
 
           const svgPad = 18;
           const svgW = metrics.width + svgPad * 2;
@@ -1048,39 +1046,39 @@ export const StorefrontHeroEditorial = React.memo(function StorefrontHeroEditori
               display: 'inline-flex',
               alignItems: 'center',
               gap: '8px',
-               boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
-               transition: 'transform 0.16s ease, background-color 0.16s ease, box-shadow 0.16s ease',
-             }}
-           >
-             <span>تصفح عروض اليوم</span>
-             <span style={{ fontSize: '13px', lineHeight: 1 }}>←</span>
-           </button>
- 
-           <button
-             type="button"
-             className="sf-hero-btn-secondary"
-             onClick={onOpenCategoriesModal}
-             style={{
-               height: '36px',
-               padding: '0 16px',
-               borderRadius: '12px',
-               background: '#ffffff',
-               color: '#1f1f1f',
-               border: '1px solid #dadce0',
-               fontSize: '12.5px',
-               fontWeight: 600,
-               cursor: 'pointer',
-               display: 'inline-flex',
-               alignItems: 'center',
-               gap: '6px',
-               boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
-               transition: 'transform 0.16s ease, background-color 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease',
-             }}
-           >
-             <span>تصفح كل الأقسام</span>
-             <IconArrowUpRight size={14} />
-           </button>
-         </div>
+              boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
+              transition: 'all 0.16s ease',
+            }}
+          >
+            <span>تصفح عروض اليوم</span>
+            <span style={{ fontSize: '13px', lineHeight: 1 }}>←</span>
+          </button>
+
+          <button
+            type="button"
+            className="sf-hero-btn-secondary"
+            onClick={onOpenCategoriesModal}
+            style={{
+              height: '36px',
+              padding: '0 16px',
+              borderRadius: '12px',
+              background: '#ffffff',
+              color: '#1f1f1f',
+              border: '1px solid #dadce0',
+              fontSize: '12.5px',
+              fontWeight: 600,
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
+              transition: 'all 0.16s ease',
+            }}
+          >
+            <span>تصفح كل الأقسام</span>
+            <IconArrowUpRight size={14} />
+          </button>
+        </div>
 
       {/* Bottom Hero Continuous Moving Trust & Value Marquee Strip */}
       <div className="sf-hero-ticker-viewport" dir="ltr" aria-label="مميزات المتجر">

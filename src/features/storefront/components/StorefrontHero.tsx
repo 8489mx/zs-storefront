@@ -17,9 +17,11 @@ export function StorefrontHero({
   inStockCount,
   searchTerm,
   onSearchChange,
+  onQuickSearch,
 }: StorefrontHeroProps) {
   const { t } = useTranslation();
   const brand = resolveStorefrontBrand(info);
+  const quickTags = ['شاي', 'بن', 'أرز', 'زيت', 'أعشاب', 'عسل'];
 
   return (
     <div
@@ -172,7 +174,7 @@ export function StorefrontHero({
                 type="text"
                 value={searchTerm}
                 onChange={(e) => onSearchChange(e.target.value)}
-                placeholder={brand.title ? `البحث في ${brand.title}` : t('storefront.storefront_hero.s3', "البحث في المتجر")}
+                placeholder={t('storefront.storefront_hero.s3', "البحث في Z")}
                 style={{
                   flex: 1,
                   border: 'none',
@@ -205,6 +207,44 @@ export function StorefrontHero({
                 <IconSearch size={16} strokeWidth={2.2} />
                 <span>{t('storefront.storefront_hero.s4', "بحث")}</span>
               </button>
+            </div>
+
+            {/* Quick Keyword Chips */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                marginTop: '12px',
+                flexWrap: 'wrap',
+              }}
+            >
+              <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.7)', fontWeight: 600 }}>
+                {t('storefront.storefront_hero.s5', "الأكثر بحثاً:")}
+              </span>
+              {quickTags.map((tag) => (
+                <button
+                  key={tag}
+                  type="button"
+                  onClick={() => onQuickSearch(tag)}
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    border: '1px solid rgba(255, 255, 255, 0.18)',
+                    color: '#ffffff',
+                    borderRadius: '6px',
+                    padding: '3px 10px',
+                    fontSize: '11.5px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    transition: 'background 0.15s ease',
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)')}
+                >
+                  {tag}
+                </button>
+              ))}
             </div>
           </div>
 

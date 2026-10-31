@@ -1,3 +1,59 @@
+/* ========================================================
+   STOREFRONT NATURAL WINDOW SCROLLING (OVERRIDES ERP OVERFLOW: HIDDEN)
+   html is the single primary scroll container for desktop & mobile
+   body and #root are overflow: visible so mouse wheel and touch scroll freely
+   ======================================================== */
+html.storefront-active-page,
+html:has(.storefront-public-root) {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  height: auto !important;
+  min-height: 100% !important;
+  scroll-behavior: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  overscroll-behavior-y: auto !important;
+}
+
+body.storefront-active-page,
+body:has(.storefront-public-root) {
+  overflow: visible !important;
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+  height: auto !important;
+  min-height: 100vh !important;
+  touch-action: pan-y !important;
+  overscroll-behavior-y: auto !important;
+}
+
+body.storefront-active-page #root,
+#root:has(.storefront-public-root) {
+  height: auto !important;
+  min-height: 100vh !important;
+  overflow: visible !important;
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+}
+
+
+/* Guarantee unconstrained sticky header positioning */
+.storefront-public-root,
+.storefront-page {
+  overflow: visible !important;
+  overflow-x: visible !important;
+}
+
+.storefront-sticky-header {
+  position: -webkit-sticky !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 110 !important;
+  transform: none !important;
+}
+
+.storefront-sticky-header .storefront-navbar {
+  pointer-events: auto !important;
+}
+
 /* Storefront Responsive Layout Styles */
 
 /*
@@ -961,7 +1017,7 @@ body, button, input, select, textarea, [class*="storefront-"] {
 html, body {
   scroll-behavior: auto !important;
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: none;
+  overscroll-behavior-y: auto !important;
 }
 
 .storefront-section-card {
@@ -1161,7 +1217,7 @@ html, body {
   display: none;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .storefront-mobile-bottom-nav {
     position: fixed;
     bottom: 0;
@@ -1266,13 +1322,13 @@ html, body {
   }
 
   .storefront-mobile-nav-item.active {
-    color: var(--storefront-primary-color, #1e1b4b);
+    color: var(--storefront-primary-color, #2563eb);
     font-weight: 700;
   }
 
   .storefront-mobile-nav-item.active .storefront-mobile-nav-icon-wrap {
-    background: rgba(30, 27, 75, 0.08);
-    background: color-mix(in srgb, var(--storefront-primary-color, #1e1b4b) 10%, transparent);
+    background: rgba(37, 99, 235, 0.08);
+    background: color-mix(in srgb, var(--storefront-primary-color, #2563eb) 10%, transparent);
   }
 
   .storefront-mobile-nav-item:active {
@@ -1297,7 +1353,7 @@ html, body {
     width: 42px;
     height: 42px;
     border-radius: 50% !important;
-    background: var(--storefront-primary-color, #1e1b4b);
+    background: var(--storefront-primary-color, #2563eb);
     color: #ffffff;
     border: none;
     box-shadow: 0 8px 18px rgba(37, 99, 235, 0.28), 0 3px 8px rgba(15, 23, 42, 0.14);
@@ -1370,7 +1426,7 @@ html, body {
   }
 
   .storefront-main-content {
-    padding: 6px 14px 0 !important;
+    padding: 6px 14px calc(68px + env(safe-area-inset-bottom, 0px)) !important;
   }
 }
 

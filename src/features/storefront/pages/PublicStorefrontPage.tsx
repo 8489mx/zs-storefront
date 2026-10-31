@@ -143,12 +143,7 @@ export function PublicStorefrontPage() {
   const handleOpenCategories = useCallback(() => setIsCategoriesModalOpen(true), [setIsCategoriesModalOpen]);
   const handleCloseCategories = useCallback(() => setIsCategoriesModalOpen(false), [setIsCategoriesModalOpen]);
 
-  const handleToggleDealsHeader = useCallback(() => {
-    setOnlyDeals((prev) => !prev);
-    setOnlyFavorites(false);
-  }, [setOnlyDeals, setOnlyFavorites]);
-
-  const handleToggleInStock = useCallback(() => {
+    const handleToggleInStock = useCallback(() => {
     setInStockOnly((prev) => !prev);
   }, [setInStockOnly]);
 
@@ -339,6 +334,45 @@ export function PublicStorefrontPage() {
     }
   }, [info]);
 
+  // SF-SCROLL: Unlock document body & html scrolling for customer storefront (overrides ERP overflow:hidden)
+  useEffect(() => {
+    document.body.classList.add('storefront-active-page');
+    document.documentElement.classList.add('storefront-active-page');
+    const originalBodyOverflow = document.body.style.overflow;
+    const originalHtmlOverflow = document.documentElement.style.overflow;
+    const rootEl = document.getElementById('root');
+    const originalRootHeight = rootEl?.style.height;
+
+    // html is the single document scroller
+    document.documentElement.style.overflowY = 'auto';
+    document.documentElement.style.overflowX = 'hidden';
+    document.documentElement.style.height = 'auto';
+
+    // body and root must be visible to allow wheel and touch to scroll html
+    document.body.style.overflow = 'visible';
+    document.body.style.overflowY = 'visible';
+    document.body.style.overflowX = 'visible';
+    document.body.style.height = 'auto';
+
+    if (rootEl) {
+      rootEl.style.height = 'auto';
+      rootEl.style.minHeight = '100vh';
+      rootEl.style.overflow = 'visible';
+      rootEl.style.overflowY = 'visible';
+    }
+
+    return () => {
+      document.body.classList.remove('storefront-active-page');
+      document.documentElement.classList.remove('storefront-active-page');
+      document.body.style.overflow = originalBodyOverflow;
+      document.documentElement.style.overflow = originalHtmlOverflow;
+      if (rootEl) {
+        if (originalRootHeight) rootEl.style.height = originalRootHeight;
+        else rootEl.style.removeProperty('height');
+      }
+    };
+  }, []);
+
   useEffect(() => {
     if (!catalogQuery.data?.products) return;
     const hash = window.location.hash;
@@ -434,6 +468,7 @@ export function PublicStorefrontPage() {
   return (
     <div
       dir="rtl"
+      className="storefront-public-root storefront-page"
       style={{
         minHeight: '100vh',
         background: info?.brandSurfaceColor && info.brandSurfaceColor !== '#f8fafc' ? info.brandSurfaceColor : '#f4f6fa',
@@ -443,7 +478,7 @@ export function PublicStorefrontPage() {
         fontFamily: 'inherit',
         width: '100%',
         maxWidth: '100vw',
-        overflowX: 'clip',
+        overflow: 'visible',
         boxSizing: 'border-box',
       }}
     >
@@ -460,16 +495,6 @@ export function PublicStorefrontPage() {
         onSelectCategory={handleSelectCategory}
         onSelectProduct={openProduct}
         onAddToCart={handleAddToCart}
-        sortBy={sortBy}
-        onSortChange={setSortBy}
-        onlyDeals={onlyDeals}
-        onToggleDeals={handleToggleDealsHeader}
-        inStockOnly={inStockOnly}
-        onToggleInStock={handleToggleInStock}
-        onlyFavorites={onlyFavorites}
-        onToggleFavorites={handleToggleFavorites}
-        onOpenCategories={handleOpenCategories}
-        onResetFilters={handleCustomGoHome}
       />
 
       {/* Dine-In QR Table Banner */}
