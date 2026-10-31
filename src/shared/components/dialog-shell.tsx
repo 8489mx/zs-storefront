@@ -30,6 +30,187 @@ function getFocusableElements(root: HTMLElement) {
 let activeDialogCount = 0;
 let savedBodyOverflow = '';
 let savedHtmlOverflow = '';
+let savedBodyOverscroll = '';
+let savedHtmlOverscroll = '';
+let lastTouchY = 0;
+let lastTouchX = 0;
+
+function handleLockedTouchStart(event: TouchEvent) {
+  if (event.touches.length === 1) {
+    lastTouchY = event.touches[0].clientY;
+    lastTouchX = event.touches[0].clientX;
+  }
+}
+
+function canElementScrollVertically(el: HTMLElement, deltaY: number): boolean {
+  const style = window.getComputedStyle(el);
+  const overflowY = style.overflowY;
+  const isScrollableY =
+    (overflowY === 'auto' || overflowY === 'scroll' || overflowY === 'overlay') &&
+    el.scrollHeight > el.clientHeight + 1;
+  if (!isScrollableY) return false;
+  if (deltaY < 0) {
+    return el.scrollTop > 0;
+  }
+  if (deltaY > 0) {
+    return Math.ceil(el.scrollTop + el.clientHeight) < el.scrollHeight;
+  }
+  return true;
+}
+
+function canElementScrollHorizontally(el: HTMLElement): boolean {
+  const style = window.getComputedStyle(el);
+  const overflowX = style.overflowX;
+  return (
+    (overflowX === 'auto' || overflowX === 'scroll' || overflowX === 'overlay') &&
+    el.scrollWidth > el.clientWidth + 1
+  );
+}
+
+function handleLockedWheel(event: WheelEvent) {
+  if (activeDialogCount <= 0) return;
+  if (event.ctrlKey) return; // Allow browser pinch-zoom if desired
+
+  let el = event.target instanceof HTMLElement ? event.target : null;
+  const isHorizontal = Math.abs(event.deltaX) > Math.abs(event.deltaY);
+
+  while (el && el !== document.body && el !== document.documentElement) {
+    if (el.hasAttribute('data-allow-wheel')) {
+      return;
+    }
+    if (isHorizontal) {
+      if (canElementScrollHorizontally(el)) {
+        return;
+      }
+    } else {
+      const style = window.getComputedStyle(el);
+      const overflowY = style.overflowY;
+      const isScrollableContainer =
+        (overflowY === 'auto' || overflowY === 'scroll' || overflowY === 'overlay') &&
+        el.scrollHeight > el.clientHeight + 1;
+      if (isScrollableContainer) {
+        if (canElementScrollVertically(el, event.deltaY)) {
+          return;
+        }
+        // Reached top or bottom boundary of this scrollable modal container — block chaining to background
+        event.preventDefault();
+        return;
+      }
+    }
+    el = el.parentElement;
+  }
+
+  // No scrollable container inside the modal/popup can consume this wheel event — block background scroll
+  event.preventDefault();
+}
+
+function handleLockedTouchMove(event: TouchEvent) {
+  if (activeDialogCount <= 0) return;
+  if (event.touches.length > 1) return;
+
+  const target = event.target instanceof HTMLElement ? event.target : null;
+  if (target && (target.tagName === 'INPUT' || target.closest('[data-allow-touch-move]'))) {
+    return;
+  }
+
+  const currentY = event.touches[0].clientY;
+  const currentX = event.touches[0].clientX;
+  const deltaY = lastTouchY - currentY; // > 0 means scrolling down
+  const deltaX = lastTouchX - currentX;
+  lastTouchY = currentY;
+  lastTouchX = currentX;
+
+  const isHorizontal = Math.abs(deltaX) > Math.abs(deltaY);
+  let el = target;
+
+  while (el && el !== document.body && el !== document.documentElement) {
+    if (isHorizontal) {
+      if (canElementScrollHorizontally(el)) {
+        return;
+      }
+    } else {
+      const style = window.getComputedStyle(el);
+      const overflowY = style.overflowY;
+      const isScrollableContainer =
+        (overflowY === 'auto' || overflowY === 'scroll' || overflowY === 'overlay') &&
+        el.scrollHeight > el.clientHeight + 1;
+      if (isScrollableContainer) {
+        if (canElementScrollVertically(el, deltaY)) {
+          return;
+        }
+        event.preventDefault();
+        return;
+      }
+    }
+    el = el.parentElement;
+  }
+
+  event.preventDefault();
+}
+
+export function useBodyScrollLock(isLocked: boolean) {
+  useEffect(() => {
+    if (!isLocked || typeof document === 'undefined' || typeof window === 'undefined') return;
+
+    if (activeDialogCount === 0) {
+      savedBodyOverflow = document.body.style.overflow;
+      savedHtmlOverflow = document.documentElement.style.overflow;
+      savedBodyOverscroll = document.body.style.overscrollBehavior;
+      savedHtmlOverscroll = document.documentElement.style.overscrollBehavior;
+
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overscrollBehavior = 'none';
+      document.documentElement.style.overscrollBehavior = 'none';
+      document.body.classList.add('dialog-shell-open');
+      document.documentElement.classList.add('dialog-shell-open');
+
+      window.addEventListener('wheel', handleLockedWheel, { passive: false, capture: true });
+      window.addEventListener('touchstart', handleLockedTouchStart, { passive: true, capture: true });
+      window.addEventListener('touchmove', handleLockedTouchMove, { passive: false, capture: true });
+    }
+    activeDialogCount++;
+
+    return () => {
+      activeDialogCount = Math.max(0, activeDialogCount - 1);
+      if (activeDialogCount === 0) {
+        window.removeEventListener('wheel', handleLockedWheel, { capture: true });
+        window.removeEventListener('touchstart', handleLockedTouchStart, { capture: true });
+        window.removeEventListener('touchmove', handleLockedTouchMove, { capture: true });
+
+        if (savedBodyOverflow) {
+          document.body.style.overflow = savedBodyOverflow;
+        } else {
+          document.body.style.removeProperty('overflow');
+        }
+        if (savedHtmlOverflow) {
+          document.documentElement.style.overflow = savedHtmlOverflow;
+        } else {
+          document.documentElement.style.removeProperty('overflow');
+        }
+        if (savedBodyOverscroll) {
+          document.body.style.overscrollBehavior = savedBodyOverscroll;
+        } else {
+          document.body.style.removeProperty('overscroll-behavior');
+        }
+        if (savedHtmlOverscroll) {
+          document.documentElement.style.overscrollBehavior = savedHtmlOverscroll;
+        } else {
+          document.documentElement.style.removeProperty('overscroll-behavior');
+        }
+
+        document.body.classList.remove('dialog-shell-open');
+        document.documentElement.classList.remove('dialog-shell-open');
+        const rootEl = document.getElementById('root');
+        if (rootEl) {
+          rootEl.style.removeProperty('overflow');
+          rootEl.style.removeProperty('overflow-y');
+          rootEl.style.removeProperty('touch-action');
+        }
+      }
+    };
+  }, [isLocked]);
+}
 
 export function DialogShell({
   open,
@@ -59,18 +240,10 @@ export function DialogShell({
     onCloseRef.current = onClose;
   }, [onClose]);
 
+  useBodyScrollLock(isVisible);
+
   useEffect(() => {
     if (!isVisible || typeof document === 'undefined') return;
-
-    if (activeDialogCount === 0) {
-      savedBodyOverflow = document.body.style.overflow;
-      savedHtmlOverflow = document.documentElement.style.overflow;
-      document.body.style.overflow = 'hidden';
-      document.documentElement.style.overflow = 'hidden';
-      document.body.classList.add('dialog-shell-open');
-      document.documentElement.classList.add('dialog-shell-open');
-    }
-    activeDialogCount++;
 
     previousActiveElementRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
 
@@ -130,28 +303,6 @@ export function DialogShell({
       if (frameId !== null) window.cancelAnimationFrame(frameId);
       window.removeEventListener('keydown', handleKeyDown, { capture: true });
       previousActiveElementRef.current?.focus({ preventScroll: true });
-
-      activeDialogCount = Math.max(0, activeDialogCount - 1);
-      if (activeDialogCount === 0) {
-        if (savedBodyOverflow) {
-          document.body.style.overflow = savedBodyOverflow;
-        } else {
-          document.body.style.removeProperty('overflow');
-        }
-        if (savedHtmlOverflow) {
-          document.documentElement.style.overflow = savedHtmlOverflow;
-        } else {
-          document.documentElement.style.removeProperty('overflow');
-        }
-        document.body.classList.remove('dialog-shell-open');
-        document.documentElement.classList.remove('dialog-shell-open');
-        const rootEl = document.getElementById('root');
-        if (rootEl) {
-          rootEl.style.removeProperty('overflow');
-          rootEl.style.removeProperty('overflow-y');
-          rootEl.style.removeProperty('touch-action');
-        }
-      }
     };
   }, [isVisible, autoFocus]);
 

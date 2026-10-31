@@ -94,6 +94,7 @@ export const StorefrontProductCard = React.memo(function StorefrontProductCard({
   const autoPhoto = resolveProductPhoto(product.name, product.categoryName);
   const displayPhotoUrl = product.imageUrl || autoPhoto.url;
   const isIllustrativePhoto = !product.imageUrl && autoPhoto.source === 'category';
+  const isRealPhoto = Boolean(displayPhotoUrl && !displayPhotoUrl.startsWith('data:image/svg+xml'));
 
   const hasRealOffer = Boolean(product.hasDiscount && product.originalPrice && product.originalPrice > product.price);
   const oldPrice = hasRealOffer
@@ -163,12 +164,12 @@ export const StorefrontProductCard = React.memo(function StorefrontProductCard({
           background: '#f4f6fa',
           position: 'relative',
           overflow: 'hidden',
-          marginBottom: isWide ? '0' : '12px',
+          marginBottom: isWide ? '0' : '10px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           border: 'none',
-          padding: '14px',
+          padding: '5px',
           boxSizing: 'border-box',
           flexShrink: 0,
         }}
@@ -180,6 +181,7 @@ export const StorefrontProductCard = React.memo(function StorefrontProductCard({
             decoding="async"
             draggable={false}
             onError={(e) => {
+              e.currentTarget.removeAttribute('data-real-photo');
               e.currentTarget.src = generatePremiumProductSvg(product.name, product.categoryName);
             }}
             className="storefront-product-img"
@@ -192,8 +194,10 @@ export const StorefrontProductCard = React.memo(function StorefrontProductCard({
               display: 'block',
               opacity: imageLoaded ? (isOutOfStock ? 0.65 : 1) : 0.92,
               pointerEvents: 'none',
+              mixBlendMode: isRealPhoto ? 'multiply' : undefined,
             }}
             onLoad={() => setImageLoaded(true)}
+            data-real-photo={isRealPhoto ? 'true' : undefined}
             data-illustrative={isIllustrativePhoto ? 'true' : undefined}
           />
 

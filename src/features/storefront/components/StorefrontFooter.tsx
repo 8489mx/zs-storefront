@@ -335,7 +335,10 @@ export function StorefrontFooter({
         {/* Centered Bottom Copyright & Legal Links */}
         <div className="sf-stylehub-bottom">
           <p className="sf-stylehub-copyright">
-            © {currentYear} <span dir="auto">{brand.title}</span>. جميع الحقوق محفوظة.
+            جميع الحقوق محفوظة{' '}
+            <span dir="ltr">
+              © {currentYear} {brand.title.replace(/^(?!Z)(Systems\b)/i, 'Z-$1')}
+            </span>
           </p>
           <div className="sf-stylehub-bottom-links">
             <button

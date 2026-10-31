@@ -18,6 +18,16 @@ interface StorefrontHeaderProps {
   onSelectCategory?: (categoryId: number) => void;
   onSelectProduct?: (product: StorefrontProduct) => void;
   onAddToCart?: (product: StorefrontProduct) => void;
+  sortBy?: 'featured' | 'price-asc' | 'price-desc' | 'name';
+  onSortChange?: (val: 'featured' | 'price-asc' | 'price-desc' | 'name') => void;
+  onlyDeals?: boolean;
+  onToggleDeals?: () => void;
+  inStockOnly?: boolean;
+  onToggleInStock?: () => void;
+  onlyFavorites?: boolean;
+  onToggleFavorites?: () => void;
+  onOpenCategories?: () => void;
+  onResetFilters?: () => void;
 }
 
 export function resolveStorefrontBrand(info: { title?: string; businessName?: string; address?: string }) {
@@ -297,6 +307,16 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
   onSelectCategory,
   onSelectProduct,
   onAddToCart,
+  sortBy,
+  onSortChange,
+  onlyDeals,
+  onToggleDeals,
+  inStockOnly,
+  onToggleInStock,
+  onlyFavorites,
+  onToggleFavorites,
+  onOpenCategories,
+  onResetFilters,
 }: StorefrontHeaderProps) {
   const { t } = useTranslation();
   const headerRef = React.useRef<HTMLElement | null>(null);
@@ -326,12 +346,10 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
 
     window.addEventListener('scroll', onScroll, { passive: true });
     document.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('wheel', onScroll, { passive: true });
     updateScrollState();
     return () => {
       window.removeEventListener('scroll', onScroll);
       document.removeEventListener('scroll', onScroll);
-      window.removeEventListener('wheel', onScroll);
       if (rafId) window.cancelAnimationFrame(rafId);
     };
   }, []);
@@ -402,7 +420,7 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
             box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.09), 0 2px 6px -1px rgba(15, 23, 42, 0.04) !important;
             transform: translate3d(0, 0, 0);
             backface-visibility: hidden;
-            transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+            transition: max-width 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.2s ease;
           }
           @media (min-width: 769px) {
             .storefront-sticky-header.is-scrolled .storefront-navbar {
@@ -421,7 +439,7 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
               position: sticky !important;
               top: 0 !important;
               z-index: 120 !important;
-              padding: 8px 12px !important;
+              padding: 6px 12px !important;
               pointer-events: auto !important;
               transform: translate3d(0, 0, 0) !important;
               background: rgba(255, 255, 255, 0.96) !important;
@@ -429,7 +447,12 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
               -webkit-backdrop-filter: blur(16px) !important;
               border-bottom: 1px solid #e8edf4 !important;
               border-radius: 0 !important;
-              box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.05) !important;
+              box-shadow: 0 2px 10px -2px rgba(15, 23, 42, 0.04) !important;
+              transition: padding 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s ease !important;
+            }
+            .storefront-sticky-header.is-scrolled {
+              padding: 5px 12px !important;
+              box-shadow: 0 4px 14px -2px rgba(15, 23, 42, 0.06) !important;
             }
             .storefront-navbar,
             .storefront-sticky-header.is-scrolled .storefront-navbar,
@@ -438,7 +461,7 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
               display: flex !important;
               flex-direction: column !important;
               align-items: center !important;
-              gap: 7px !important;
+              gap: 0 !important;
               padding: 0 !important;
               margin: 0 !important;
               border-radius: 0 !important;
@@ -447,23 +470,7 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
               box-shadow: none !important;
               position: relative !important;
             }
-            .storefront-brand-btn {
-              display: flex !important;
-              align-items: center !important;
-              justify-content: center !important;
-              margin: 0 auto !important;
-              gap: 8px !important;
-            }
-            .storefront-brand-btn .storefront-brand-avatar {
-              width: 28px !important;
-              height: 28px !important;
-              border-radius: 8px !important;
-              font-size: 13px !important;
-            }
-            .storefront-brand-btn .storefront-brand-title {
-              font-size: 15px !important;
-              font-weight: 800 !important;
-            }
+            .storefront-brand-btn,
             .storefront-actions,
             .storefront-mobile-search-trigger {
               display: none !important;
@@ -480,13 +487,16 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
               flex: none !important;
             }
             .storefront-search-box {
-              padding: 0 12px !important;
-              border-radius: 11px !important;
-              height: 38px !important;
+              padding: 0 11px !important;
+              border-radius: 10px !important;
+              height: 34px !important;
               border: 1px solid #e2e8f0 !important;
               background: #f8fafc !important;
               box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.02) !important;
-              transition: box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease !important;
+              transition: height 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease !important;
+            }
+            .storefront-sticky-header.is-scrolled .storefront-search-box {
+              height: 32px !important;
             }
             .storefront-search-box:focus-within {
               background: #ffffff !important;
@@ -494,8 +504,8 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
               box-shadow: 0 0 0 3px rgba(45, 104, 196, 0.12) !important;
             }
             .storefront-search-input {
-              font-size: 12.5px !important;
-              padding: 5px 4px !important;
+              font-size: 12px !important;
+              padding: 4px 4px !important;
             }
             .storefront-search-btn {
               display: none !important;
@@ -593,6 +603,16 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
               onSelectCategory={onSelectCategory}
               onSelectProduct={onSelectProduct}
               onAddToCart={onAddToCart}
+              sortBy={sortBy}
+              onSortChange={onSortChange}
+              onlyDeals={onlyDeals}
+              onToggleDeals={onToggleDeals}
+              inStockOnly={inStockOnly}
+              onToggleInStock={onToggleInStock}
+              onlyFavorites={onlyFavorites}
+              onToggleFavorites={onToggleFavorites}
+              onOpenCategories={onOpenCategories}
+              onResetFilters={onResetFilters}
             />
           </div>
 

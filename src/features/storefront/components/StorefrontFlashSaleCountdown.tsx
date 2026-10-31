@@ -1,13 +1,6 @@
-import { useState, useEffect, useMemo, Fragment } from 'react';
+import React, { useState, useEffect, useMemo, Fragment } from 'react';
 import type { StorefrontProduct } from '../types/storefront.types';
-import { resolveProductPhoto } from '../lib/storefront-photo-matcher';
-import {
-  LAPTOP_PHOTO,
-  IPHONE_PHOTO,
-  SMARTWATCH_PHOTO,
-  HEADPHONES_PHOTO,
-  WATCH_CLASSIC_PHOTO,
-} from '../lib/product-photos-registry';
+import { generatePremiumProductSvg, isRealProductPhotoUrl } from '../lib/storefront-photo-matcher';
 
 interface StorefrontFlashSaleCountdownProps {
   products: StorefrontProduct[];
@@ -21,12 +14,9 @@ interface StorefrontFlashSaleCountdownProps {
   onSelectDeals?: () => void;
 }
 
-export function StorefrontFlashSaleCountdown({
-  products,
-  onQuickView,
-  onSelectDeals,
-}: StorefrontFlashSaleCountdownProps) {
-  // Live Countdown Timer: Days, Hours, Minutes, Seconds
+const padZero = (n: number) => String(n).padStart(2, '0');
+
+const FlashCountdownTimerBoxes = React.memo(function FlashCountdownTimerBoxes() {
   const [timeLeft, setTimeLeft] = useState<{
     days: number;
     hours: number;
@@ -40,7 +30,6 @@ export function StorefrontFlashSaleCountdown({
   });
 
   useEffect(() => {
-    // Target: 3 days + remaining time today for an authentic live countdown matching the reference
     const calculateTimeRemaining = () => {
       const now = new Date();
       const endOfDay = new Date();
@@ -63,31 +52,271 @@ export function StorefrontFlashSaleCountdown({
     return () => clearInterval(timer);
   }, []);
 
-  // Resolve up to 5 showcase products or fallback to crisp cutout product images
+  return (
+    <div
+      className="sf-flash-countdown-row"
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '6px',
+        direction: 'rtl',
+      }}
+    >
+      {[
+        { label: 'يوم', value: padZero(timeLeft.days) },
+        { label: 'ساعة', value: padZero(timeLeft.hours) },
+        { label: 'دقيقة', value: padZero(timeLeft.minutes) },
+        { label: 'ثانية', value: padZero(timeLeft.seconds) },
+      ].map((box, index, arr) => (
+        <Fragment key={index}>
+          <div
+            className="sf-flash-countdown-box"
+            style={{
+              position: 'relative',
+              width: '58px',
+              height: '62px',
+              borderRadius: '12px',
+              background: 'rgba(255, 255, 255, 0.88)',
+              backdropFilter: 'blur(8px)',
+              border: '1px solid rgba(255, 255, 255, 0.95)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '3px',
+              boxShadow: '0 4px 12px rgba(15, 23, 42, 0.04), inset 0 1px 0 #ffffff',
+              overflow: 'hidden',
+            }}
+          >
+            {/* Number Value */}
+            <span
+              className="sf-flash-countdown-val"
+              style={{
+                fontSize: '19px',
+                fontWeight: 800,
+                color: '#1e293b',
+                fontVariantNumeric: 'tabular-nums',
+                lineHeight: 1.05,
+                letterSpacing: '-0.3px',
+              }}
+            >
+              {box.value}
+            </span>
+
+            {/* Unit Label */}
+            <span
+              className="sf-flash-countdown-lbl"
+              style={{
+                fontSize: '10.5px',
+                fontWeight: 600,
+                color: '#64748b',
+                lineHeight: 1.15,
+              }}
+            >
+              {box.label}
+            </span>
+          </div>
+
+          {/* Subtle Separator Colon Dots between cards */}
+          {index < arr.length - 1 && (
+            <div
+              className="sf-flash-countdown-sep"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '5px',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '0 1px',
+                opacity: 0.28,
+              }}
+            >
+              <span
+                style={{
+                  width: '3.5px',
+                  height: '3.5px',
+                  borderRadius: '50%',
+                  background: '#334155',
+                }}
+              />
+              <span
+                style={{
+                  width: '3.5px',
+                  height: '3.5px',
+                  borderRadius: '50%',
+                  background: '#334155',
+                }}
+              />
+            </div>
+          )}
+        </Fragment>
+      ))}
+    </div>
+  );
+});
+
+const FLASH_SALE_STATIC_CSS = `
+  @media (max-width: 860px) {
+    .storefront-flash-banner-card {
+      grid-template-columns: 1fr !important;
+      padding: 20px 16px !important;
+      text-align: right;
+      min-height: auto !important;
+      gap: 14px !important;
+    }
+    .storefront-flash-banner-card > div:first-of-type {
+      transform: none !important;
+    }
+    .storefront-flash-collage {
+      width: 100% !important;
+      height: 200px !important;
+      margin-top: 0 !important;
+    }
+    .storefront-flash-collage .sf-flash-item-center {
+      width: 175px !important;
+      height: 168px !important;
+      z-index: 5 !important;
+    }
+    .storefront-flash-collage .sf-flash-item-right-inner {
+      width: 90px !important;
+      height: 102px !important;
+      right: 17% !important;
+      top: 6% !important;
+    }
+    .storefront-flash-collage .sf-flash-item-right-outer {
+      width: 74px !important;
+      height: 74px !important;
+      right: 2% !important;
+      bottom: 12% !important;
+    }
+    .storefront-flash-collage .sf-flash-item-left-inner {
+      width: 72px !important;
+      height: 72px !important;
+      left: 17% !important;
+      top: 6% !important;
+    }
+    .storefront-flash-collage .sf-flash-item-left-outer {
+      width: 84px !important;
+      height: 84px !important;
+      left: 2% !important;
+      bottom: 10% !important;
+    }
+  }
+  @media (max-width: 640px) {
+    .storefront-deals-of-the-day-section {
+      margin: 12px 0 !important;
+      padding: 0 !important;
+    }
+    .storefront-deals-of-the-day-section > h2 {
+      font-size: 14px !important;
+      font-weight: 700 !important;
+      margin: 0 0 8px 0 !important;
+    }
+    .storefront-flash-banner-card {
+      border-radius: 16px !important;
+      padding: 14px 12px 10px !important;
+      gap: 6px !important;
+    }
+    .storefront-flash-banner-card h3 {
+      font-size: 13.5px !important;
+      font-weight: 700 !important;
+      margin: 0 0 7px 0 !important;
+    }
+    .sf-flash-countdown-row {
+      gap: 4px !important;
+    }
+    .sf-flash-countdown-box {
+      width: 44px !important;
+      height: 46px !important;
+      border-radius: 10px !important;
+      gap: 1.5px !important;
+    }
+    .sf-flash-countdown-val {
+      font-size: 14.5px !important;
+      font-weight: 800 !important;
+      line-height: 1.05 !important;
+    }
+    .sf-flash-countdown-lbl {
+      font-size: 9px !important;
+      font-weight: 600 !important;
+      line-height: 1.1 !important;
+    }
+    .sf-flash-countdown-sep {
+      gap: 3.5px !important;
+      padding: 0 !important;
+    }
+    .sf-flash-countdown-sep > span {
+      width: 2.5px !important;
+      height: 2.5px !important;
+    }
+    .storefront-flash-collage {
+      width: 100% !important;
+      max-width: 340px !important;
+      height: 146px !important;
+      margin: 2px auto 0 !important;
+      transform: none !important;
+    }
+    .storefront-flash-collage .sf-flash-item-center {
+      width: 118px !important;
+      height: 112px !important;
+      margin-top: 14px !important;
+      z-index: 5 !important;
+    }
+    .storefront-flash-collage .sf-flash-item-right-inner {
+      width: 56px !important;
+      height: 64px !important;
+      right: 17% !important;
+      top: 4% !important;
+      z-index: 3 !important;
+    }
+    .storefront-flash-collage .sf-flash-item-right-outer {
+      width: 54px !important;
+      height: 54px !important;
+      right: 1% !important;
+      bottom: 12% !important;
+      z-index: 4 !important;
+    }
+    .storefront-flash-collage .sf-flash-item-left-inner {
+      width: 52px !important;
+      height: 52px !important;
+      left: 17% !important;
+      top: 4% !important;
+      z-index: 3 !important;
+    }
+    .storefront-flash-collage .sf-flash-item-left-outer {
+      width: 58px !important;
+      height: 58px !important;
+      left: 1% !important;
+      bottom: 10% !important;
+      z-index: 4 !important;
+    }
+  }
+`;
+
+export const StorefrontFlashSaleCountdown = React.memo(function StorefrontFlashSaleCountdown({
+  products,
+  onQuickView,
+  onSelectDeals,
+}: StorefrontFlashSaleCountdownProps) {
+  // Resolve up to 5 showcase products strictly from the current tenant's catalog (zero foreign stock photos)
   const showcaseItems = useMemo(() => {
-    const defaults = [
-      { img: LAPTOP_PHOTO, product: products[0] },
-      { img: IPHONE_PHOTO, product: products[1] || products[0] },
-      { img: SMARTWATCH_PHOTO, product: products[2] || products[0] },
-      { img: HEADPHONES_PHOTO, product: products[3] || products[0] },
-      { img: WATCH_CLASSIC_PHOTO, product: products[4] || products[0] },
-    ];
+    if (!products || products.length === 0) return [];
+    const withRealPhoto = products.filter((p) => isRealProductPhotoUrl(p.imageUrl));
+    const withoutRealPhoto = products.filter((p) => !isRealProductPhotoUrl(p.imageUrl));
+    const ordered = [...withRealPhoto, ...withoutRealPhoto];
 
-    if (!products || products.length === 0) return defaults;
-
-    return defaults.map((def, idx) => {
-      const p = products[idx];
-      if (!p) return def;
-      const resolved = resolveProductPhoto(p.name, p.categoryName);
-      const url = p.imageUrl || resolved.url || def.img;
-      return {
-        img: url,
-        product: p,
-      };
-    });
+    const count = Math.min(5, ordered.length);
+    const items: Array<{ img: string; product: StorefrontProduct }> = [];
+    for (let i = 0; i < count; i++) {
+      const p = ordered[i];
+      const url = isRealProductPhotoUrl(p.imageUrl)
+        ? p.imageUrl!
+        : generatePremiumProductSvg(p.name, p.categoryName);
+      items.push({ img: url, product: p });
+    }
+    return items;
   }, [products]);
-
-  const padZero = (n: number) => String(n).padStart(2, '0');
 
   const handleBannerClick = () => {
     if (onSelectDeals) {
@@ -145,7 +374,7 @@ export function StorefrontFlashSaleCountdown({
         <svg
           viewBox="0 0 1200 360"
           fill="none"
-           preserveAspectRatio="none"
+          preserveAspectRatio="none"
           style={{
             position: 'absolute',
             inset: 0,
@@ -219,107 +448,8 @@ export function StorefrontFlashSaleCountdown({
               سارع الآن! عروض محدودة
             </h3>
 
-            {/* 4 Calm & Uniform Light Countdown Cards */}
-            <div
-              className="sf-flash-countdown-row"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '6px',
-                direction: 'rtl',
-              }}
-            >
-              {[
-                { label: 'يوم', value: padZero(timeLeft.days) },
-                { label: 'ساعة', value: padZero(timeLeft.hours) },
-                { label: 'دقيقة', value: padZero(timeLeft.minutes) },
-                { label: 'ثانية', value: padZero(timeLeft.seconds) },
-              ].map((box, index, arr) => (
-                <Fragment key={index}>
-                  <div
-                    className="sf-flash-countdown-box"
-                    style={{
-                      position: 'relative',
-                      width: '58px',
-                      height: '62px',
-                      borderRadius: '12px',
-                      background: 'rgba(255, 255, 255, 0.88)',
-                      backdropFilter: 'blur(8px)',
-                      border: '1px solid rgba(255, 255, 255, 0.95)',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '3px',
-                      boxShadow: '0 4px 12px rgba(15, 23, 42, 0.04), inset 0 1px 0 #ffffff',
-                      overflow: 'hidden',
-                    }}
-                  >
-                    {/* Number Value */}
-                    <span
-                      className="sf-flash-countdown-val"
-                      style={{
-                        fontSize: '19px',
-                        fontWeight: 800,
-                        color: '#1e293b',
-                        fontVariantNumeric: 'tabular-nums',
-                        lineHeight: 1.05,
-                        letterSpacing: '-0.3px',
-                      }}
-                    >
-                      {box.value}
-                    </span>
-
-                    {/* Unit Label */}
-                    <span
-                      className="sf-flash-countdown-lbl"
-                      style={{
-                        fontSize: '10.5px',
-                        fontWeight: 600,
-                        color: '#64748b',
-                        lineHeight: 1.15,
-                      }}
-                    >
-                      {box.label}
-                    </span>
-                  </div>
-
-                  {/* Subtle Separator Colon Dots between cards */}
-                  {index < arr.length - 1 && (
-                    <div
-                      className="sf-flash-countdown-sep"
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '5px',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        padding: '0 1px',
-                        opacity: 0.28,
-                      }}
-                    >
-                      <span
-                        style={{
-                          width: '3.5px',
-                          height: '3.5px',
-                          borderRadius: '50%',
-                          background: '#334155',
-                        }}
-                      />
-                      <span
-                        style={{
-                          width: '3.5px',
-                          height: '3.5px',
-                          borderRadius: '50%',
-                          background: '#334155',
-                        }}
-                      />
-                    </div>
-                  )}
-                </Fragment>
-              ))}
-            </div>
+            {/* Isolated 1s Timer Component */}
+            <FlashCountdownTimerBoxes />
           </div>
         </div>
 
@@ -352,6 +482,7 @@ export function StorefrontFlashSaleCountdown({
                 width: '95px',
                 height: '95px',
                 transform: 'rotate(14deg)',
+                backfaceVisibility: 'hidden',
                 transition: 'transform 0.3s ease',
                 cursor: 'pointer',
                 zIndex: 3,
@@ -367,6 +498,8 @@ export function StorefrontFlashSaleCountdown({
               <img
                 src={showcaseItems[2].img}
                 alt=""
+                loading="lazy"
+                decoding="async"
                 style={{ width: '100%', height: '100%', objectFit: 'contain' }}
               />
             </div>
@@ -389,6 +522,7 @@ export function StorefrontFlashSaleCountdown({
                 width: '135px',
                 height: '155px',
                 transform: 'rotate(-16deg)',
+                backfaceVisibility: 'hidden',
                 transition: 'transform 0.3s ease',
                 cursor: 'pointer',
                 zIndex: 2,
@@ -404,6 +538,8 @@ export function StorefrontFlashSaleCountdown({
               <img
                 src={showcaseItems[1].img}
                 alt=""
+                loading="lazy"
+                decoding="async"
                 style={{ width: '100%', height: '100%', objectFit: 'contain' }}
               />
             </div>
@@ -424,6 +560,7 @@ export function StorefrontFlashSaleCountdown({
                 width: '250px',
                 height: '240px',
                 transform: 'rotate(-4deg)',
+                backfaceVisibility: 'hidden',
                 transition: 'transform 0.35s ease',
                 cursor: 'pointer',
                 zIndex: 5,
@@ -439,6 +576,8 @@ export function StorefrontFlashSaleCountdown({
               <img
                 src={showcaseItems[0].img}
                 alt=""
+                loading="lazy"
+                decoding="async"
                 style={{ width: '100%', height: '100%', objectFit: 'contain' }}
               />
             </div>
@@ -461,6 +600,7 @@ export function StorefrontFlashSaleCountdown({
                 width: '90px',
                 height: '90px',
                 transform: 'rotate(12deg)',
+                backfaceVisibility: 'hidden',
                 transition: 'transform 0.3s ease',
                 cursor: 'pointer',
                 zIndex: 3,
@@ -476,6 +616,8 @@ export function StorefrontFlashSaleCountdown({
               <img
                 src={showcaseItems[3].img}
                 alt=""
+                loading="lazy"
+                decoding="async"
                 style={{ width: '100%', height: '100%', objectFit: 'contain' }}
               />
             </div>
@@ -498,6 +640,7 @@ export function StorefrontFlashSaleCountdown({
                 width: '130px',
                 height: '130px',
                 transform: 'rotate(-12deg)',
+                backfaceVisibility: 'hidden',
                 transition: 'transform 0.3s ease',
                 cursor: 'pointer',
                 zIndex: 4,
@@ -513,6 +656,8 @@ export function StorefrontFlashSaleCountdown({
               <img
                 src={showcaseItems[4].img}
                 alt=""
+                loading="lazy"
+                decoding="async"
                 style={{ width: '100%', height: '100%', objectFit: 'contain' }}
               />
             </div>
@@ -520,143 +665,8 @@ export function StorefrontFlashSaleCountdown({
         </div>
       </div>
 
-      <style>{`
-        @media (max-width: 860px) {
-          .storefront-flash-banner-card {
-            grid-template-columns: 1fr !important;
-            padding: 20px 16px !important;
-            text-align: right;
-            min-height: auto !important;
-            gap: 14px !important;
-          }
-          .storefront-flash-banner-card > div:first-of-type {
-            transform: none !important;
-          }
-          .storefront-flash-collage {
-            width: 100% !important;
-            height: 200px !important;
-            margin-top: 0 !important;
-          }
-          .storefront-flash-collage .sf-flash-item-center {
-            width: 175px !important;
-            height: 168px !important;
-            z-index: 5 !important;
-          }
-          .storefront-flash-collage .sf-flash-item-right-inner {
-            width: 90px !important;
-            height: 102px !important;
-            right: 17% !important;
-            top: 6% !important;
-          }
-          .storefront-flash-collage .sf-flash-item-right-outer {
-            width: 74px !important;
-            height: 74px !important;
-            right: 2% !important;
-            bottom: 12% !important;
-          }
-          .storefront-flash-collage .sf-flash-item-left-inner {
-            width: 72px !important;
-            height: 72px !important;
-            left: 17% !important;
-            top: 6% !important;
-          }
-          .storefront-flash-collage .sf-flash-item-left-outer {
-            width: 84px !important;
-            height: 84px !important;
-            left: 2% !important;
-            bottom: 10% !important;
-          }
-        }
-        @media (max-width: 640px) {
-          .storefront-deals-of-the-day-section {
-            margin: 12px 0 !important;
-            padding: 0 !important;
-          }
-          .storefront-deals-of-the-day-section > h2 {
-            font-size: 14px !important;
-            font-weight: 700 !important;
-            margin: 0 0 8px 0 !important;
-          }
-          .storefront-flash-banner-card {
-            border-radius: 16px !important;
-            padding: 14px 12px 10px !important;
-            gap: 6px !important;
-          }
-          .storefront-flash-banner-card h3 {
-            font-size: 13.5px !important;
-            font-weight: 700 !important;
-            margin: 0 0 7px 0 !important;
-          }
-          .sf-flash-countdown-row {
-            gap: 4px !important;
-          }
-          .sf-flash-countdown-box {
-            width: 44px !important;
-            height: 46px !important;
-            border-radius: 10px !important;
-            gap: 1.5px !important;
-          }
-          .sf-flash-countdown-val {
-            font-size: 14.5px !important;
-            font-weight: 800 !important;
-            line-height: 1.05 !important;
-          }
-          .sf-flash-countdown-lbl {
-            font-size: 9px !important;
-            font-weight: 600 !important;
-            line-height: 1.1 !important;
-          }
-          .sf-flash-countdown-sep {
-            gap: 3.5px !important;
-            padding: 0 !important;
-          }
-          .sf-flash-countdown-sep > span {
-            width: 2.5px !important;
-            height: 2.5px !important;
-          }
-          .storefront-flash-collage {
-            width: 100% !important;
-            max-width: 340px !important;
-            height: 146px !important;
-            margin: 2px auto 0 !important;
-            transform: none !important;
-          }
-          .storefront-flash-collage .sf-flash-item-center {
-            width: 118px !important;
-            height: 112px !important;
-            margin-top: 14px !important;
-            z-index: 5 !important;
-          }
-          .storefront-flash-collage .sf-flash-item-right-inner {
-            width: 56px !important;
-            height: 64px !important;
-            right: 17% !important;
-            top: 4% !important;
-            z-index: 3 !important;
-          }
-          .storefront-flash-collage .sf-flash-item-right-outer {
-            width: 54px !important;
-            height: 54px !important;
-            right: 1% !important;
-            bottom: 12% !important;
-            z-index: 4 !important;
-          }
-          .storefront-flash-collage .sf-flash-item-left-inner {
-            width: 52px !important;
-            height: 52px !important;
-            left: 17% !important;
-            top: 4% !important;
-            z-index: 3 !important;
-          }
-          .storefront-flash-collage .sf-flash-item-left-outer {
-            width: 58px !important;
-            height: 58px !important;
-            left: 1% !important;
-            bottom: 10% !important;
-            z-index: 4 !important;
-          }
-        }
-      `}</style>
+      <style>{FLASH_SALE_STATIC_CSS}</style>
     </section>
   );
-}
+});
+

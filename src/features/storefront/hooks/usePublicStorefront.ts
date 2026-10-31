@@ -360,9 +360,9 @@ export function usePublicStorefront(cleanSlug: string) {
       const q = searchTerm.trim().toLowerCase();
       list = list.filter(
         (p) =>
-          p.name.toLowerCase().includes(q) ||
-          p.barcode.includes(q) ||
-          p.categoryName.toLowerCase().includes(q)
+          (p.name || '').toLowerCase().includes(q) ||
+          (p.barcode || '').toLowerCase().includes(q) ||
+          (p.categoryName || '').toLowerCase().includes(q)
       );
     }
     list.sort((a, b) => {
@@ -370,11 +370,11 @@ export function usePublicStorefront(cleanSlug: string) {
         const aScore = (a.inStock ? 2 : 0) + (a.price > 0 ? 1 : 0);
         const bScore = (b.inStock ? 2 : 0) + (b.price > 0 ? 1 : 0);
         if (aScore !== bScore) return bScore - aScore;
-        return arCollator.compare(a.name, b.name);
+        return arCollator.compare(a.name || '', b.name || '');
       }
       if (sortBy === 'price-asc') return a.price - b.price;
       if (sortBy === 'price-desc') return b.price - a.price;
-      if (sortBy === 'name') return arCollator.compare(a.name, b.name);
+      if (sortBy === 'name') return arCollator.compare(a.name || '', b.name || '');
       return 0;
     });
     return list;
@@ -421,7 +421,13 @@ export function usePublicStorefront(cleanSlug: string) {
   const cartOriginalSubtotal = cartTotals.originalSubtotal;
   const cartSavings = cartTotals.totalSavings;
 
-  const isHomepageMultiRow = selectedCategory === 'all' && !searchTerm.trim() && !onlyDeals && !onlyFavorites;
+  const isHomepageMultiRow =
+    selectedCategory === 'all' &&
+    !searchTerm.trim() &&
+    !onlyDeals &&
+    !onlyFavorites &&
+    !inStockOnly &&
+    sortBy === 'featured';
 
   const info: StorefrontInfo = infoQuery.data || {
     tenantId: '',

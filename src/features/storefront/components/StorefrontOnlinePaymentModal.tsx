@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { CreateOnlineOrderResponse, StorefrontPaymentSessionResponse } from '../types/storefront.types';
 import { storefrontApi } from '../api/storefront.api';
 import { ShieldCheckIcon, XIcon, AlertCircleIcon, CreditCardIcon, CheckIcon } from '@/shared/components/icons/AppIcons';
+import { useBodyScrollLock } from '@/shared/components/dialog-shell';
 
 interface StorefrontOnlinePaymentModalProps {
   isOpen: boolean;
@@ -29,6 +30,8 @@ export function StorefrontOnlinePaymentModal({
   const [cardHolder, setCardHolder] = useState(orderData?.orderNumber ? 'عميل المتجر' : 'Mohammed Ali');
   const [cardExpiry, setCardExpiry] = useState('12/28');
   const [cardCvv, setCardCvv] = useState('123');
+
+  useBodyScrollLock(Boolean(isOpen && session && orderData));
 
   if (!isOpen || !session || !orderData) return null;
 

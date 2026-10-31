@@ -1,5 +1,5 @@
+import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useState, useRef, useEffect } from 'react';
 import type { StorefrontProduct, StorefrontCategory, StorefrontInfo } from '../types/storefront.types';
 import { StorefrontProductCard } from './StorefrontProductCard';
 import { IconSearch } from './StorefrontIcons';
@@ -35,7 +35,50 @@ const SORT_OPTIONS: { id: 'featured' | 'price-asc' | 'price-desc' | 'name'; labe
   { id: 'name', label: 'أبجدياً (أ - ي)' },
 ];
 
-export function StorefrontFilteredGrid({
+const FILTERED_GRID_STATIC_CSS = `
+  @media (max-width: 640px) {
+    .sf-filtered-products-section {
+      min-height: calc(100vh - 210px);
+    }
+    .storefront-filter-header {
+      padding: 6px 10px !important;
+      margin-bottom: 8px !important;
+      border-radius: 11px !important;
+      gap: 6px !important;
+    }
+    .sf-filter-home-btn {
+      width: 28px !important;
+      height: 28px !important;
+      border-radius: 8px !important;
+    }
+    .sf-filter-home-btn svg {
+      width: 14px !important;
+      height: 14px !important;
+    }
+    .sf-filter-title {
+      font-size: 12.5px !important;
+      font-weight: 700 !important;
+    }
+    .sf-filter-count-badge {
+      font-size: 10px !important;
+      font-weight: 600 !important;
+      padding: 1.5px 6px !important;
+      border-radius: 6px !important;
+    }
+    .sf-filter-sort-btn {
+      height: 28px !important;
+      border-radius: 8px !important;
+      padding: 0 7px !important;
+      font-size: 11px !important;
+    }
+    .sf-filter-sort-btn svg {
+      width: 13px !important;
+      height: 13px !important;
+    }
+  }
+`;
+
+export const StorefrontFilteredGrid = React.memo(function StorefrontFilteredGrid({
   searchTerm,
   onlyFavorites,
   onlyDeals,
@@ -87,10 +130,11 @@ export function StorefrontFilteredGrid({
     ? 'المنتجات المفضلة'
     : onlyDeals
     ? 'العروض والتخفيضات'
-    : `${currentCategory?.name || 'القسم المختار'}`;
+    : `${currentCategory?.name || 'جميع المنتجات'}`;
 
   return (
-    <div id="storefront-products-section">
+    <div id="storefront-products-section" className="sf-filtered-products-section">
+      <style>{FILTERED_GRID_STATIC_CSS}</style>
       {/* Filter & Sorting Controls Bar */}
       <div
         className="storefront-filter-header"
@@ -122,6 +166,7 @@ export function StorefrontFilteredGrid({
           {/* Home Return Button */}
           <button
             type="button"
+            className="sf-filter-home-btn"
             onClick={onGoHome}
             title={t('storefront.storefront_filtered_grid.s0', "العودة للصفحة الرئيسية")}
             aria-label={t('storefront.storefront_filtered_grid.s1', "العودة للصفحة الرئيسية")}
@@ -137,7 +182,7 @@ export function StorefrontFilteredGrid({
               color: 'var(--storefront-primary-color, #2d68c4)',
               cursor: 'pointer',
               flexShrink: 0,
-              transition: 'all 0.15s ease',
+              transition: 'background-color 0.15s ease, border-color 0.15s ease, transform 0.12s ease',
               padding: 0,
               boxShadow: '0 1px 2px rgba(15, 23, 42, 0.04)',
             }}
@@ -197,6 +242,7 @@ export function StorefrontFilteredGrid({
             </span>
             <span className="sf-filter-breadcrumb-home" style={{ fontSize: '11px', color: '#cbd5e1', fontWeight: 600 }}>/</span>
             <h2
+              className="sf-filter-title"
               style={{
                 margin: 0,
                 fontSize: '14px',
@@ -214,9 +260,10 @@ export function StorefrontFilteredGrid({
 
           {/* Count Badge */}
           <span
+            className="sf-filter-count-badge"
             style={{
               fontSize: '11px',
-              fontWeight: 800,
+              fontWeight: 700,
               background: onlyFavorites ? '#fef2f2' : 'var(--storefront-primary-subtle, rgba(45, 104, 196, 0.12))',
               color: onlyFavorites ? '#dc2626' : 'var(--storefront-primary-color, #2d68c4)',
               border: onlyFavorites ? '1px solid #fecaca' : 'none',
@@ -238,6 +285,7 @@ export function StorefrontFilteredGrid({
         >
           <button
             type="button"
+            className="sf-filter-sort-btn"
             onClick={() => setIsSortOpen((prev) => !prev)}
             title={t('storefront.storefront_filtered_grid.s3', "ترتيب المنتجات")}
             aria-label={t('storefront.storefront_filtered_grid.s4', "ترتيب المنتجات")}
@@ -256,7 +304,7 @@ export function StorefrontFilteredGrid({
               color: isSortOpen || sortBy !== 'featured' ? '#1d4ed8' : '#1e293b',
               cursor: 'pointer',
               flexShrink: 0,
-              transition: 'all 0.15s ease',
+              transition: 'background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease',
               fontSize: '12px',
               fontWeight: 600,
             }}
@@ -474,4 +522,4 @@ export function StorefrontFilteredGrid({
       )}
     </div>
   );
-}
+});

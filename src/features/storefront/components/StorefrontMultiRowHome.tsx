@@ -32,7 +32,7 @@ interface StorefrontMultiRowHomeProps {
   onOpenCategoriesModal: () => void;
 }
 
-export function StorefrontMultiRowHome({
+export const StorefrontMultiRowHome = React.memo(function StorefrontMultiRowHome({
   dealsProducts,
   topHomepageSections,
   categories,
@@ -224,4 +224,4 @@ export function StorefrontMultiRowHome({
       ))}
     </div>
   );
-}
+});

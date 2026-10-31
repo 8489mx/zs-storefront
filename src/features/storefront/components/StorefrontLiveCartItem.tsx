@@ -1,5 +1,5 @@
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
 import { Trash2Icon } from '@/shared/components/icons/AppIcons';
 import { CartItem } from '../types/storefront.types';
 import { ProductIcon } from '@/shared/components/icons/product-svg-catalog';
@@ -12,7 +12,7 @@ interface StorefrontLiveCartItemProps {
   onUpdateQuantity: (productId: number, qty: number) => void;
 }
 
-export function StorefrontLiveCartItem({ item, onUpdateQuantity }: StorefrontLiveCartItemProps) {
+export const StorefrontLiveCartItem = React.memo(function StorefrontLiveCartItem({ item, onUpdateQuantity }: StorefrontLiveCartItemProps) {
   const { t } = useTranslation();
   const currCode = getGlobalSystemCurrency();
   const isThreeDec = isThreeDecimalCurrency(currCode);
@@ -36,8 +36,8 @@ export function StorefrontLiveCartItem({ item, onUpdateQuantity }: StorefrontLiv
       style={{
         display: 'flex',
         alignItems: 'center',
-        gap: '12px',
-        padding: '14px 2px',
+        gap: '10px',
+        padding: '9px 2px',
         borderBottom: '1px solid #f1f5f9',
         background: '#ffffff',
         position: 'relative',
@@ -47,16 +47,17 @@ export function StorefrontLiveCartItem({ item, onUpdateQuantity }: StorefrontLiv
       {/* Soft-Rounded Product Thumbnail (Right in RTL) */}
       <div
         style={{
-          width: '62px',
-          height: '62px',
-          borderRadius: '14px',
+          width: '52px',
+          height: '52px',
+          borderRadius: '11px',
           background: '#f8fafc',
+          border: '1px solid #f1f5f9',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           overflow: 'hidden',
           flexShrink: 0,
-          padding: '5px',
+          padding: '3px',
           boxSizing: 'border-box',
         }}
       >
@@ -64,26 +65,32 @@ export function StorefrontLiveCartItem({ item, onUpdateQuantity }: StorefrontLiv
           <img
             src={photo}
             alt={item.product.name}
-            style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '10px' }}
+            loading="lazy"
+            decoding="async"
+            style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '8px' }}
             onError={() => setImageError(true)}
           />
         ) : (
-          <ProductIcon name={item.product.icon || 'box-package'} size={24} color="#0f172a" />
+          <ProductIcon name={item.product.icon || 'box-package'} size={22} color="#0f172a" />
         )}
       </div>
 
-      {/* Product Info Column: Full width for Title on top, Price + Stepper on bottom row */}
+      {/* Product Info Column: 2-line Title on top, Price + Stepper on bottom row */}
       <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '2px' }}>
-        {/* Full-Width Single-Line Product Name (Not Bold) */}
+        {/* 2-Line Product Name */}
         <div
           style={{
-            fontSize: '13.5px',
-            fontWeight: 500,
+            fontSize: '12.5px',
+            fontWeight: 600,
             color: '#0f172a',
-            whiteSpace: 'nowrap',
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
-            lineHeight: 1.35,
+            whiteSpace: 'normal',
+            wordBreak: 'break-word',
+            lineHeight: 1.28,
             letterSpacing: '0px',
           }}
           title={item.product.name}
@@ -91,40 +98,35 @@ export function StorefrontLiveCartItem({ item, onUpdateQuantity }: StorefrontLiv
           {item.product.name}
         </div>
 
-        {/* Subtle Category Label */}
-        <div style={{ fontSize: '11.5px', color: '#94a3b8', fontWeight: 400, letterSpacing: '0px' }}>
-          {item.product.categoryName || t('storefront.storefront_live_cart_item.default_cat', 'منتج أصلي')}
-        </div>
-
-        {/* Bottom Row: Price on Right + Circular Stepper on Left */}
+        {/* Bottom Row: Price on Right + Compact Stepper on Left */}
         <div
           style={{
-            marginTop: '4px',
+            marginTop: '2px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            gap: '8px',
+            gap: '6px',
           }}
         >
           {/* Price & Savings */}
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', flexWrap: 'wrap', letterSpacing: '0px' }}>
-            <span style={{ fontSize: '14px', color: '#0f172a', fontWeight: 600, letterSpacing: '0px' }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '5px', flexWrap: 'nowrap', whiteSpace: 'nowrap', letterSpacing: '0px' }}>
+            <span style={{ fontSize: '13px', color: '#0f172a', fontWeight: 700, letterSpacing: '0px' }}>
               {formatPriceNumber(lineTotal)} {activeSymbol}
             </span>
             {linePricing.savings > 0 && (
-              <span style={{ textDecoration: 'line-through', color: '#cbd5e1', fontSize: '11.5px', fontWeight: 400, letterSpacing: '0px' }}>
+              <span style={{ textDecoration: 'line-through', color: '#94a3b8', fontSize: '10.5px', fontWeight: 400, letterSpacing: '0px' }}>
                 {formatPriceNumber(linePricing.originalLineTotal)} {activeSymbol}
               </span>
             )}
             {linePricing.isBogoApplied && (
               <span
                 style={{
-                  fontSize: '10px',
+                  fontSize: '9.5px',
                   background: '#dcfce7',
                   color: '#166534',
-                  padding: '1px 6px',
-                  borderRadius: '6px',
-                  fontWeight: 500,
+                  padding: '1px 5px',
+                  borderRadius: '5px',
+                  fontWeight: 600,
                   letterSpacing: '0px',
                 }}
               >
@@ -133,13 +135,13 @@ export function StorefrontLiveCartItem({ item, onUpdateQuantity }: StorefrontLiv
             )}
           </div>
 
-          {/* Modern Circular Stepper Controls (Left in RTL) */}
-          {/* CRITICAL: Follow RULE[AGENTS_md] Section 5 for RTL: [+] on Right, Quantity in Center, [-] on Left */}
+          {/* Modern Compact Stepper Controls (Left in RTL) */}
+          {/* CRITICAL: Follow RULE[AGENTS_md] Section 2 for RTL: [+] on Right, Quantity in Center, [-] on Left */}
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '7px',
+              gap: '5px',
               flexShrink: 0,
             }}
           >
@@ -152,9 +154,9 @@ export function StorefrontLiveCartItem({ item, onUpdateQuantity }: StorefrontLiv
               }}
               title={t('storefront.storefront_live_cart_item.s1', 'زيادة الكمية')}
               style={{
-                width: '28px',
-                height: '28px',
-                borderRadius: '8px',
+                width: '24px',
+                height: '24px',
+                borderRadius: '7px',
                 border: 'none',
                 background: '#0f172a',
                 color: '#ffffff',
@@ -162,7 +164,7 @@ export function StorefrontLiveCartItem({ item, onUpdateQuantity }: StorefrontLiv
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '14px',
+                fontSize: '13px',
                 fontWeight: 600,
                 padding: 0,
                 boxShadow: '0 1px 2px rgba(0, 0, 0, 0.06)',
@@ -177,10 +179,10 @@ export function StorefrontLiveCartItem({ item, onUpdateQuantity }: StorefrontLiv
             {/* Quantity in CENTER */}
             <span
               style={{
-                minWidth: '18px',
+                minWidth: '15px',
                 textAlign: 'center',
-                fontSize: '13px',
-                fontWeight: 600,
+                fontSize: '12px',
+                fontWeight: 700,
                 color: '#0f172a',
                 fontVariantNumeric: 'tabular-nums',
               }}
@@ -201,9 +203,9 @@ export function StorefrontLiveCartItem({ item, onUpdateQuantity }: StorefrontLiv
                   : t('storefront.storefront_live_cart_item.s3', 'تقليل الكمية')
               }
               style={{
-                width: '28px',
-                height: '28px',
-                borderRadius: '8px',
+                width: '24px',
+                height: '24px',
+                borderRadius: '7px',
                 border: item.quantity === 1 ? '1px solid #fecaca' : '1px solid #cbd5e1',
                 background: item.quantity === 1 ? '#fef2f2' : '#ffffff',
                 color: item.quantity === 1 ? '#ef4444' : '#0f172a',
@@ -211,11 +213,11 @@ export function StorefrontLiveCartItem({ item, onUpdateQuantity }: StorefrontLiv
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '14px',
+                fontSize: '13px',
                 fontWeight: 600,
                 padding: 0,
                 boxShadow: '0 1px 2px rgba(0, 0, 0, 0.04)',
-                transition: 'all 0.15s ease',
+                transition: 'border-color 0.15s ease, background-color 0.15s ease, transform 0.12s ease',
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.borderColor = item.quantity === 1 ? '#f87171' : '#0f172a';
@@ -224,13 +226,14 @@ export function StorefrontLiveCartItem({ item, onUpdateQuantity }: StorefrontLiv
                 e.currentTarget.style.borderColor = item.quantity === 1 ? '#fecaca' : '#cbd5e1';
               }}
             >
-              {item.quantity === 1 ? <Trash2Icon size={12.5} /> : '−'}
+              {item.quantity === 1 ? <Trash2Icon size={11.5} /> : '−'}
             </button>
           </div>
         </div>
       </div>
     </div>
   );
-}
+});
+
 
 
