@@ -84,19 +84,9 @@ export function StorefrontFloatingWhatsApp({
         .sf-floating-whatsapp:active {
           transform: translateY(0) scale(0.95);
         }
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
           .sf-floating-whatsapp {
-            bottom: calc(68px + env(safe-area-inset-bottom, 0px)) !important;
-            left: 12px !important;
-            right: auto !important;
-            width: 40px !important;
-            height: 40px !important;
-            border-radius: 11px !important;
-            box-shadow: 0 6px 18px -2px rgba(37, 211, 102, 0.4), 0 2px 6px -1px rgba(15, 23, 42, 0.1) !important;
-          }
-          .sf-floating-whatsapp svg {
-            width: 21px !important;
-            height: 21px !important;
+            display: none !important;
           }
         }
         @media print {

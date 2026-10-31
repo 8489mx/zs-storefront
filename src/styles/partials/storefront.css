@@ -1370,9 +1370,9 @@ button.storefront-btn-pill,
 .sf-floating-whatsapp {
   border-radius: 14px !important;
 }
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .sf-floating-whatsapp {
-    border-radius: 12px !important;
+    display: none !important;
   }
 }
 

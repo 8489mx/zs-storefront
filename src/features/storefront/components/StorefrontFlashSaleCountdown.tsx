@@ -221,6 +221,7 @@ export function StorefrontFlashSaleCountdown({
 
             {/* 4 Calm & Uniform Light Countdown Cards */}
             <div
+              className="sf-flash-countdown-row"
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -237,6 +238,7 @@ export function StorefrontFlashSaleCountdown({
               ].map((box, index, arr) => (
                 <Fragment key={index}>
                   <div
+                    className="sf-flash-countdown-box"
                     style={{
                       position: 'relative',
                       width: '58px',
@@ -256,6 +258,7 @@ export function StorefrontFlashSaleCountdown({
                   >
                     {/* Number Value */}
                     <span
+                      className="sf-flash-countdown-val"
                       style={{
                         fontSize: '19px',
                         fontWeight: 800,
@@ -270,6 +273,7 @@ export function StorefrontFlashSaleCountdown({
 
                     {/* Unit Label */}
                     <span
+                      className="sf-flash-countdown-lbl"
                       style={{
                         fontSize: '10.5px',
                         fontWeight: 600,
@@ -284,6 +288,7 @@ export function StorefrontFlashSaleCountdown({
                   {/* Subtle Separator Colon Dots between cards */}
                   {index < arr.length - 1 && (
                     <div
+                      className="sf-flash-countdown-sep"
                       style={{
                         display: 'flex',
                         flexDirection: 'column',
@@ -574,13 +579,40 @@ export function StorefrontFlashSaleCountdown({
           }
           .storefront-flash-banner-card {
             border-radius: 16px !important;
-            padding: 15px 12px 12px !important;
+            padding: 14px 12px 10px !important;
             gap: 6px !important;
           }
           .storefront-flash-banner-card h3 {
-            font-size: 14px !important;
+            font-size: 13.5px !important;
             font-weight: 700 !important;
-            margin: 0 0 8px 0 !important;
+            margin: 0 0 7px 0 !important;
+          }
+          .sf-flash-countdown-row {
+            gap: 4px !important;
+          }
+          .sf-flash-countdown-box {
+            width: 44px !important;
+            height: 46px !important;
+            border-radius: 10px !important;
+            gap: 1.5px !important;
+          }
+          .sf-flash-countdown-val {
+            font-size: 14.5px !important;
+            font-weight: 800 !important;
+            line-height: 1.05 !important;
+          }
+          .sf-flash-countdown-lbl {
+            font-size: 9px !important;
+            font-weight: 600 !important;
+            line-height: 1.1 !important;
+          }
+          .sf-flash-countdown-sep {
+            gap: 3.5px !important;
+            padding: 0 !important;
+          }
+          .sf-flash-countdown-sep > span {
+            width: 2.5px !important;
+            height: 2.5px !important;
           }
           .storefront-flash-collage {
             width: 100% !important;
