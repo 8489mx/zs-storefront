@@ -21,7 +21,7 @@ export function StorefrontFooter({
   onGoHome,
   onToggleDeals,
 }: StorefrontFooterProps) {
-  const { isEn, dir } = useStorefrontLang();
+  const { isEn, dir, setLang } = useStorefrontLang();
 
   const safeInfo: StorefrontInfo = info || {
     tenantId: '',
@@ -109,10 +109,13 @@ export function StorefrontFooter({
   };
 
   const rawBio = (safeInfo.bio || safeInfo.description || '').trim();
-  const isDefaultArBio = rawBio.includes('وجهتك الأولى للتسوق') || rawBio.includes('وجهتك المفضلة');
+  const isDefaultArBio =
+    rawBio.includes('وجهتك الأولى للتسوق') ||
+    rawBio.includes('وجهتك المفضلة') ||
+    rawBio.includes('تشكيلة متنوعة من المنتجات');
   const storeDescription = isEn
     ? (!rawBio || isDefaultArBio
-      ? 'Your premier destination for a seamless and curated online shopping experience with authentic quality and competitive prices.'
+      ? 'A curated collection of authentic products — order online effortlessly and receive your doorstep delivery in record time.'
       : rawBio)
     : (rawBio || 'وجهتك المفضلة لتجربة تسوق مميزة وسلسة. نوفر لكم تشكيلة مختارة بعناية بأعلى جودة وأفضل الأسعار.');
 
@@ -613,6 +616,16 @@ export function StorefrontFooter({
               className="sf-stylehub-bottom-link"
             >
               {isEn ? 'Terms of Service' : 'شروط الخدمة'}
+            </button>
+            <span style={{ color: '#d1d5db' }}>|</span>
+            <button
+              type="button"
+              onClick={() => setLang(isEn ? 'ar' : 'en')}
+              className="sf-stylehub-bottom-link"
+              style={{ fontWeight: 700, color: 'var(--storefront-primary-color, #2d68c4)' }}
+              title={isEn ? 'التبديل إلى العربية' : 'Switch to English'}
+            >
+              🌐 {isEn ? 'العربية' : 'English'}
             </button>
           </div>
         </div>

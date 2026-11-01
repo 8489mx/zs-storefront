@@ -93,8 +93,8 @@ export const StorefrontPredictiveSearch = React.memo(function StorefrontPredicti
       style={{
         flex: '1 1 auto',
         width: '100%',
-        maxWidth: '380px',
-        minWidth: '120px',
+        maxWidth: '260px',
+        minWidth: '110px',
         margin: '0 auto',
         justifySelf: 'center',
         position: 'relative',
@@ -160,13 +160,13 @@ export const StorefrontPredictiveSearch = React.memo(function StorefrontPredicti
           alignItems: 'center',
           gap: '8px',
           background: '#ffffff',
-          borderRadius: '12px',
-          padding: '0 12px',
+          borderRadius: '10px',
+          padding: '0 10px',
           border: isOpen ? '1.5px solid var(--storefront-primary-color, #2d68c4)' : '1px solid #E0E3E7',
           transition: 'border-color 0.16s ease, box-shadow 0.16s ease',
           boxShadow: isOpen ? '0 4px 16px rgba(45, 104, 196, 0.14)' : '0 1px 2px rgba(15, 23, 42, 0.04)',
           boxSizing: 'border-box',
-          height: '37px',
+          height: '34px',
           position: 'relative',
         }}
       >
@@ -180,15 +180,16 @@ export const StorefrontPredictiveSearch = React.memo(function StorefrontPredicti
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '6px',
+              gap: '5px',
               color: '#94a3b8',
-              fontSize: '13px',
+              fontSize: '12px',
               fontWeight: 600,
               pointerEvents: 'none',
               userSelect: 'none',
+              padding: '0 8px',
             }}
           >
-            <IconSearch size={16} strokeWidth={2.2} />
+            <IconSearch size={14} strokeWidth={2.2} />
             <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{placeholderText}</span>
           </div>
         )}
@@ -204,7 +205,7 @@ export const StorefrontPredictiveSearch = React.memo(function StorefrontPredicti
             transition: 'opacity 0.15s ease',
           }}
         >
-          <IconSearch size={16} strokeWidth={2.2} />
+          <IconSearch size={14} strokeWidth={2.2} />
         </span>
         <input
           className="storefront-search-input"

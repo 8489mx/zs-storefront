@@ -565,7 +565,6 @@ body, button, input, select, textarea, [class*="storefront-"] {
   flex-direction: column;
   overflow: hidden;
   overscroll-behavior: contain !important;
-  direction: rtl;
   padding: 0 !important;
   box-sizing: border-box;
 }
@@ -678,7 +677,7 @@ body, button, input, select, textarea, [class*="storefront-"] {
   width: 265px;
   flex-shrink: 0;
   background: #f8fafc;
-  border-left: 1px solid #edf1f7;
+  border-inline-end: 1px solid #edf1f7;
   padding: 14px 12px;
   display: flex;
   flex-direction: column;
@@ -2066,7 +2065,6 @@ button.storefront-view-all-btn {
   border-top: 1px solid #e5e7eb;
   box-shadow: 0 -4px 20px rgba(15, 23, 42, 0.025);
   box-sizing: border-box;
-  direction: rtl;
   color: #111827;
 }
 

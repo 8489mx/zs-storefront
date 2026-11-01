@@ -9,6 +9,7 @@ import {
   localizeCategory,
   localizeProduct,
   localizeStorefrontInfo,
+  subscribeAutoTranslation,
 } from '../lib/storefront-translations';
 import type {
   CartItem,
@@ -24,6 +25,13 @@ const arCollator = new Intl.Collator('ar', { sensitivity: 'base' });
 
 export function usePublicStorefront(cleanSlug: string) {
   const { lang } = useStorefrontLang();
+  const [autoTransVersion, setAutoTransVersion] = useState(0);
+
+  useEffect(() => {
+    return subscribeAutoTranslation(() => {
+      setAutoTransVersion((v) => v + 1);
+    });
+  }, []);
   // Queries for live Storefront data
   const infoQuery = useQuery({
     queryKey: ['storefront-info', cleanSlug],
@@ -316,19 +324,19 @@ export function usePublicStorefront(cleanSlug: string) {
   const rawProducts: StorefrontProduct[] = useMemo(() => {
     const base: StorefrontProduct[] = catalogQuery.data?.products || [];
     return base.map((p) => localizeProduct(p, lang));
-  }, [catalogQuery.data?.products, lang]);
+  }, [catalogQuery.data?.products, lang, autoTransVersion]);
 
   const categories: StorefrontCategory[] = useMemo(() => {
     const base: StorefrontCategory[] = catalogQuery.data?.categories || [];
     return base.map((c) => localizeCategory(c, lang));
-  }, [catalogQuery.data?.categories, lang]);
+  }, [catalogQuery.data?.categories, lang, autoTransVersion]);
 
   const localizedCartItems: CartItem[] = useMemo(() => {
     return cartItems.map((item) => ({
       ...item,
       product: localizeProduct(item.product, lang),
     }));
-  }, [cartItems, lang]);
+  }, [cartItems, lang, autoTransVersion]);
 
   const isSmartDealsOn = Boolean(infoQuery.data?.smartDealsEnabled);
 
@@ -472,7 +480,7 @@ export function usePublicStorefront(cleanSlug: string) {
       smartDealsEnabled: false,
     };
     return localizeStorefrontInfo(baseInfo, lang);
-  }, [infoQuery.data, cleanSlug, lang]);
+  }, [infoQuery.data, cleanSlug, lang, autoTransVersion]);
 
   const paginatedProducts = filteredProducts.slice(0, visibleCount);
   const hasMore = visibleCount < filteredProducts.length;

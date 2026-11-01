@@ -22,14 +22,14 @@ export function getSavedStorefrontLang(): StorefrontLang {
  * Category translations (by ID and by Arabic name)
  */
 export const CATEGORY_EN_BY_ID: Record<number, string> = {
-  1: 'Smartphones & Audio',
-  2: 'Laptops & Tablets',
+  1: 'Laptops & Tablets',
+  2: 'Smartphones & Audio',
   3: 'Luxury & Smart Watches',
-  4: 'Sneakers & Casual Shoes',
-  5: 'Perfumes & Beauty',
-  6: "Men's Fashion",
-  7: "Women's Fashion",
-  8: 'Bags & Sunglasses',
+  4: 'Perfumes & Beauty',
+  5: 'Sneakers & Casual Shoes',
+  6: 'Bags & Sunglasses',
+  7: "Men's Fashion",
+  8: "Women's Fashion",
 };
 
 export const CATEGORY_EN_BY_AR: Record<string, string> = {
@@ -51,6 +51,7 @@ export const CATEGORY_EN_BY_AR: Record<string, string> = {
   'الحقائب': 'Bags',
   'عام': 'General',
   'قسم عام': 'General Category',
+  'أقسام عامة': 'General Categories',
   'منتج أصلي': 'Authentic Product',
   'منتجات مميزة': 'Featured Products',
   'عروض حصرية': 'Exclusive Deals',
@@ -89,30 +90,65 @@ export const OFFER_BADGE_EN_BY_AR: Record<string, string> = {
   'إصدار خاص': 'Special Edition',
   'إصدار احترافي': 'Pro Edition',
   'كاميرا خارقة': 'Ultra Camera',
+  'كاميرا احترافية': 'Pro Camera',
   'قيمة مقابل سعر': 'Best Value',
   'للألعاب والمونتاج': 'Gaming & Creator',
   'جديد': 'New Arrival',
   'خيار اقتصادي': 'Budget Pick',
   'الأقوى للأعمال': 'Top Business Pick',
+  'الأقوى أداءً': 'Top Performance',
+  'أداء فائق': 'Ultra Performance',
+  'شاشة OLED 4K': '4K OLED Display',
+  'صوت محيطي': 'Surround Sound',
+  'للأعمال والدراسة': 'Work & Study',
+  'أحدث معالج': 'Latest Processor',
+  'عزل ضوضاء ذكي': 'Smart ANC',
+  'صوت 360°': '360° Sound',
+  'بطارية 36 ساعة': '36h Battery',
+  'شاشة AMOLED': 'AMOLED Display',
+  'مساعد ذكي': 'Smart Assistant',
+  'تيتانيوم فاخر': 'Luxury Titanium',
+  'تصميم كلاسيكي': 'Classic Design',
+  'إصدار رياضي': 'Sport Edition',
+  'طلي ذهب عيار 18': '18K Gold Plated',
   'ساعة ذكية متكاملة': 'All-in-One Smartwatch',
   'تصميم سويسري': 'Swiss Design',
   'بطارية 14 يوم': '14-Day Battery',
   'مقاومة للصدمات': 'Shock Resistant',
   'أيقونة الموضة': 'Fashion Icon',
+  'إصدار 2026': '2026 Edition',
+  'راحة طبية': 'Medical Comfort',
+  'خفيف الوزن': 'Lightweight',
+  'كلاسيك أنيق': 'Sleek Classic',
   'للجري اليومي': 'Daily Running',
   'كلاسيك عصري': 'Modern Classic',
   'ثبات 48 ساعة': '48h Long-Lasting',
   'عطر شرقي فاخر': 'Luxury Oriental',
+  'عطر فرنسي أصلي': 'Authentic French',
+  'إصدار مسائي فاخر': 'Evening Luxury',
+  'مجموعة متكاملة': 'Complete Set',
   'الأكثر مبيعاً نسائياً': "Women's Best Seller",
   'تفتيح ونضارة': 'Brightening & Glow',
+  'ترطيب عميق': 'Deep Hydration',
   'عناية متكاملة': 'Complete Care',
   'ترطيب 72 ساعة': '72h Hydration',
   'الأكثر طلباً في الشتاء': 'Winter Best Seller',
   'قطن مصري 100%': '100% Egyptian Cotton',
-  'إطلالة رسمية': 'Formal Look',
+  'خامة تركية': 'Turkish Fabric',
   'خامة تركية ممتازة': 'Premium Turkish Fabric',
+  'إطلالة رسمية': 'Formal Look',
+  'إطلالة عصرية': 'Modern Look',
+  'تطريز يدوي': 'Hand Embroidery',
   'تطريز يدوي فاخر': 'Handcrafted Embroidery',
+  'سهرة ومناسبات': 'Evening & Events',
+  'صيف 2026': 'Summer 2026',
+  'حرير ناعم': 'Soft Silk',
+  'شتاء دافئ': 'Warm Winter',
   'تصميم إيطالي': 'Italian Design',
+  'جلد إيطالي فاخر': 'Italian Leather',
+  'تصميم عالمي': 'Global Design',
+  'للقيادة والسفر': 'Driving & Travel',
+  'هدية فاخرة': 'Luxury Gift',
   'كشمير ناعم': 'Soft Cashmere',
   'أرباح مضاعفة': 'Top Value',
   'عدسات مستقطبة': 'Polarized Lenses',
@@ -130,381 +166,391 @@ export const OFFER_BADGE_EN_BY_AR: Record<string, string> = {
 };
 
 /**
- * Complete English catalog data for all 62 Demo Products
+ * Complete English catalog data for all Demo Products (IDs 201..207 and 1101..1806)
  */
 export const PRODUCT_EN_BY_ID: Record<
   number,
   { name: string; description: string; offerBadge?: string }
 > = {
-  // 1. Smartphones & Audio
-  101: {
-    name: 'Apple iPhone 15 Pro Max - 256GB Natural Titanium',
+  // Hero & Showcase Products (201..207)
+  201: {
+    name: 'Apple iPhone 13 Pro Max 5G - 256GB Sierra Blue',
     description:
-      '6.7" Super Retina XDR ProMotion 120Hz display, A17 Pro chip, and 48MP pro camera system with 5x optical zoom.',
+      '6.7" Super Retina XDR ProMotion 120Hz display, A15 Bionic chip, and pro triple camera system with Cinematic mode.',
     offerBadge: 'Best Seller',
   },
-  102: {
-    name: 'Sony WH-1000XM5 Wireless Noise Cancelling Headphones',
+  202: {
+    name: 'Apple Watch Series 9 Luxury Gold Stainless Steel - 45mm',
     description:
-      'Industry-leading active noise cancellation (ANC), Hi-Res 3D audio, 30-hour battery life, and ultra-fast charging.',
+      'Always-On Retina display, S9 SiP chip, Double Tap gesture, blood oxygen & ECG sensors, and Luxury Milanese loop.',
     offerBadge: 'Exclusive Deal',
   },
-  103: {
-    name: 'Samsung Galaxy S24 Ultra 5G - 512GB Titanium Black',
-    description:
-      'Built-in S-Pen, 200MP quad camera with Galaxy AI, and Snapdragon 8 Gen 3 flagship processor.',
-    offerBadge: 'Ultra Camera',
-  },
-  104: {
-    name: 'Apple AirPods Pro (2nd Gen) with USB-C MagSafe Case',
-    description:
-      '2x Active Noise Cancellation, Adaptive Transparency mode, Personalized Spatial Audio, and IP54 sweat/water resistance.',
-    offerBadge: "Today's Deal",
-  },
-  105: {
-    name: 'Anker 737 PowerCore 24000mAh 140W Fast Power Bank',
-    description:
-      'Ultra-fast PD 3.1 bidirectional charging for laptops and smartphones with smart digital display.',
-  },
-  106: {
-    name: 'JBL Flip 6 Waterproof Portable Bluetooth Speaker',
-    description:
-      'Powerful stereo bass sound, IP67 waterproof and dustproof rating, and 12 hours of continuous playtime.',
-  },
-  107: {
-    name: 'Xiaomi Redmi Note 13 Pro+ 5G - 512GB / 12GB RAM',
-    description:
-      'Curved 1.5K AMOLED display, 200MP OIS camera, and blazing-fast 120W HyperCharge included in the box.',
-    offerBadge: 'Best Value',
-  },
-  108: {
-    name: 'Anker 65W GaN II 3-Port Fast Wall Charger + Type-C Cable',
-    description:
-      'Charge your laptop, phone, and earbuds simultaneously in a compact GaN II pocket-friendly design.',
-  },
-  109: {
-    name: 'Apple MagSafe Shockproof Clear Case for iPhone 15 Pro Max',
-    description:
-      'Military-grade drop protection with anti-yellowing crystal clear polycarbonate and strong MagSafe magnets.',
-    offerBadge: '99% Protection',
-  },
-  110: {
-    name: 'Anker MagGo 15W 3-in-1 Wireless Charging Stand',
-    description:
-      'Sleek magnetic charging dock for iPhone, Apple Watch, and AirPods simultaneously.',
-    offerBadge: 'Super Fast Charging',
-  },
-
-  // 2. Laptops & Tablets
-  201: {
-    name: 'Apple MacBook Air 15" M3 - 16GB RAM / 512GB SSD',
-    description:
-      'Ultra-thin aluminum unibody design, Liquid Retina display, Apple M3 chip, and 18-hour battery life.',
-    offerBadge: 'Most Popular',
-  },
-  202: {
-    name: 'ASUS ROG Strix G16 Gaming Laptop - Core i7 / RTX 4060',
-    description:
-      '16" FHD+ 165Hz display, Intel Core i7-13650HX, NVIDIA RTX 4060 8GB GPU, and advanced ROG tri-fan cooling.',
-    offerBadge: 'Gaming & Creator',
-  },
   203: {
-    name: 'Apple iPad Air 11" M2 Wi-Fi - 256GB Space Gray',
+    name: 'Apple AirPods Max Wireless Over-Ear Headphones - Space Gray',
     description:
-      'Liquid Retina display with True Tone, M2 chip for design and study, and Apple Pencil Pro support.',
-    offerBadge: 'New Arrival',
+      'Pro-level Active Noise Cancellation, Transparency mode, Personalized Spatial Audio, and breathable knit-mesh canopy.',
+    offerBadge: 'Surround Sound',
   },
   204: {
-    name: 'Logitech MX Master 3S Wireless Ergonomic Mouse',
+    name: "Dior J'adore Eau de Parfum for Women - 100ml Original",
     description:
-      '8000 DPI optical sensor that tracks on glass, quiet clicks, and MagSpeed electromagnetic scrolling.',
-  },
-  205: {
-    name: 'Keychron K2 Pro Wireless RGB Mechanical Keyboard',
-    description:
-      'Bluetooth 5.1 & USB-C connectivity, aluminum frame, hot-swappable mechanical switches for Mac & Windows.',
-  },
-  206: {
-    name: 'SanDisk Extreme Portable SSD 1TB USB 3.2',
-    description:
-      'Read speeds up to 1050MB/s, IP65 water/dust resistance, and 3-meter drop protection.',
-    offerBadge: 'Special Offer',
-  },
-  207: {
-    name: 'Lenovo IdeaPad Slim 5 - Ryzen 7 / 16GB RAM / 512GB SSD',
-    description:
-      'Lightweight everyday work & study laptop with 15.6" IPS anti-glare screen and Dolby Audio.',
-    offerBadge: 'Budget Pick',
-  },
-  208: {
-    name: 'Dell XPS 15 OLED - Core i9 / 32GB RAM / 1TB SSD',
-    description:
-      '3.5K OLED touch display, CNC machined aluminum & carbon fiber chassis, and NVIDIA RTX 4070 graphics.',
-    offerBadge: 'Top Business Pick',
-  },
-
-  // 3. Luxury & Smart Watches
-  301: {
-    name: 'Apple Watch Ultra 2 Titanium 49mm GPS + Cellular',
-    description:
-      'Aerospace-grade titanium case, 3000-nit sapphire display, dual-frequency GPS, and 100m water resistance.',
-    offerBadge: 'Pro Edition',
-  },
-  302: {
-    name: 'Classic Swiss Chronograph Men’s Watch - Gold & Black',
-    description:
-      'Japanese quartz chronograph movement, scratch-resistant sapphire crystal, 316L stainless steel strap, 5ATM water resistance.',
-    offerBadge: 'Swiss Design',
-  },
-  303: {
-    name: 'Huawei Watch GT 4 46mm Smartwatch - Brown Leather Strap',
-    description:
-      'Classic octagonal bezel, AMOLED display, TruSeen 5.5+ health tracking, and up to 14 days of battery life.',
-    offerBadge: '14-Day Battery',
-  },
-  304: {
-    name: 'Casio G-Shock GA-2100 CasiOak Carbon Core - Matte Black',
-    description:
-      'Iconic octagonal carbon-reinforced resin bezel, 200m water resistance, world time, and dual LED light.',
-    offerBadge: 'Shock Resistant',
-  },
-  305: {
-    name: 'Luxury Women’s Rose Gold Watch with Crystal Bezel',
-    description:
-      'Slim Milanese mesh strap in rose gold, mother-of-pearl dial, and sparkling zirconia crystal accents.',
-  },
-  306: {
-    name: 'Automatic Skeleton Mechanical Men’s Watch - Genuine Leather',
-    description:
-      'Self-winding mechanical movement with open-heart dial and handcrafted Italian crocodile-embossed leather strap.',
-    offerBadge: 'Limited Edition',
-  },
-  307: {
-    name: 'Samsung Galaxy Watch 6 Classic 47mm with Rotating Bezel',
-    description:
-      'Iconic rotating stainless steel bezel, sapphire crystal glass, BIA body composition sensor, and ECG.',
-    offerBadge: 'All-in-One Smartwatch',
-  },
-  308: {
-    name: 'Tissot PRX Powermatic 80 Men’s Watch - Ice Blue Dial',
-    description:
-      'Integrated stainless steel bracelet, waffle-pattern dial, and 80-hour automatic power reserve.',
-    offerBadge: 'Special Edition',
-  },
-
-  // 4. Sneakers & Casual Shoes
-  401: {
-    name: 'Nike Air Jordan 1 Retro High OG - Red, White & Black',
-    description:
-      'Premium full-grain leather upper, encapsulated Air-Sole cushioning, and high-traction rubber outsole.',
-    offerBadge: 'Fashion Icon',
-  },
-  402: {
-    name: 'Adidas Ultraboost Light Running Shoes - White & Blue',
-    description:
-      '30% lighter Light BOOST midsole for maximum energy return, Primeknit+ breathable upper, and Continental rubber grip.',
-    offerBadge: 'Daily Running',
-  },
-  403: {
-    name: 'New Balance 550 Casual Lifestyle Sneakers - White & Grey',
-    description:
-      'Retro 80s basketball silhouette crafted with perforated leather, suede overlays, and OrthoLite comfort insole.',
-    offerBadge: 'Modern Classic',
-  },
-  404: {
-    name: 'Puma RS-X Efekt Multi-Layer Chunky Sneakers',
-    description:
-      'Bold futuristic design with RS cushioning technology, breathable mesh upper, and suede overlays.',
-  },
-  405: {
-    name: 'Skechers Arch Fit Slip-On Medical Comfort Walking Shoes',
-    description:
-      'Podiatrist-certified Arch Fit insole for superior foot support during long standing or walking hours.',
-  },
-  406: {
-    name: 'Handcrafted Italian Genuine Suede Men’s Loafer - Brown',
-    description:
-      'Soft natural suede leather with hand-stitched detailing, memory foam leather footbed, and flexible non-slip sole.',
-  },
-  407: {
-    name: 'Nike Air Max 270 React Men’s Sneakers - Black & White',
-    description:
-      '270-degree Max Air heel unit paired with Nike React foam for ultra-smooth all-day cushioning.',
-  },
-  408: {
-    name: 'Converse Chuck Taylor All Star Lift Platform - White',
-    description:
-      'Durable canvas upper with elevated double-stacked rubber platform sole for a timeless street-style look.',
-  },
-
-  // 5. Perfumes & Beauty
-  501: {
-    name: 'Dior Sauvage Eau de Parfum - 100ml Original',
-    description:
-      'Calabrian bergamot, Sichuan pepper, and warm Papua New Guinean vanilla with smoky ambroxan.',
-    offerBadge: '48h Long-Lasting',
-  },
-  502: {
-    name: 'Bleu de Chanel Eau de Parfum - 100ml',
-    description:
-      'Aromatic-woody fragrance blending fresh citrus, New Caledonian sandalwood, cedar, and incense.',
-  },
-  503: {
-    name: 'Royal Oud & Amber Oriental Niche Perfume - 100ml',
-    description:
-      'Rich Cambodian oud oil blended with saffron, Damask rose, and warm amber in a luxury crystal bottle.',
-    offerBadge: 'Luxury Oriental',
-  },
-  504: {
-    name: 'YSL Libre Eau de Parfum for Women - 90ml',
-    description:
-      'French lavender essence combined with Moroccan orange blossom, warm vanilla, and white musk.',
-    offerBadge: "Women's Best Seller",
-  },
-  505: {
-    name: 'Vitamin C 20% + Hyaluronic Acid & Vitamin E Glow Serum',
-    description:
-      'Brightens skin tone, reduces dark spots, and boosts natural collagen with a fast-absorbing non-greasy formula.',
-    offerBadge: 'Brightening & Glow',
-  },
-  506: {
-    name: 'Complete 4-Step Daily Skincare Routine Set',
-    description:
-      'Includes foaming cleanser, soothing rose toner, niacinamide 10% serum, and ceramide barrier cream.',
-    offerBadge: 'Bundle Deal',
-  },
-  507: {
-    name: 'pure Moroccan Argan Oil Hair Mask & Serum Set',
-    description:
-      'Repairs damaged and split ends, restores natural shine, and provides heat protection.',
-  },
-  508: {
-    name: 'Coco Mademoiselle Chanel Eau de Parfum - 100ml',
-    description:
-      'Vibrant orange notes with jasmine, May rose, patchouli, and vetiver for timeless feminine elegance.',
-    offerBadge: 'Complete Care',
-  },
-  509: {
-    name: 'Hyaluronic Acid + Ceramide 72-Hour Deep Hydration Gel Cream',
-    description:
-      'Oil-free water-gel moisturizer that locks in hydration for 72 hours and strengthens the skin barrier.',
-    offerBadge: '72h Hydration',
-  },
-
-  // 6. Men's Fashion
-  601: {
-    name: 'Water-Resistant Quilted Puffer Winter Jacket - Navy Blue',
-    description:
-      'Windproof & water-repellent outer shell with lightweight thermal insulation, removable hood, and zippered pockets.',
-    offerBadge: 'Winter Best Seller',
-  },
-  602: {
-    name: 'Premium Oxford 100% Egyptian Cotton Shirt - Sky Blue',
-    description:
-      'Tailored slim-fit cut crafted from breathable long-staple Egyptian cotton with easy-iron finish.',
-    offerBadge: '100% Egyptian Cotton',
-  },
-  603: {
-    name: 'Heavy Fleece Oversized Cotton Hoodie - Charcoal Black',
-    description:
-      '400 GSM brushed combed cotton fleece that resists pilling and shrinkage, with kangaroo pocket.',
-  },
-  604: {
-    name: 'Piqué Cotton Polo Shirt with Embroidered Collar - White & Navy',
-    description:
-      'Breathable honeycomb piqué weave with contrast ribbed collar and cuffs for smart-casual wear.',
-  },
-  605: {
-    name: 'Stretch Gabardine Chino Pants - Beige',
-    description:
-      '98% cotton + 2% Lycra stretch fabric for superior freedom of movement and all-day color fastness.',
-  },
-  606: {
-    name: 'Italian Cut Slim-Fit Men’s Blazer - Charcoal Grey',
-    description:
-      'Wrinkle-resistant premium suiting fabric with satin lining, ideal for business meetings and events.',
-    offerBadge: 'Formal Look',
-  },
-  607: {
-    name: 'Men’s Biker Faux-Leather Jacket - Classic Black',
-    description:
-      'Soft matte leather finish with rust-proof metal zippers and quilted inner lining.',
-    offerBadge: 'Premium Turkish Fabric',
-  },
-
-  // 7. Women's Fashion
-  701: {
-    name: 'Pleated Chiffon Evening Maxi Dress - Royal Burgundy',
-    description:
-      'Flowing pleated chiffon with full soft lining, cinched waist belt, and elegant balloon sleeves.',
-    offerBadge: 'New Arrival',
-  },
-  702: {
-    name: 'Embroidered Crepe Open Abaya with Matching Sheila - Black',
-    description:
-      'Japanese matte crepe fabric with delicate hand-beaded sleeve embroidery, includes matching chiffon headscarf.',
-    offerBadge: 'Handcrafted Embroidery',
-  },
-  703: {
-    name: 'Formal 2-Piece Women’s Blazer & Wide-Leg Pants Suit - Beige',
-    description:
-      'Double-breasted tailored blazer paired with high-waist wide-leg trousers for a refined executive look.',
-    offerBadge: 'Italian Design',
-  },
-  704: {
-    name: 'Satin Wrap Blouse with Pearl Cuff Buttons - Emerald Green',
-    description:
-      'Silky smooth satin blouse with V-neck wrap drape and pearl-accented cuffs.',
-  },
-  705: {
-    name: 'Cashmere-Blend Long Winter Coat with Waist Belt - Camel',
-    description:
-      'Warm wool-cashmere blend trench coat with wide lapel collar and adjustable tie belt.',
-    offerBadge: 'Soft Cashmere',
-  },
-  706: {
-    name: 'Cotton Linen Summer Shirt Dress with Belt - Olive Green',
-    description:
-      'Breathable natural linen-cotton blend shirt dress with wooden front buttons and side pockets.',
-    offerBadge: 'Top Value',
-  },
-
-  // 8. Bags & Sunglasses
-  801: {
-    name: 'Ray-Ban Aviator Polarized Sunglasses - Gold Frame & Green Lens',
-    description:
-      '100% UV400 protection with anti-glare polarized crystal lenses and lightweight metal frame.',
-    offerBadge: 'Polarized Lenses',
-  },
-  802: {
-    name: 'Waterproof Laptop Backpack 15.6" with Built-in USB Charging Port',
-    description:
-      'Padded shockproof laptop compartment, hidden anti-theft back pocket, and ergonomic breathable straps.',
-    offerBadge: 'Anti-Theft & Waterproof',
-  },
-  803: {
-    name: 'Luxury Quilted Women’s Crossbody Bag with Gold Chain - Black',
-    description:
-      'Scratch-resistant caviar leather texture with gold-tone twist lock and convertible shoulder chain.',
+      'Iconic floral bouquet blending ylang-ylang, Damask rose, and Grasse jasmine with up to 48-hour longevity.',
     offerBadge: 'Most Popular',
   },
-  804: {
-    name: 'Handcrafted Genuine Cowhide Leather Men’s Wallet + Cardholder Gift Box',
+  205: {
+    name: 'Nike Air Jordan 1 Mid SE Sport Sneakers - Yellow & White',
     description:
-      'RFID-blocking slim bifold leather wallet with 8 card slots and cash pocket in a luxury gift box.',
+      'Iconic basketball heritage design crafted with genuine leather, Air-Sole heel cushioning, and high-grip rubber outsole.',
+    offerBadge: 'Special Edition',
+  },
+  206: {
+    name: 'Prada Saffiano Luxury Leather Handbag - Sky Blue',
+    description:
+      'Scratch-resistant Italian Saffiano leather with gold-plated hardware and detachable shoulder strap.',
+    offerBadge: 'Limited Edition',
+  },
+  207: {
+    name: 'ASUS ZenBook Pro Duo 15 OLED Dual-Screen Touch Laptop - Core i9',
+    description:
+      '4K OLED HDR main touch display + interactive ScreenPad Plus secondary display, Intel Core i9, 32GB RAM, and 1TB NVMe SSD.',
+    offerBadge: 'Top Performance',
+  },
+
+  // Category 1: Laptops & Tablets (1101..1106)
+  1101: {
+    name: 'ASUS ZenBook Pro Duo 15 OLED Dual-Screen Touch Laptop - Core i9',
+    description:
+      '4K OLED HDR touch display with interactive ScreenPad Plus secondary display, Intel Core i9, 32GB RAM, and 1TB SSD.',
+    offerBadge: '4K OLED Display',
+  },
+  1102: {
+    name: 'Acer Swift X 14 Creator & Business Laptop - Core i7 / RTX 3050',
+    description:
+      'Ultra-slim metallic body weighing 1.39 kg, 100% sRGB IPS display, backlit keyboard, and 14-hour battery life.',
+    offerBadge: 'Best Value',
+  },
+  1103: {
+    name: 'ASUS VivoBook S15 Ultra-Slim Laptop - Core i7 / 16GB RAM / 512GB SSD',
+    description:
+      'NanoEdge 15.6" FHD narrow-bezel display, fingerprint sensor, Harman Kardon audio, and fast Type-C charging.',
+    offerBadge: 'Ultra Performance',
+  },
+  1104: {
+    name: 'Acer Aspire Vero Eco-Friendly Edition Laptop - Core i5 / 16GB RAM',
+    description:
+      'Intel Core i5 12th Gen processor, IPS anti-glare display, Wi-Fi 6E, and ultra-fast NVMe SSD.',
+  },
+  1105: {
+    name: 'Apple iPad Pro 12.9" M2 Wi-Fi + 5G - 256GB Space Gray',
+    description:
+      'Liquid Retina XDR Mini-LED 120Hz display, Apple M2 chip, Apple Pencil Hover support, and Face ID.',
+    offerBadge: 'Limited Edition',
+  },
+  1106: {
+    name: 'Lenovo Tab P11 Pro Gen 2 11.2" OLED Tablet + Keyboard & Pen',
+    description:
+      '120Hz 2.5K OLED display with quad JBL speakers, detachable magnetic keyboard, and Precision Pen 3 included.',
+    offerBadge: 'Work & Study',
+  },
+
+  // Category 2: Smartphones & Audio (1201..1209)
+  1201: {
+    name: 'Apple iPhone 13 Pro 5G - 256GB Sierra Blue',
+    description:
+      'Super Retina XDR ProMotion 120Hz display, A15 Bionic chip, 3x optical zoom triple camera, and IP68 water resistance.',
+    offerBadge: 'Best Seller',
+  },
+  1202: {
+    name: 'Apple iPhone 12 Dual SIM 5G - 128GB Purple',
+    description:
+      '6.1" Super Retina XDR OLED display, Ceramic Shield front, A14 Bionic chip, and Night mode dual camera.',
+    offerBadge: "Today's Deal",
+  },
+  1203: {
+    name: 'Samsung Galaxy S22 5G - 256GB Phantom Black',
+    description:
+      'Dynamic AMOLED 2X 120Hz display, 50MP Nightography pro camera, Armor Aluminum frame, and IP68 water resistance.',
+    offerBadge: 'Pro Camera',
+  },
+  1204: {
+    name: 'Apple iPhone 13 5G - 128GB Midnight',
+    description:
+      'Diagonal dual-camera system with Sensor-Shift OIS, A15 Bionic chip, and all-day battery life.',
+  },
+  1205: {
+    name: 'Realme GT Neo 3 5G - 256GB / 12GB RAM Blue',
+    description:
+      '150W UltraDart charging (50% in 5 minutes), Sony IMX766 OIS camera, and 120Hz AMOLED display.',
+    offerBadge: 'Latest Processor',
+  },
+  1206: {
+    name: 'Apple AirPods Max Wireless Noise Cancelling Headphones',
+    description:
+      'Apple-designed dynamic driver for high-fidelity audio, industry-leading Active Noise Cancellation, and 20-hour battery.',
+    offerBadge: 'Smart ANC',
+  },
+  1207: {
+    name: 'Apple HomePod Mini Smart Speaker - Space Gray',
+    description:
+      'Rich 360-degree computational audio, Siri voice assistant, smart home hub, and seamless iPhone Handoff.',
+    offerBadge: '360° Sound',
+  },
+  1208: {
+    name: 'Beats Studio Buds True Wireless Noise Cancelling Earbuds - Red',
+    description:
+      'Active Noise Cancellation (ANC), Transparency mode, IPX4 sweat resistance, and one-touch Apple & Android pairing.',
+    offerBadge: '36h Battery',
+  },
+  1209: {
+    name: 'Oppo Reno 8 Pro 5G - 256GB Glazed Green',
+    description:
+      'MariSilicon X 4K Ultra Night Video NPU, streamlined unibody design, and 80W SuperVOOC flash charge.',
+    offerBadge: 'AMOLED Display',
+  },
+
+  // Category 3: Luxury & Smart Watches (1301..1307)
+  1301: {
+    name: 'Amazon Echo Plus (2nd Gen) Smart Hub Speaker - Silver',
+    description:
+      'Premium 360-degree Dolby audio with built-in Zigbee smart home hub and far-field voice recognition.',
+    offerBadge: 'Smart Assistant',
+  },
+  1302: {
+    name: 'Apple Watch Series 9 GPS 45mm - Gold Stainless Steel & Milanese Loop',
+    description:
+      'Sapphire front crystal, stainless steel case, ECG & blood oxygen apps, sleep stages, and water resistance to 50m.',
+    offerBadge: 'Best Seller',
+  },
+  1303: {
+    name: 'Fossil Grant Chronograph Men’s Watch - Two-Tone Steel & Gold',
+    description:
+      'Classic Roman numeral dial, quartz chronograph movement, 316L stainless steel bracelet, and 5ATM water resistance.',
+    offerBadge: 'Luxury Titanium',
+  },
+  1304: {
+    name: 'Daniel Wellington Classic Men’s Watch - Genuine Brown Leather Strap',
+    description:
+      'Ultra-thin 6mm rose gold case, eggshell white dial, and interchangeable Italian brown leather strap.',
+    offerBadge: 'Classic Design',
+  },
+  1305: {
+    name: 'Casio Edifice Chronograph Sport Men’s Watch - Black & Silver',
+    description:
+      'Tachymeter bezel, 100m water resistance, scratch-resistant mineral glass, and luminous hands.',
+    offerBadge: 'Sport Edition',
+  },
+  1306: {
+    name: 'Michael Kors Luxury Women’s Crystal-Set Watch - Rose Gold',
+    description:
+      'Pavé crystal bezel, mother-of-pearl dial, and polished rose-gold stainless steel link bracelet.',
+    offerBadge: '18K Gold Plated',
+  },
+  1307: {
+    name: 'Samsung Galaxy Watch 6 Classic 47mm with Rotating Bezel - Black',
+    description:
+      'Sapphire crystal display, signature rotating bezel, BIA body composition analysis, and blood pressure monitoring.',
+    offerBadge: 'All-in-One Smartwatch',
+  },
+
+  // Category 4: Perfumes & Beauty (1401..1408)
+  1401: {
+    name: "Dior J'adore Eau de Parfum for Women - 100ml",
+    description:
+      'Luminous floral fragrance with Comoros ylang-ylang, Damask rose, and Grasse jasmine in the iconic amphora bottle.',
+    offerBadge: '48h Long-Lasting',
+  },
+  1402: {
+    name: 'Chanel Coco Mademoiselle Eau de Parfum - 100ml',
+    description:
+      'Sparkling orange, Turkish rose, jasmine, and Indonesian patchouli for an irresistibly modern oriental scent.',
+    offerBadge: 'Authentic French',
+  },
+  1403: {
+    name: 'Bleu de Chanel Eau de Parfum for Men - 100ml',
+    description:
+      'Woody aromatic signature combining New Caledonian sandalwood, amber cedar, and fresh citrus.',
+    offerBadge: 'Best Seller',
+  },
+  1404: {
+    name: 'YSL Libre Intense Eau de Parfum for Women - 90ml',
+    description:
+      'French lavender essence, Moroccan orange blossom, glowing orchid accord, and warm Madagascar vanilla.',
+    offerBadge: "Women's Best Seller",
+  },
+  1405: {
+    name: 'Tom Ford Black Orchid Eau de Parfum - 100ml',
+    description:
+      'Rich dark accords of black truffle, black orchid, plum, patchouli, and warm incense.',
+    offerBadge: 'Evening Luxury',
+  },
+  1406: {
+    name: 'Professional 12-Piece Luxury Makeup & Skincare Brush Set',
+    description:
+      'Ultra-soft antibacterial synthetic bristles with ergonomic rose-gold handles and travel leather pouch.',
+    offerBadge: 'Complete Set',
+  },
+  1407: {
+    name: 'Vitamin C 20% + Hyaluronic Acid Radiance & Glow Facial Serum',
+    description:
+      'Antioxidant brightening formula that targets dark spots, boosts collagen, and delivers instant glass-skin glow.',
+    offerBadge: 'Brightening & Glow',
+  },
+  1408: {
+    name: 'Ceramide & Hyaluronic 72-Hour Deep Hydration Barrier Cream',
+    description:
+      'Dermatologist-tested moisture lock cream with 5 essential ceramides and hyaluronic acid.',
+    offerBadge: 'Deep Hydration',
+  },
+
+  // Category 5: Sneakers & Casual Shoes (1501..1506)
+  1501: {
+    name: 'Nike Air Jordan 1 Mid SE Sneakers - Yellow, White & Blue',
+    description:
+      'Premium leather and suede upper with encapsulated Air-Sole cushioning and padded mid-top collar.',
+    offerBadge: 'Fashion Icon',
+  },
+  1502: {
+    name: 'Puma Future Rider Play On Running & Lifestyle Sneakers',
+    description:
+      'Featherlight nylon, suede, and leather upper with shock-absorbing Federbein outsole and Rider Foam midsole.',
+    offerBadge: '2026 Edition',
+  },
+  1503: {
+    name: 'Nike Air Force 1 ’07 Low Classic Sneakers - Triple White',
+    description:
+      'Crisp stitched leather overlays, perforated toe box, and full-length Nike Air cushioning.',
+    offerBadge: 'Best Seller',
+  },
+  1504: {
+    name: 'Adidas Ultraboost Light Running Shoes - Core Black',
+    description:
+      'Light BOOST cushioning for high energy return, Primeknit+ breathable knit upper, and Continental rubber outsole.',
+    offerBadge: 'Medical Comfort',
+  },
+  1505: {
+    name: 'New Balance 327 Retro Running Sneakers - Grey & White',
+    description:
+      '70s heritage silhouette with oversized N logo, lightweight suede/nylon upper, and studded trail-inspired outsole.',
+    offerBadge: 'Lightweight',
+  },
+  1506: {
+    name: 'Handcrafted Italian Genuine Leather Men’s Classic Loafer - Brown',
+    description:
+      'Full-grain Italian calfskin leather with cushioned leather insole and flexible anti-slip rubber sole.',
+    offerBadge: 'Sleek Classic',
+  },
+
+  // Category 6: Bags & Sunglasses (1601..1607)
+  1601: {
+    name: 'Prada Saffiano Luxury Leather Tote & Shoulder Bag - Sky Blue',
+    description:
+      'Authentic Italian Saffiano crosshatch leather, dual top handles, detachable strap, and signature triangle logo.',
+    offerBadge: 'Italian Leather',
+  },
+  1602: {
+    name: 'Gucci Marmont Quilted Leather Crossbody Bag - Pastel Pink',
+    description:
+      'Matelassé chevron leather with antique gold-toned Double G hardware and sliding chain strap.',
+    offerBadge: 'Global Design',
+  },
+  1603: {
+    name: 'Classic Brown Leather Tote & Work Handbag for Women',
+    description:
+      'Spacious 3-compartment interior that fits a 14" laptop, crafted from durable pebbled leather.',
     offerBadge: '100% Genuine Leather',
   },
-  805: {
-    name: 'Vintage Acetate Cat-Eye Women’s Sunglasses - Tortoise Brown',
+  1604: {
+    name: ' Luxury Black UV400 Polarized Sunglasses - Gold Accents',
     description:
-      'Italian acetate frame with gradient UV400 lenses, includes hard leather case and microfiber cloth.',
-    offerBadge: 'Classic Edition',
+      '100% UVA/UVB protection, scratch-resistant polarized lenses, and lightweight acetate frame with hard case.',
+    offerBadge: 'Best Seller',
   },
-  806: {
-    name: 'Genuine Leather Travel & Gym Duffel Bag - Cognac Brown',
+  1605: {
+    name: 'Sport Aviator Polarized Sunglasses - Matte Black & Green Lens',
     description:
-      'Spacious cabin-size leather duffel with dedicated shoe compartment and padded shoulder strap.',
-    offerBadge: 'Travel & Work',
+      'Anti-glare HD polarized green lenses with lightweight alloy frame, ideal for driving and outdoor travel.',
+    offerBadge: 'Driving & Travel',
+  },
+  1606: {
+    name: 'Retro Clubmaster Browline Sunglasses - Tortoise Brown & Gold',
+    description:
+      'Timeless vintage browline silhouette with UV400 crystal green lenses and adjustable nose pads.',
+    offerBadge: 'Modern Look',
+  },
+  1607: {
+    name: 'Waterproof Anti-Theft 15.6" Laptop Backpack with USB Port',
+    description:
+      'Shockproof laptop sleeve, hidden back valuables pocket, luggage strap, and external USB charging port.',
+    offerBadge: 'Anti-Theft & Waterproof',
+  },
+
+  // Category 7: Men's Fashion (1701..1705)
+  1701: {
+    name: 'Premium 100% Egyptian Cotton Long-Sleeve Casual Shirt - Blue Plaid',
+    description:
+      'Soft breathable long-staple Egyptian cotton with tailored regular fit and button-down collar.',
+    offerBadge: '100% Egyptian Cotton',
+  },
+  1702: {
+    name: 'Heavyweight Oversized Cotton Fleece Hoodie - Navy Blue',
+    description:
+      '400 GSM combed cotton fleece with soft brushed interior, double-lined hood, and front kangaroo pocket.',
+    offerBadge: 'Winter Best Seller',
+  },
+  1703: {
+    name: 'Classic Piqué Cotton Polo Shirt - Royal White',
+    description:
+      'Breathable honeycomb piqué knit with ribbed collar and cuffs that hold their shape wash after wash.',
+    offerBadge: 'Turkish Fabric',
+  },
+  1704: {
+    name: 'Slim-Fit Stretch Gabardine Chino Pants - Beige',
+    description:
+      '98% cotton + 2% elastane stretch twill for all-day comfort and color fastness.',
+  },
+  1705: {
+    name: 'Water-Resistant Quilted Men’s Winter Puffer Jacket - Black',
+    description:
+      'Windproof outer shell with warm thermal fill, detachable hood, and zippered security pockets.',
+    offerBadge: 'Italian Design',
+  },
+
+  // Category 8: Women's Fashion (1801..1806)
+  1801: {
+    name: 'Elegant Modest Evening Maxi Dress - Royal Burgundy & White',
+    description:
+      'Flowing premium crepe fabric with flattering tailored waist cut, ideal for evenings and special occasions.',
+    offerBadge: 'Evening & Events',
+  },
+  1802: {
+    name: 'Embroidered Japanese Crepe Open Abaya with Matching Sheila - Black',
+    description:
+      'Luxurious matte Japanese crepe with delicate handcrafted sleeve embroidery and matching chiffon headscarf.',
+    offerBadge: 'Hand Embroidery',
+  },
+  1803: {
+    name: 'Floral Belted Summer Midi Dress - Soft Pastel Print',
+    description:
+      'Lightweight breathable viscose-cotton blend with cinched waist belt and side pockets.',
+    offerBadge: 'Summer 2026',
+  },
+  1804: {
+    name: 'Satin Wrap Blouse with Pearl Cuff Buttons - Champagne Gold',
+    description:
+      'Silky smooth satin finish with elegant drape neckline and pearl button cuffs for formal or smart-casual styling.',
+    offerBadge: 'Soft Silk',
+  },
+  1805: {
+    name: 'Tailored 2-Piece Women’s Formal Blazer & Wide-Leg Pants Suit - Beige',
+    description:
+      'Double-breasted blazer paired with high-waisted wide-leg trousers in wrinkle-resistant suiting fabric.',
+    offerBadge: 'Formal Look',
+  },
+  1806: {
+    name: 'Cashmere-Blend Long Winter Trench Coat with Belt - Camel',
+    description:
+      'Warm wool-cashmere blend coat with classic lapel collar, waist tie belt, and full satin lining.',
+    offerBadge: 'Warm Winter',
   },
 };
 
@@ -520,9 +566,14 @@ export function translateVariantNameToEn(nameAr: string): string {
     'رام 16GB - هارد 512GB SSD': '16GB RAM - 512GB SSD',
     'رام 16GB - هارد 1TB SSD': '16GB RAM - 1TB SSD',
     'رام 24GB - هارد 1TB SSD': '24GB RAM - 1TB SSD',
+    'رام 32GB - هارد 2TB SSD': '32GB RAM - 2TB SSD',
     'حجم 50 مل (Eau de Parfum)': '50ml (Eau de Parfum)',
     'حجم 100 مل (الحجم الأصلي)': '100ml (Full Size)',
     'حجم 200 مل (توفير عائلي)': '200ml (Value Size)',
+    'مقاس M': 'Size M',
+    'مقاس L': 'Size L',
+    'مقاس XL': 'Size XL',
+    'مقاس XXL': 'Size XXL',
   };
   if (exactMap[nameAr]) return exactMap[nameAr];
   return nameAr
@@ -537,14 +588,211 @@ export function translateVariantNameToEn(nameAr: string): string {
  */
 export function translateBadgeToEn(text: string): string {
   if (!text) return '';
-  if (OFFER_BADGE_EN_BY_AR[text]) return OFFER_BADGE_EN_BY_AR[text];
-  const discountMatch = text.match(/خصم\s*(\d+)%/);
+  const trimmed = text.trim();
+  if (OFFER_BADGE_EN_BY_AR[trimmed]) return OFFER_BADGE_EN_BY_AR[trimmed];
+  const discountMatch = trimmed.match(/خصم\s*(\d+)%/);
   if (discountMatch) return `${discountMatch[1]}% OFF`;
-  const leftMatch = text.match(/متبقي\s*(\d+)\s*فقط/);
+  const leftMatch = trimmed.match(/متبقي\s*(\d+)\s*فقط/);
   if (leftMatch) return `Only ${leftMatch[1]} left`;
-  const countMatch = text.match(/^(\d+)\s*منتج/);
+  const countMatch = trimmed.match(/^(\d+)\s*منتج/);
   if (countMatch) return `${countMatch[1]} Products`;
-  return text;
+  return trimmed;
+}
+
+/**
+ * Smart fallback translator for custom merchant-entered Arabic product names
+ * when no explicit English name (`nameEn`) or catalog ID match exists.
+ */
+const SMART_AR_PRODUCT_TERMS: Array<[RegExp, string]> = [
+  [/لابتوب/g, 'Laptop'],
+  [/هاتف ذكي/g, 'Smartphone'],
+  [/موبايل/g, 'Smartphone'],
+  [/سماعة رأس لاسلكية/g, 'Wireless Headphones'],
+  [/سماعة لاسلكية/g, 'Wireless Earbuds'],
+  [/مكبر صوت ذكي/g, 'Smart Speaker'],
+  [/ساعة ذكية/g, 'Smartwatch'],
+  [/ساعة كلاسيك رجالي/g, "Men's Classic Watch"],
+  [/ساعة رجالي/g, "Men's Watch"],
+  [/ساعة نسائية فاخرة/g, "Luxury Women's Watch"],
+  [/ساعة نسائية/g, "Women's Watch"],
+  [/عطر/g, 'Perfume'],
+  [/نسائي/g, 'for Women'],
+  [/رجالي/g, 'for Men'],
+  [/حذاء رياضي/g, 'Sneakers'],
+  [/حذاء كاجوال/g, 'Casual Shoes'],
+  [/حذاء كلاسيك/g, 'Classic Loafers'],
+  [/حقيبة يد نسائية فاخرة/g, "Luxury Women's Handbag"],
+  [/حقيبة كروس/g, 'Crossbody Bag'],
+  [/حقيبة ظهر/g, 'Backpack'],
+  [/حقيبة/g, 'Bag'],
+  [/نظارة شمسية رياضية/g, 'Sport Sunglasses'],
+  [/نظارة شمسية/g, 'Sunglasses'],
+  [/قميص كاجوال/g, 'Casual Shirt'],
+  [/قميص/g, 'Shirt'],
+  [/هودي شتوي/g, 'Winter Hoodie'],
+  [/تيشيرت بولو/g, 'Polo Shirt'],
+  [/بنطلون تشينو/g, 'Chino Pants'],
+  [/جاكيت شتوي/g, 'Winter Jacket'],
+  [/فستان سهرة/g, 'Evening Dress'],
+  [/فستان صيفي/g, 'Summer Dress'],
+  [/فستان/g, 'Dress'],
+  [/عباية خليجي/g, 'Abaya'],
+  [/بلوزة ستان/g, 'Satin Blouse'],
+  [/طقم بليزر وبنطلون/g, 'Blazer & Pants Suit'],
+  [/بالطو شتوي/g, 'Winter Coat'],
+  [/سيروم/g, 'Serum'],
+  [/كريم مرطب/g, 'Moisturizing Cream'],
+  [/مجموعة فرش مكياج/g, 'Makeup Brush Set'],
+  [/رمادي فلكي/g, 'Space Gray'],
+  [/أزرق سييرا/g, 'Sierra Blue'],
+  [/أزرق سماوي/g, 'Sky Blue'],
+  [/أبيض لؤلؤي/g, 'Pearl White'],
+  [/أسود فانتوم/g, 'Phantom Black'],
+  [/أسود مطفي/g, 'Matte Black'],
+  [/أسود/g, 'Black'],
+  [/أبيض/g, 'White'],
+  [/أحمر/g, 'Red'],
+  [/أخضر/g, 'Green'],
+  [/أصفر/g, 'Yellow'],
+  [/بني/g, 'Brown'],
+  [/بيج/g, 'Beige'],
+  [/كحلي/g, 'Navy'],
+  [/ذهبي/g, 'Gold'],
+  [/فضي/g, 'Silver'],
+  [/مل/g, 'ml'],
+  [/بوصة/g, '"'],
+];
+
+const AUTO_EN_CACHE_STORAGE_KEY = 'zs_auto_en_cache_v1';
+const autoEnMemoryCache = new Map<string, string>();
+const pendingAutoRequests = new Set<string>();
+const autoTranslateListeners = new Set<() => void>();
+let autoCacheLoaded = false;
+let batchQueue: string[] = [];
+let batchTimer: ReturnType<typeof setTimeout> | null = null;
+
+function ensureAutoCacheLoaded() {
+  if (autoCacheLoaded || typeof window === 'undefined') return;
+  autoCacheLoaded = true;
+  try {
+    const raw = window.localStorage.getItem(AUTO_EN_CACHE_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw) as Record<string, string>;
+      for (const [k, v] of Object.entries(parsed)) {
+        if (k && typeof v === 'string' && v.trim()) {
+          autoEnMemoryCache.set(k, v);
+        }
+      }
+    }
+  } catch {
+    // Ignore storage read errors
+  }
+}
+
+function persistAutoCache() {
+  if (typeof window === 'undefined') return;
+  try {
+    const obj: Record<string, string> = {};
+    for (const [k, v] of autoEnMemoryCache.entries()) {
+      obj[k] = v;
+    }
+    window.localStorage.setItem(AUTO_EN_CACHE_STORAGE_KEY, JSON.stringify(obj));
+  } catch {
+    // Ignore storage quota errors
+  }
+}
+
+function notifyAutoTranslateListeners() {
+  for (const listener of autoTranslateListeners) {
+    try {
+      listener();
+    } catch {
+      // Ignore listener errors
+    }
+  }
+}
+
+export function subscribeAutoTranslation(listener: () => void): () => void {
+  autoTranslateListeners.add(listener);
+  return () => {
+    autoTranslateListeners.delete(listener);
+  };
+}
+
+async function fetchSingleTranslationArToEn(text: string): Promise<string | null> {
+  try {
+    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=ar&tl=en&dt=t&q=${encodeURIComponent(text)}`;
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (Array.isArray(data) && Array.isArray(data[0])) {
+      const translated = data[0]
+        .map((seg: unknown) => (Array.isArray(seg) && typeof seg[0] === 'string' ? seg[0] : ''))
+        .join('')
+        .trim();
+      return translated || null;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function flushAutoTranslateQueue() {
+  batchTimer = null;
+  if (batchQueue.length === 0) return;
+  const items = [...batchQueue];
+  batchQueue = [];
+
+  void Promise.all(
+    items.map(async (text) => {
+      const translated = await fetchSingleTranslationArToEn(text);
+      pendingAutoRequests.delete(text);
+      if (translated && translated !== text) {
+        autoEnMemoryCache.set(text, translated);
+        return true;
+      }
+      return false;
+    })
+  ).then((results) => {
+    if (results.some(Boolean)) {
+      persistAutoCache();
+      notifyAutoTranslateListeners();
+    }
+  });
+}
+
+export function translateMerchantTextToEn(rawText: string | undefined | null, fallbackFn?: (t: string) => string): string {
+  if (!rawText) return '';
+  const trimmed = rawText.trim();
+  if (!trimmed) return '';
+  // If already English (no Arabic characters), return as-is
+  if (!/[\u0600-\u06FF]/.test(trimmed)) return trimmed;
+
+  ensureAutoCacheLoaded();
+  const cached = autoEnMemoryCache.get(trimmed);
+  if (cached) return cached;
+
+  // Queue background live translation for any merchant-entered Arabic string
+  if (typeof window !== 'undefined' && !pendingAutoRequests.has(trimmed)) {
+    pendingAutoRequests.add(trimmed);
+    batchQueue.push(trimmed);
+    if (!batchTimer) {
+      batchTimer = setTimeout(flushAutoTranslateQueue, 35);
+    }
+  }
+
+  return fallbackFn ? fallbackFn(trimmed) : trimmed;
+}
+
+export function smartTranslateProductNameToEn(name: string): string {
+  if (!name) return '';
+  if (!/[\u0600-\u06FF]/.test(name)) return name;
+  let result = name;
+  for (const [pattern, replacement] of SMART_AR_PRODUCT_TERMS) {
+    result = result.replace(pattern, replacement);
+  }
+  return result.replace(/\s{2,}/g, ' ').trim();
 }
 
 /**
@@ -555,10 +803,16 @@ export function localizeCategory(
   lang: StorefrontLang
 ): StorefrontCategory {
   if (lang !== 'en') return cat;
-  const enName =
-    CATEGORY_EN_BY_ID[cat.id] ||
-    CATEGORY_EN_BY_AR[cat.name?.trim()] ||
-    cat.name;
+  const customEn = (cat as unknown as Record<string, unknown>).nameEn || (cat as unknown as Record<string, unknown>).name_en;
+  if (typeof customEn === 'string' && customEn.trim()) {
+    return { ...cat, name: customEn.trim() };
+  }
+  const trimmedName = cat.name?.trim() || '';
+  const staticEn =
+    CATEGORY_EN_BY_AR[trimmedName] ||
+    (cat.id in CATEGORY_EN_BY_ID && trimmedName === '' ? CATEGORY_EN_BY_ID[cat.id] : undefined);
+
+  const enName = staticEn || translateMerchantTextToEn(trimmedName, smartTranslateProductNameToEn);
   return {
     ...cat,
     name: enName,
@@ -567,7 +821,6 @@ export function localizeCategory(
 
 /**
  * Localize a StorefrontProduct into the active language
- * Preserves original Arabic fields in `_arName` / `_arCategoryName` if needed for photo matching
  */
 export function localizeProduct(
   product: StorefrontProduct,
@@ -575,25 +828,49 @@ export function localizeProduct(
 ): StorefrontProduct {
   if (lang !== 'en') return product;
 
+  const rawRec = product as unknown as Record<string, unknown>;
+  const merchantNameEn =
+    (typeof rawRec.nameEn === 'string' && rawRec.nameEn.trim()) ||
+    (typeof rawRec.name_en === 'string' && rawRec.name_en.trim()) ||
+    '';
+  const merchantDescEn =
+    (typeof rawRec.descriptionEn === 'string' && rawRec.descriptionEn.trim()) ||
+    (typeof rawRec.description_en === 'string' && rawRec.description_en.trim()) ||
+    '';
+
   const enEntry = PRODUCT_EN_BY_ID[product.id];
+  const rawCatTrimmed = product.categoryName?.trim() || '';
   const enCat =
+    (rawCatTrimmed && CATEGORY_EN_BY_AR[rawCatTrimmed]) ||
+    (rawCatTrimmed ? translateMerchantTextToEn(rawCatTrimmed, smartTranslateProductNameToEn) : '') ||
     (product.categoryId && CATEGORY_EN_BY_ID[product.categoryId]) ||
-    (product.categoryName && CATEGORY_EN_BY_AR[product.categoryName.trim()]) ||
     product.categoryName;
 
   const enBadge =
     enEntry?.offerBadge ||
-    (product.offerBadge ? translateBadgeToEn(product.offerBadge) : product.offerBadge);
+    (product.offerBadge
+      ? translateMerchantTextToEn(translateBadgeToEn(product.offerBadge), smartTranslateProductNameToEn)
+      : product.offerBadge);
 
   const localizedVariants = product.variants?.map((v) => ({
     ...v,
-    name: translateVariantNameToEn(v.name),
+    name: translateMerchantTextToEn(translateVariantNameToEn(v.name), smartTranslateProductNameToEn),
   }));
+
+  const resolvedName =
+    merchantNameEn ||
+    enEntry?.name ||
+    translateMerchantTextToEn(product.name, smartTranslateProductNameToEn);
+
+  const resolvedDesc =
+    merchantDescEn ||
+    enEntry?.description ||
+    (product.description ? translateMerchantTextToEn(product.description) : product.description);
 
   return {
     ...product,
-    name: enEntry?.name || product.name,
-    description: enEntry?.description || product.description,
+    name: resolvedName,
+    description: resolvedDesc,
     categoryName: enCat,
     offerBadge: enBadge,
     variants: localizedVariants,
@@ -613,38 +890,58 @@ export function localizeStorefrontInfo(
     'القاهرة والجيزة': 'Cairo & Giza',
     'الإسكندرية والدلتا': 'Alexandria & Delta',
     'مدن القناة والصعيد': 'Canal Cities & Upper Egypt',
+    'وجه بحري والدلتا': 'Delta & Lower Egypt',
+    'مدن القناة والوجه القبلي': 'Canal Cities & Upper Egypt',
   };
 
   const zoneTimeEnMap: Record<string, string> = {
     'خلال 24 ساعة': 'Within 24 hours',
     'خلال 48 ساعة': 'Within 48 hours',
     '2 إلى 3 أيام عمل': '2 to 3 business days',
+    '2 - 3 أيام عمل': '2 - 3 business days',
   };
+
+  const bioTrimmed = (info.bio || '').trim();
+  const isDefaultArBio =
+    bioTrimmed.includes('تشكيلة متنوعة من المنتجات') ||
+    bioTrimmed.includes('وجهتك الأولى للتسوق') ||
+    bioTrimmed.includes('وجهتك المفضلة');
+
+  const announcementTrimmed = (info.announcement || '').trim();
+  const isDefaultArAnnouncement =
+    announcementTrimmed.includes('توصيل سريع لجميع المناطق') ||
+    announcementTrimmed.includes('عروض الموسم الكبرى');
+
+  const addressTrimmed = (info.address || '').trim();
+  const isDefaultArAddress =
+    addressTrimmed.includes('التجمع الخامس') ||
+    addressTrimmed.includes('شارع التسعين');
 
   return {
     ...info,
-    bio:
-      info.bio ===
-      'وجهتك الأولى للتسوق الذكي — أحدث الإلكترونيات، الساعات الفاخرة، العطور العالمية، والأزياء العصرية بضمان رسمي وتوصيل سريع لباب المنزل.'
-        ? 'Your premier destination for smart shopping — flagship electronics, luxury watches, signature perfumes, and modern fashion with official warranty and fast doorstep delivery.'
-        : info.bio,
-    announcement:
-      info.announcement ===
-      '🔥 عروض الموسم الكبرى: خصومات تصل إلى 35% + شحن مجاني للطلبات فوق 1500 ج.م!'
-        ? '🔥 Grand Season Sale: Up to 35% OFF + Free Shipping on orders over 1,500 EGP!'
-        : info.announcement,
-    address:
-      info.address === 'القاهرة - التجمع الخامس، شارع التسعين الشمالي، مول كايرو فيستيفال'
-        ? 'Cairo - Fifth Settlement, North 90th St., Cairo Festival City Mall'
-        : info.address,
+    title:
+      info.title === 'متجر الأناقة والتقنية الحديث'
+        ? 'Modern Style & Tech Store'
+        : translateMerchantTextToEn(info.title),
+    bio: isDefaultArBio
+      ? 'A curated collection of authentic products — order online effortlessly and receive your doorstep delivery in record time.'
+      : translateMerchantTextToEn(info.bio),
+    announcement: isDefaultArAnnouncement
+      ? 'Fast nationwide delivery • Free shipping on orders over 300 EGP'
+      : translateMerchantTextToEn(info.announcement),
+    address: isDefaultArAddress
+      ? 'Fifth Settlement - North 90th St., Cairo'
+      : translateMerchantTextToEn(info.address),
     heroHeadline:
       info.heroHeadline === 'تسوق أحدث الإصدارات العالمية بأفضل الأسعار في مصر'
         ? 'Shop the Latest Global Releases at the Best Prices'
-        : info.heroHeadline,
+        : translateMerchantTextToEn(info.heroHeadline),
     deliveryZones: info.deliveryZones?.map((z) => ({
       ...z,
-      name: zoneNameEnMap[z.name] || z.name,
-      estimatedTime: z.estimatedTime ? zoneTimeEnMap[z.estimatedTime] || z.estimatedTime : z.estimatedTime,
+      name: zoneNameEnMap[z.name] || translateMerchantTextToEn(z.name),
+      estimatedTime: z.estimatedTime
+        ? zoneTimeEnMap[z.estimatedTime] || translateMerchantTextToEn(z.estimatedTime)
+        : z.estimatedTime,
     })),
   };
 }
@@ -840,7 +1137,9 @@ export function translateKnownPhrase(text: string | null | undefined, lang: Stor
 export function translateProductName(name: string | null | undefined, lang: StorefrontLang): string {
   if (!name) return '';
   if (lang !== 'en') return name;
-  return translateKnownPhrase(name, lang);
+  const known = translateKnownPhrase(name, lang);
+  if (known !== name) return known;
+  return smartTranslateProductNameToEn(name);
 }
 
 export function translateCategoryName(cat: string | null | undefined, lang: StorefrontLang): string {

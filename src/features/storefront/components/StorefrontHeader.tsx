@@ -425,11 +425,11 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
           alignItems: 'center',
           justifyContent: 'center',
           gap: '4px',
-          width: isMobileSlot ? '58px' : '58px',
-          height: isMobileSlot ? '34px' : '36px',
-          minHeight: isMobileSlot ? '34px' : '36px',
-          padding: '0 8px',
-          borderRadius: isMobileSlot ? '10px' : '12px',
+          width: '54px',
+          height: '32px',
+          minHeight: '32px',
+          padding: '0 6px',
+          borderRadius: '10px',
           background: langMenuOpen ? '#f0f4f9' : '#ffffff',
           border: langMenuOpen ? '1px solid var(--storefront-primary-color, #2d68c4)' : '1px solid #dadce0',
           color: '#1f1f1f',
@@ -615,56 +615,119 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
             width: 100%;
             max-width: var(--storefront-container, 1440px);
             margin: 0 auto;
-            padding: 8px 18px;
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) minmax(240px, 380px) minmax(0, 1fr);
-            align-items: center;
-            gap: 14px;
+            padding: 7px 14px;
             box-sizing: border-box;
             border-radius: 14px;
             background: #ffffff !important;
             border: 1px solid #e2e8f0 !important;
-            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.09), 0 2px 6px -1px rgba(15, 23, 42, 0.04) !important;
+            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04) !important;
             transform: translate3d(0, 0, 0);
             backface-visibility: hidden;
             transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
           }
+          .storefront-nav-desktop-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            gap: 12px;
+          }
+          .storefront-nav-start {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+            min-width: 0;
+          }
+          .storefront-nav-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1 1 240px;
+            max-width: 270px;
+            min-width: 120px;
+            margin: 0 4px;
+          }
+          .storefront-nav-end {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+          }
+          .storefront-orders-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            padding: 0 9px;
+            height: 32px;
+            min-height: 32px;
+            border-radius: 10px;
+            background: #ffffff;
+            border: 1px solid #dadce0;
+            color: #1f1f1f;
+            font-size: 11.5px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            transition: background-color 0.16s ease, border-color 0.16s ease, transform 0.16s ease;
+            box-sizing: border-box;
+            white-space: nowrap;
+            flex-shrink: 0;
+            user-select: none;
+          }
+          .storefront-orders-btn:hover {
+            background: #f8fafc !important;
+            border-color: #94a3b8 !important;
+          }
+          .storefront-orders-btn:active {
+            transform: scale(0.97);
+          }
+          .storefront-cart-btn:hover {
+            opacity: 0.94;
+          }
+          .storefront-cart-btn:active {
+            transform: scale(0.97);
+          }
           @media (min-width: 769px) {
+            .storefront-mobile-top-row,
+            .storefront-mobile-search-row {
+              display: none !important;
+            }
             .storefront-sticky-header.is-scrolled {
-              padding: 6px 16px !important;
+              padding: 5px 14px !important;
             }
             .storefront-sticky-header.is-scrolled .storefront-navbar {
-              max-width: 860px !important;
-              padding: 5px 14px !important;
-              gap: 10px !important;
+              max-width: 880px !important;
+              padding: 5px 12px !important;
+              gap: 8px !important;
               background: rgba(255, 255, 255, 0.98) !important;
               backdrop-filter: blur(16px) !important;
               -webkit-backdrop-filter: blur(16px) !important;
               border-color: #cbd5e1 !important;
-              border-radius: 16px !important;
+              border-radius: 14px !important;
               box-shadow: 0 10px 28px -6px rgba(15, 23, 42, 0.14), 0 4px 10px -2px rgba(15, 23, 42, 0.06) !important;
             }
             .storefront-sticky-header.is-scrolled .storefront-search-box {
-              height: 33px !important;
+              height: 32px !important;
             }
             .storefront-sticky-header.is-scrolled .storefront-brand-avatar {
-              width: 30px !important;
-              height: 30px !important;
+              width: 28px !important;
+              height: 28px !important;
             }
             .storefront-sticky-header.is-scrolled .storefront-brand-title {
-              font-size: 13.5px !important;
+              font-size: 13px !important;
             }
-            .storefront-sticky-header.is-scrolled .storefront-action-btn,
+            .storefront-sticky-header.is-scrolled .storefront-orders-btn,
             .storefront-sticky-header.is-scrolled .storefront-cart-btn {
-              height: 33px !important;
-              min-height: 33px !important;
-              padding: 0 12px !important;
-              font-size: 12px !important;
-              border-radius: 10px !important;
+              height: 30px !important;
+              min-height: 30px !important;
+              padding: 0 8px !important;
+              font-size: 11px !important;
             }
             .storefront-sticky-header.is-scrolled .sf-lang-trigger-btn {
-              height: 33px !important;
-              min-height: 33px !important;
+              height: 30px !important;
+              min-height: 30px !important;
             }
           }
           @media (max-width: 768px) {
@@ -676,7 +739,7 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
               position: sticky !important;
               top: 0 !important;
               z-index: 120 !important;
-              padding: 8px 12px !important;
+              padding: 6px 10px !important;
               pointer-events: auto !important;
               transform: none !important;
               background: rgba(255, 255, 255, 0.96) !important;
@@ -690,10 +753,7 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
             .storefront-sticky-header.is-scrolled .storefront-navbar,
             .storefront-header-shell {
               pointer-events: auto !important;
-              display: flex !important;
-              flex-direction: column !important;
-              align-items: center !important;
-              gap: 0 !important;
+              display: block !important;
               padding: 0 !important;
               margin: 0 !important;
               border-radius: 0 !important;
@@ -704,57 +764,18 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
               width: 100% !important;
               max-width: 100% !important;
             }
-            .storefront-brand-btn {
+            .storefront-nav-desktop-row {
               display: none !important;
             }
-            .storefront-actions,
-            .storefront-mobile-search-trigger {
-              display: none !important;
-            }
-            .storefront-nav-bottom-row,
-            .storefront-nav-bottom-row.is-mobile-search-open {
+            .storefront-mobile-search-row {
               display: flex !important;
-              align-items: center !important;
-              gap: 8px !important;
-              width: 100% !important;
-            }
-            .sf-lang-mobile-slot {
-              display: block !important;
-            }
-            .storefront-search-wrapper {
               width: 100% !important;
               max-width: 100% !important;
-              margin: 0 !important;
-              flex: 1 1 auto !important;
-              min-width: 0 !important;
             }
-            .storefront-search-box {
-              padding: 0 12px !important;
-              border-radius: 11px !important;
-              height: 38px !important;
-              border: 1px solid #e2e8f0 !important;
-              background: #ffffff !important;
-              box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.02) !important;
-              transition: box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease !important;
-            }
-            .storefront-search-box:focus-within {
-              background: #ffffff !important;
-              border-color: var(--storefront-primary-color, #2d68c4) !important;
-              box-shadow: 0 0 0 3px rgba(45, 104, 196, 0.12) !important;
-            }
-            .storefront-search-input,
-            .storefront-search-input:focus,
-            .storefront-search-input:focus-visible {
-              font-size: 12.5px !important;
-              padding: 5px 4px !important;
-              border: none !important;
-              outline: none !important;
-              box-shadow: none !important;
-              min-height: 0 !important;
-              border-radius: 0 !important;
-            }
-            .storefront-search-btn {
-              display: none !important;
+            .storefront-mobile-search-row .storefront-search-wrapper {
+              max-width: 100% !important;
+              width: 100% !important;
+              flex: 1 1 100% !important;
             }
           }
         `}</style>
@@ -764,88 +785,193 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
           dir="rtl"
           className="storefront-navbar storefront-header-shell"
           style={{
-            maxWidth: isScrolled ? '860px' : 'var(--storefront-container, 1440px)',
+            maxWidth: isScrolled ? '880px' : 'var(--storefront-container, 1440px)',
             transition: 'all 0.25s cubic-bezier(0.22, 1, 0.36, 1)',
           }}
         >
-          {/* Brand & Store Name (Clickable to go home / reset) */}
-          <div
-            onClick={onGoHome}
-            role={onGoHome ? 'button' : undefined}
-            tabIndex={onGoHome ? 0 : undefined}
-            onKeyDown={(e) => {
-              if (onGoHome && (e.key === 'Enter' || e.key === ' ')) {
-                e.preventDefault();
-                onGoHome();
-              }
-            }}
-            title={onGoHome ? (isEn ? 'Back to Home' : 'العودة للصفحة الرئيسية') : undefined}
-            className="storefront-brand-btn"
-            style={{
-              justifySelf: 'start',
-              display: 'flex',
-              direction: 'ltr',
-              alignItems: 'center',
-              gap: '10px',
-              cursor: onGoHome ? 'pointer' : 'default',
-              userSelect: 'none',
-              outline: 'none',
-              minWidth: 0,
-            }}
-          >
-            {info.logo_url || info.logoUrl ? (
-              <StorefrontBrandLogo
-                src={(info.logo_url || info.logoUrl)!}
-                alt={info.title || info.businessName}
-                size={36}
-                className="storefront-brand-avatar"
-                style={{
-                  transition: 'transform 0.2s cubic-bezier(0.22, 1, 0.36, 1)',
-                }}
-              />
-            ) : (
+          {/* DESKTOP ROW (> 768px): Brand + Orders on Start, Centered Search, Cart + Lang on End */}
+          <div className="storefront-nav-desktop-row">
+            {/* Start: Brand Logo & Title + "My Orders" button */}
+            <div className="storefront-nav-start">
               <div
-                className="storefront-brand-avatar"
+                onClick={onGoHome}
+                role={onGoHome ? 'button' : undefined}
+                tabIndex={onGoHome ? 0 : undefined}
+                onKeyDown={(e) => {
+                  if (onGoHome && (e.key === 'Enter' || e.key === ' ')) {
+                    e.preventDefault();
+                    onGoHome();
+                  }
+                }}
+                title={onGoHome ? (isEn ? 'Back to Home' : 'العودة للصفحة الرئيسية') : undefined}
+                className="storefront-brand-btn"
                 style={{
-                  width: '36px',
-                  height: '36px',
-                  borderRadius: '10px',
-                  background: 'linear-gradient(135deg, var(--storefront-primary-color, #2d68c4) 0%, #2353a0 100%)',
-                  color: '#ffffff',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: 900,
-                  fontSize: '15px',
-                  boxShadow: '0 2px 8px var(--storefront-primary-subtle, rgba(45, 104, 196, 0.22))',
+                  gap: '8px',
+                  cursor: onGoHome ? 'pointer' : 'default',
+                  userSelect: 'none',
+                  outline: 'none',
+                  minWidth: 0,
                   flexShrink: 0,
-                  border: '1.5px solid rgba(255,255,255,0.25)',
-                  transition: 'transform 0.2s cubic-bezier(0.22, 1, 0.36, 1)',
                 }}
               >
-                {((brand.title || '').trim().replace(/^ال/, '').trim().charAt(0) || (brand.title || '').trim().charAt(0) || (isEn ? 'S' : 'م'))}
+                {info.logo_url || info.logoUrl ? (
+                  <StorefrontBrandLogo
+                    src={(info.logo_url || info.logoUrl)!}
+                    alt={info.title || info.businessName}
+                    size={32}
+                    className="storefront-brand-avatar"
+                    style={{
+                      transition: 'transform 0.2s cubic-bezier(0.22, 1, 0.36, 1)',
+                    }}
+                  />
+                ) : (
+                  <div
+                    className="storefront-brand-avatar"
+                    style={{
+                      width: '32px',
+                      height: '32px',
+                      borderRadius: '9px',
+                      background: 'linear-gradient(135deg, var(--storefront-primary-color, #2d68c4) 0%, #2353a0 100%)',
+                      color: '#ffffff',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontWeight: 900,
+                      fontSize: '14px',
+                      boxShadow: '0 2px 8px var(--storefront-primary-subtle, rgba(45, 104, 196, 0.22))',
+                      flexShrink: 0,
+                      border: '1.5px solid rgba(255,255,255,0.25)',
+                      transition: 'transform 0.2s cubic-bezier(0.22, 1, 0.36, 1)',
+                    }}
+                  >
+                    {((brand.title || '').trim().replace(/^ال/, '').trim().charAt(0) || (brand.title || '').trim().charAt(0) || (isEn ? 'S' : 'م'))}
+                  </div>
+                )}
+                <span
+                  dir="auto"
+                  className="storefront-brand-title"
+                  style={{
+                    fontSize: '14px',
+                    fontWeight: 800,
+                    color: '#0f172a',
+                    letterSpacing: '-0.2px',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    maxWidth: '180px',
+                    transition: 'color 0.16s ease',
+                  }}
+                >
+                  {brand.title}
+                </span>
               </div>
-            )}
-            <span
-              dir="auto"
-              className="storefront-brand-title"
-              style={{
-                fontSize: '15px',
-                fontWeight: 800,
-                color: '#0f172a',
-                letterSpacing: '-0.2px',
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                transition: 'color 0.16s ease',
-              }}
-            >
-              {brand.title}
-            </span>
+
+              {/* Compact "My Orders" button right next to the Brand/Logo */}
+              {onOpenOrders && (
+                <button
+                  className="storefront-action-btn storefront-orders-btn"
+                  type="button"
+                  onClick={onOpenOrders}
+                  title={isEn ? 'Track My Orders' : 'متابعة وتتبع طلباتي'}
+                  aria-label={isEn ? 'Track My Orders' : 'متابعة وتتبع طلباتي'}
+                >
+                  <PackageIcon size={14} style={{ flexShrink: 0, color: 'var(--storefront-primary-color, #2d68c4)' }} />
+                  <span className="storefront-orders-label" style={{ fontSize: '11.5px', fontWeight: 600 }}>
+                    {isEn ? 'My Orders' : 'طلباتي'}
+                  </span>
+                </button>
+              )}
+            </div>
+
+            {/* Center: Refined Predictive Search Input (Compact 260px max width) */}
+            <div className="storefront-nav-center">
+              <StorefrontPredictiveSearch
+                slug={info.slug}
+                storeName={brand.title}
+                searchTerm={searchTerm}
+                onSearchChange={onSearchChange}
+                onSelectCategory={onSelectCategory}
+                onSelectProduct={onSelectProduct}
+                onAddToCart={onAddToCart}
+                onOpenCategories={onOpenCategories}
+              />
+            </div>
+
+            {/* End: Cart & Language Dropdown */}
+            <div className="storefront-nav-end">
+              {/* Cart Button */}
+              <button
+                className="storefront-cart-btn storefront-gpu-btn"
+                type="button"
+                onClick={onOpenCart}
+                style={{
+                  position: 'relative',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '5px',
+                  padding: '0 9px',
+                  height: '32px',
+                  minHeight: '32px',
+                  borderRadius: '10px',
+                  background: 'var(--storefront-primary-color, #2d68c4)',
+                  color: 'var(--storefront-primary-contrast, #ffffff)',
+                  fontSize: '11.5px',
+                  fontWeight: 600,
+                  border: '1px solid var(--storefront-primary-color, #2d68c4)',
+                  cursor: 'pointer',
+                  boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
+                  boxSizing: 'border-box',
+                  fontVariantNumeric: 'tabular-nums',
+                  whiteSpace: 'nowrap',
+                  flexShrink: 0,
+                  userSelect: 'none',
+                }}
+              >
+                {cartCount > 0 && (
+                  <span
+                    style={{
+                      background: '#ffffff',
+                      color: 'var(--storefront-primary-color, #0f172a)',
+                      fontSize: '9.5px',
+                      fontWeight: 800,
+                      padding: '0.5px 4.5px',
+                      borderRadius: '5px',
+                      minWidth: '15px',
+                      height: '16px',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      textAlign: 'center',
+                      boxShadow: '0 1px 2px rgba(0, 0, 0, 0.12)',
+                      lineHeight: 1,
+                    }}
+                  >
+                    {cartCount}
+                  </span>
+                )}
+                <IconShoppingCart size={15} strokeWidth={2.1} />
+                {cartTotal > 0 && (() => {
+                  const isThreeDec = isThreeDecimalCurrency(storeCurr);
+                  const formattedTotal = isThreeDec
+                    ? cartTotal.toFixed(3)
+                    : (storeCurr === 'EGP' && cartTotal % 1 === 0 ? cartTotal.toFixed(0) : cartTotal.toFixed(2));
+                  return (
+                    <span style={{ borderInlineStart: '1px solid rgba(255,255,255,0.25)', paddingInlineStart: '5px', marginInlineStart: '2px', fontSize: '11px', fontWeight: 600 }}>
+                      {formattedTotal} {currSymbol}
+                    </span>
+                  );
+                })()}
+              </button>
+
+              {/* Language Switcher Dropdown (Fixed in Place) */}
+              {renderLangDropdown(false)}
+            </div>
           </div>
 
-          {/* Unified Search Bar — Centered on Desktop, Flex Row with Lang Dropdown on Mobile */}
-          <div className={`storefront-nav-bottom-row${showMobileSearchRow ? ' is-mobile-search-open' : ''}`}>
+          {/* MOBILE VIEW (<= 768px): Search Input ONLY as per strict rule */}
+          <div className="storefront-mobile-search-row">
             <StorefrontPredictiveSearch
               slug={info.slug}
               storeName={brand.title}
@@ -856,139 +982,6 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
               onAddToCart={onAddToCart}
               onOpenCategories={onOpenCategories}
             />
-            {renderLangDropdown(true)}
-          </div>
-
-          {/* Quick Actions (Orders, Cart & Fixed-Position Language Dropdown) */}
-          <div
-            dir="rtl"
-            className="storefront-actions"
-            style={{ justifySelf: 'end', display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}
-          >
-            {/* Mobile Search Icon Button */}
-            <button
-              className="storefront-mobile-search-trigger"
-              type="button"
-              onClick={handleToggleMobileSearch}
-              title={isEn ? 'Search' : t('storefront.storefront_header.search', 'بحث')}
-              aria-label={isEn ? 'Search' : t('storefront.storefront_header.search', 'بحث')}
-              style={{
-                display: 'none',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '32px',
-                height: '32px',
-                borderRadius: '10px',
-                background: showMobileSearchRow ? '#f1f5f9' : '#ffffff',
-                border: '1px solid #E0E3E7',
-                color: '#1f1f1f',
-                cursor: 'pointer',
-                boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
-                boxSizing: 'border-box',
-                flexShrink: 0,
-              }}
-            >
-              {showMobileSearchRow ? <IconClose size={14} /> : <IconSearch size={15} />}
-            </button>
-
-            {/* My Orders Trigger */}
-            {onOpenOrders && (
-              <button
-                className="storefront-action-btn"
-                type="button"
-                onClick={onOpenOrders}
-                title={isEn ? 'Track My Orders' : 'متابعة وتتبع طلباتي'}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '5px',
-                  padding: '0 10px',
-                  height: '32px',
-                  borderRadius: '10px',
-                  background: '#ffffff',
-                  border: '1px solid #dadce0',
-                  color: '#1f1f1f',
-                  fontSize: '11.5px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
-                  transition: 'transform 0.16s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.16s ease, border-color 0.16s ease',
-                  boxSizing: 'border-box',
-                  whiteSpace: 'nowrap',
-                  flexShrink: 0,
-                }}
-              >
-                <PackageIcon size={14} style={{ flexShrink: 0 }} />
-                <span className="storefront-action-label" style={{ fontSize: '11.5px', fontWeight: 600 }}>
-                  {isEn ? 'My Orders' : 'طلباتي'}
-                </span>
-              </button>
-            )}
-
-            {/* Cart Trigger */}
-            <button
-              className="storefront-cart-btn storefront-gpu-btn"
-              type="button"
-              onClick={onOpenCart}
-              style={{
-                position: 'relative',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '5px',
-                padding: '0 10px',
-                height: '32px',
-                borderRadius: '10px',
-                background: 'var(--storefront-primary-color, #2d68c4)',
-                color: 'var(--storefront-primary-contrast, #ffffff)',
-                fontSize: '11.5px',
-                fontWeight: 600,
-                border: '1px solid var(--storefront-primary-color, #2d68c4)',
-                cursor: 'pointer',
-                boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
-                boxSizing: 'border-box',
-                fontVariantNumeric: 'tabular-nums',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {cartCount > 0 && (
-                <span
-                  style={{
-                    background: '#ffffff',
-                    color: 'var(--storefront-primary-color, #0f172a)',
-                    fontSize: '9.5px',
-                    fontWeight: 800,
-                    padding: '0.5px 4.5px',
-                    borderRadius: '5px',
-                    minWidth: '15px',
-                    height: '16px',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    textAlign: 'center',
-                    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.12)',
-                    lineHeight: 1,
-                  }}
-                >
-                  {cartCount}
-                </span>
-              )}
-              <IconShoppingCart size={15} strokeWidth={2.1} />
-              {cartTotal > 0 && (() => {
-                const isThreeDec = isThreeDecimalCurrency(storeCurr);
-                const formattedTotal = isThreeDec
-                  ? cartTotal.toFixed(3)
-                  : (storeCurr === 'EGP' && cartTotal % 1 === 0 ? cartTotal.toFixed(0) : cartTotal.toFixed(2));
-                return (
-                  <span className="storefront-action-label" style={{ borderInlineStart: '1px solid rgba(255,255,255,0.25)', paddingInlineStart: '5px', marginInlineStart: '2px', fontSize: '11px', fontWeight: 600 }}>
-                    {formattedTotal} {currSymbol}
-                  </span>
-                );
-              })()}
-            </button>
-
-            {/* Compact Language Switcher Dropdown (Always fixed at far-left of header) */}
-            {renderLangDropdown(false)}
           </div>
         </div>
       </header>

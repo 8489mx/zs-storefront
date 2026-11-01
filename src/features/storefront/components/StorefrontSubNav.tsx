@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next';
+import { useStorefrontLang } from '@/i18n';
 import { StorefrontCategory } from '../types/storefront.types';
 import { IconGrid, IconTag, IconCheckCircle, IconClose } from './StorefrontIcons';
 
@@ -32,10 +32,11 @@ export function StorefrontSubNav({
   favoritesCount = 0,
   onClearFilters,
 }: StorefrontSubNavProps) {
-  const { t } = useTranslation();
+  const { isEn, dir } = useStorefrontLang();
   return (
     <div
       className="storefront-subnav"
+      dir={dir}
       style={{
         background: 'rgba(255, 255, 255, 0.92)',
         backdropFilter: 'blur(12px)',
@@ -48,6 +49,7 @@ export function StorefrontSubNav({
         width: '100%',
         maxWidth: '100vw',
         boxSizing: 'border-box',
+        direction: dir,
       }}
     >
       <style>{`
@@ -106,7 +108,7 @@ export function StorefrontSubNav({
           gap: '10px',
         }}
       >
-        {/* Left Side: Category Drawer Button + Filter Pills */}
+        {/* Category Drawer Button + Filter Pills */}
         <div className="storefront-subnav-pills" style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
           {/* Main "Browse Categories" Button */}
           <button
@@ -134,7 +136,7 @@ export function StorefrontSubNav({
             onMouseLeave={(e) => (e.currentTarget.style.filter = 'none')}
           >
             <IconGrid size={15} strokeWidth={2.2} color="currentColor" />
-            <span>{t('storefront.storefront_sub_nav.s0', "تصفح الأقسام")}</span>
+            <span>{isEn ? 'Browse Categories' : 'تصفح الأقسام'}</span>
             <span
               style={{
                 fontSize: '11px',
@@ -173,7 +175,7 @@ export function StorefrontSubNav({
               }}
             >
               <IconTag size={14} color={onlyDeals ? '#e11d48' : '#e11d48'} strokeWidth={2.2} />
-              <span>{t('storefront.storefront_sub_nav.s1', "عروض وتخفيضات")}</span>
+              <span>{isEn ? 'Deals & Discounts' : 'عروض وتخفيضات'}</span>
               {dealsCount > 0 && (
                 <span
                   style={{
@@ -215,7 +217,7 @@ export function StorefrontSubNav({
             }}
           >
             <IconCheckCircle size={14} color={inStockOnly ? '#16a34a' : '#64748b'} strokeWidth={2} />
-            <span>{t('storefront.storefront_sub_nav.s2', "المتوفر بالمخزن")}</span>
+            <span>{isEn ? 'In Stock' : 'المتوفر بالمخزن'}</span>
           </button>
 
           {/* Favorites Filter Pill */}
@@ -254,7 +256,7 @@ export function StorefrontSubNav({
               >
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
               </svg>
-              <span>{t('storefront.storefront_sub_nav.s3', "المفضلة")}</span>
+              <span>{isEn ? 'Favorites' : 'المفضلة'}</span>
               {favoritesCount > 0 && (
                 <span
                   style={{
@@ -273,7 +275,7 @@ export function StorefrontSubNav({
           )}
         </div>
 
-        {/* Left Side (RTL End): Clean Reset Button if any filter is active */}
+        {/* Clean Reset Button if any filter is active */}
         {(selectedCategoryId !== 'all' || onlyFavorites || onlyDeals || inStockOnly) && onClearFilters ? (
           <button
             type="button"
@@ -306,7 +308,7 @@ export function StorefrontSubNav({
             }}
           >
             <IconClose size={12} strokeWidth={2.5} />
-            <span>{t('storefront.storefront_sub_nav.s4', "مسح التصفية")}</span>
+            <span>{isEn ? 'Clear Filters' : 'مسح التصفية'}</span>
           </button>
         ) : null}
       </div>
