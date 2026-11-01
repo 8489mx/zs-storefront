@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useBodyScrollLock } from '../../../shared/components/dialog-shell';
+import { useBodyScrollLock } from '@/shared/components/dialog-shell';
 import type { StorefrontInfo } from '../types/storefront.types';
 import { resolveStorefrontBrand, StorefrontBrandLogo } from './StorefrontHeader';
 
@@ -441,6 +441,7 @@ export function StorefrontFooter({
                     target="_blank"
                     rel="noopener noreferrer"
                     className="sf-stylehub-link-btn"
+                    style={{ textDecoration: 'none', display: 'inline-block' }}
                   >
                     تواصل معنا
                   </a>

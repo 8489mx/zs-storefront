@@ -273,6 +273,18 @@ export function StorefrontBrandLogo({
   );
 }
 
+const getInitialStorefrontScrollTop = () => {
+  if (typeof window === 'undefined') return 0;
+  return Math.max(
+    window.scrollY || 0,
+    window.pageYOffset || 0,
+    document.documentElement?.scrollTop || 0,
+    document.body?.scrollTop || 0,
+    document.getElementById('root')?.scrollTop || 0,
+    (document.querySelector('.storefront-page') as HTMLElement)?.scrollTop || 0
+  );
+};
+
 export const StorefrontHeader = React.memo(function StorefrontHeader({
   info,
   searchTerm,
@@ -289,8 +301,8 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
   const { t } = useTranslation();
   const headerRef = React.useRef<HTMLElement | null>(null);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-  const isScrolledRef = React.useRef(false);
+  const [isScrolled, setIsScrolled] = useState(() => getInitialStorefrontScrollTop() > 18);
+  const isScrolledRef = React.useRef(getInitialStorefrontScrollTop() > 18);
 
   useEffect(() => {
     let rafId = 0;
@@ -516,9 +528,16 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
               border-color: var(--storefront-primary-color, #2d68c4) !important;
               box-shadow: 0 0 0 3px rgba(45, 104, 196, 0.12) !important;
             }
-            .storefront-search-input {
+            .storefront-search-input,
+            .storefront-search-input:focus,
+            .storefront-search-input:focus-visible {
               font-size: 12.5px !important;
               padding: 5px 4px !important;
+              border: none !important;
+              outline: none !important;
+              box-shadow: none !important;
+              min-height: 0 !important;
+              border-radius: 0 !important;
             }
             .storefront-search-btn {
               display: none !important;
