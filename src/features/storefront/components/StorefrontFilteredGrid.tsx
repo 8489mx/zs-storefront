@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next';
+import { useStorefrontLang } from '../../../i18n';
 import { useState, useRef, useEffect } from 'react';
 import type { StorefrontProduct, StorefrontCategory, StorefrontInfo } from '../types/storefront.types';
 import { StorefrontProductCard } from './StorefrontProductCard';
@@ -28,11 +28,11 @@ interface StorefrontFilteredGridProps {
   onQuickView?: (product: StorefrontProduct) => void;
 }
 
-const SORT_OPTIONS: { id: 'featured' | 'price-asc' | 'price-desc' | 'name'; label: string }[] = [
-  { id: 'featured', label: 'المتوفر أولاً (افتراضي)' },
-  { id: 'price-asc', label: 'السعر: من الأقل للأعلى' },
-  { id: 'price-desc', label: 'السعر: من الأعلى للأقل' },
-  { id: 'name', label: 'أبجدياً (أ - ي)' },
+const SORT_OPTIONS: { id: 'featured' | 'price-asc' | 'price-desc' | 'name'; labelAr: string; labelEn: string }[] = [
+  { id: 'featured', labelAr: 'المتوفر أولاً (افتراضي)', labelEn: 'In Stock First (Default)' },
+  { id: 'price-asc', labelAr: 'السعر: من الأقل للأعلى', labelEn: 'Price: Low to High' },
+  { id: 'price-desc', labelAr: 'السعر: من الأعلى للأقل', labelEn: 'Price: High to Low' },
+  { id: 'name', labelAr: 'أبجدياً (أ - ي)', labelEn: 'Alphabetical (A - Z)' },
 ];
 
 export function StorefrontFilteredGrid({
@@ -58,7 +58,7 @@ export function StorefrontFilteredGrid({
   onToggleFavorite,
   onQuickView,
 }: StorefrontFilteredGridProps) {
-  const { t } = useTranslation();
+  const { t, isEn, dir } = useStorefrontLang();
   const [isSortOpen, setIsSortOpen] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
 
@@ -82,15 +82,21 @@ export function StorefrontFilteredGrid({
 
   const currentCategory = categories.find((c) => c.id === selectedCategory);
   const title = searchTerm
-    ? `بحث: "${searchTerm}"`
+    ? isEn
+      ? `Search: "${searchTerm}"`
+      : `بحث: "${searchTerm}"`
     : onlyFavorites
-    ? 'المنتجات المفضلة'
+    ? isEn
+      ? 'Favorite Products'
+      : 'المنتجات المفضلة'
     : onlyDeals
-    ? 'العروض والتخفيضات'
-    : `${currentCategory?.name || 'القسم المختار'}`;
+    ? isEn
+      ? 'Deals & Discounts'
+      : 'العروض والتخفيضات'
+    : `${currentCategory?.name || (isEn ? 'Selected Category' : 'القسم المختار')}`;
 
   return (
-    <div id="storefront-products-section">
+    <div id="storefront-products-section" style={{ minHeight: '48vh', paddingBottom: '20px' }}>
       {/* Filter & Sorting Controls Bar */}
       <div
         className="storefront-filter-header"
@@ -123,14 +129,16 @@ export function StorefrontFilteredGrid({
           <button
             type="button"
             onClick={onGoHome}
-            title={t('storefront.storefront_filtered_grid.s0', "العودة للصفحة الرئيسية")}
-            aria-label={t('storefront.storefront_filtered_grid.s1', "العودة للصفحة الرئيسية")}
+            title={t('storefront.storefront_filtered_grid.s0', 'العودة للصفحة الرئيسية')}
+            aria-label={t('storefront.storefront_filtered_grid.s1', 'العودة للصفحة الرئيسية')}
             style={{
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
               width: '34px',
               height: '34px',
+              minWidth: '34px',
+              minHeight: '34px',
               borderRadius: '10px',
               background: '#f8fafc',
               border: '1px solid #e2e8f0',
@@ -193,7 +201,7 @@ export function StorefrontFilteredGrid({
                 e.currentTarget.style.color = '#64748b';
               }}
             >
-              الرئيسية
+              {isEn ? 'Home' : 'الرئيسية'}
             </span>
             <span className="sf-filter-breadcrumb-home" style={{ fontSize: '11px', color: '#cbd5e1', fontWeight: 600 }}>/</span>
             <h2
@@ -227,7 +235,7 @@ export function StorefrontFilteredGrid({
               fontVariantNumeric: 'tabular-nums',
             }}
           >
-            {filteredProducts.length} {t('storefront.storefront_filtered_grid.s2', "صنف")}
+            {filteredProducts.length} {t('storefront.storefront_filtered_grid.s2', 'صنف')}
           </span>
         </div>
 
@@ -239,8 +247,8 @@ export function StorefrontFilteredGrid({
           <button
             type="button"
             onClick={() => setIsSortOpen((prev) => !prev)}
-            title={t('storefront.storefront_filtered_grid.s3', "ترتيب المنتجات")}
-            aria-label={t('storefront.storefront_filtered_grid.s4', "ترتيب المنتجات")}
+            title={t('storefront.storefront_filtered_grid.s3', 'ترتيب المنتجات')}
+            aria-label={t('storefront.storefront_filtered_grid.s4', 'ترتيب المنتجات')}
             aria-expanded={isSortOpen}
             aria-haspopup="true"
             style={{
@@ -249,6 +257,7 @@ export function StorefrontFilteredGrid({
               justifyContent: 'center',
               gap: '6px',
               height: '32px',
+              minHeight: '32px',
               padding: sortBy !== 'featured' ? '0 10px' : '0 8px',
               borderRadius: '8px',
               background: isSortOpen || sortBy !== 'featured' ? '#eff6ff' : '#f8fafc',
@@ -268,18 +277,22 @@ export function StorefrontFilteredGrid({
             </svg>
             {sortBy !== 'featured' && (
               <span style={{ fontSize: '11px', fontWeight: 700 }}>
-                {SORT_OPTIONS.find((o) => o.id === sortBy)?.label.split(':')[0] || t('storefront.storefront_filtered_grid.s5', "ترتيب")}
+                {(() => {
+                  const found = SORT_OPTIONS.find((o) => o.id === sortBy);
+                  const lbl = found ? (isEn ? found.labelEn : found.labelAr) : '';
+                  return lbl.split(':')[0] || t('storefront.storefront_filtered_grid.s5', 'ترتيب');
+                })()}
               </span>
             )}
           </button>
 
           {isSortOpen && (
             <div
-              dir="rtl"
+              dir={dir}
               style={{
                 position: 'absolute',
                 top: 'calc(100% + 6px)',
-                left: 0,
+                insetInlineEnd: 0,
                 zIndex: 100,
                 minWidth: '210px',
                 background: '#ffffff',
@@ -302,7 +315,7 @@ export function StorefrontFilteredGrid({
                   justifyContent: 'space-between',
                 }}
               >
-                <span>{t('storefront.storefront_filtered_grid.s6', "ترتيب حسب")}</span>
+                <span>{t('storefront.storefront_filtered_grid.s6', 'ترتيب حسب')}</span>
                 {sortBy !== 'featured' && (
                   <button
                     type="button"
@@ -317,10 +330,12 @@ export function StorefrontFilteredGrid({
                       fontSize: '10px',
                       cursor: 'pointer',
                       padding: 0,
+                      minHeight: 0,
+                      height: 'auto',
                       textDecoration: 'underline',
                     }}
                   >
-                    {t('storefront.storefront_filtered_grid.s7', "استعادة الافتراضي")}
+                    {t('storefront.storefront_filtered_grid.s7', 'استعادة الافتراضي')}
                   </button>
                 )}
               </div>
@@ -340,6 +355,8 @@ export function StorefrontFilteredGrid({
                       alignItems: 'center',
                       justifyContent: 'space-between',
                       width: '100%',
+                      minHeight: 0,
+                      height: 'auto',
                       padding: '8px 10px',
                       borderRadius: '8px',
                       border: 'none',
@@ -348,7 +365,7 @@ export function StorefrontFilteredGrid({
                       fontSize: '12px',
                       fontWeight: isSelected ? 800 : 500,
                       cursor: 'pointer',
-                      textAlign: 'right',
+                      textAlign: isEn ? 'left' : 'right',
                       transition: 'background 0.12s ease',
                       marginBottom: '2px',
                     }}
@@ -359,7 +376,7 @@ export function StorefrontFilteredGrid({
                       if (!isSelected) e.currentTarget.style.background = 'transparent';
                     }}
                   >
-                    <span>{opt.label}</span>
+                    <span>{isEn ? opt.labelEn : opt.labelAr}</span>
                     {isSelected && (
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="20 6 9 17 4 12" />
@@ -430,7 +447,7 @@ export function StorefrontFilteredGrid({
         </div>
       ) : (
         <>
-          <div className="storefront-products-grid">
+          <div className={`storefront-products-grid ${paginatedProducts.length === 1 ? 'is-single-product' : ''}`}>
             {paginatedProducts.map((product) => (
               <StorefrontProductCard
                 key={product.id}

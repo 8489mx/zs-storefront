@@ -20,6 +20,7 @@ interface StorefrontSubNavProps {
 
 export function StorefrontSubNav({
   categories,
+  selectedCategoryId = 'all',
   onOpenCategoriesModal,
   onlyDeals,
   onToggleDeals,
@@ -120,7 +121,7 @@ export function StorefrontSubNav({
               height: '35px',
               borderRadius: '12px',
               background: 'var(--storefront-primary-color, #170e5e)',
-              color: '#ffffff',
+              color: 'var(--storefront-primary-contrast, #ffffff)',
               border: 'none',
               fontSize: '12.5px',
               fontWeight: 600,
@@ -132,7 +133,7 @@ export function StorefrontSubNav({
             onMouseEnter={(e) => (e.currentTarget.style.filter = 'brightness(1.15)')}
             onMouseLeave={(e) => (e.currentTarget.style.filter = 'none')}
           >
-            <IconGrid size={15} strokeWidth={2.2} />
+            <IconGrid size={15} strokeWidth={2.2} color="currentColor" />
             <span>{t('storefront.storefront_sub_nav.s0', "تصفح الأقسام")}</span>
             <span
               style={{
@@ -273,7 +274,7 @@ export function StorefrontSubNav({
         </div>
 
         {/* Left Side (RTL End): Clean Reset Button if any filter is active */}
-        {(onlyFavorites || onlyDeals || inStockOnly) && onClearFilters ? (
+        {(selectedCategoryId !== 'all' || onlyFavorites || onlyDeals || inStockOnly) && onClearFilters ? (
           <button
             type="button"
             onClick={onClearFilters}

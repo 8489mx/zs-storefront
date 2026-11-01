@@ -29,7 +29,11 @@ function getFocusableElements(root: HTMLElement) {
 // Module-level state to track nested dialogs and safely restore original overflow
 let activeDialogCount = 0;
 let savedBodyOverflow = '';
+let savedBodyOverflowY = '';
+let savedBodyOverflowX = '';
 let savedHtmlOverflow = '';
+let savedHtmlOverflowY = '';
+let savedHtmlOverflowX = '';
 let savedBodyOverscroll = '';
 let savedHtmlOverscroll = '';
 let lastTouchY = 0;
@@ -154,12 +158,20 @@ export function useBodyScrollLock(isLocked: boolean) {
 
     if (activeDialogCount === 0) {
       savedBodyOverflow = document.body.style.overflow;
+      savedBodyOverflowY = document.body.style.overflowY;
+      savedBodyOverflowX = document.body.style.overflowX;
       savedHtmlOverflow = document.documentElement.style.overflow;
+      savedHtmlOverflowY = document.documentElement.style.overflowY;
+      savedHtmlOverflowX = document.documentElement.style.overflowX;
       savedBodyOverscroll = document.body.style.overscrollBehavior;
       savedHtmlOverscroll = document.documentElement.style.overscrollBehavior;
 
       document.body.style.overflow = 'hidden';
+      document.body.style.overflowY = 'hidden';
+      document.body.style.overflowX = 'hidden';
       document.documentElement.style.overflow = 'hidden';
+      document.documentElement.style.overflowY = 'hidden';
+      document.documentElement.style.overflowX = 'hidden';
       document.body.style.overscrollBehavior = 'none';
       document.documentElement.style.overscrollBehavior = 'none';
       document.body.classList.add('dialog-shell-open');
@@ -183,11 +195,33 @@ export function useBodyScrollLock(isLocked: boolean) {
         } else {
           document.body.style.removeProperty('overflow');
         }
+        if (savedBodyOverflowY) {
+          document.body.style.overflowY = savedBodyOverflowY;
+        } else if (!savedBodyOverflow) {
+          document.body.style.removeProperty('overflow-y');
+        }
+        if (savedBodyOverflowX) {
+          document.body.style.overflowX = savedBodyOverflowX;
+        } else if (!savedBodyOverflow) {
+          document.body.style.removeProperty('overflow-x');
+        }
+
         if (savedHtmlOverflow) {
           document.documentElement.style.overflow = savedHtmlOverflow;
         } else {
           document.documentElement.style.removeProperty('overflow');
         }
+        if (savedHtmlOverflowY) {
+          document.documentElement.style.overflowY = savedHtmlOverflowY;
+        } else if (!savedHtmlOverflow) {
+          document.documentElement.style.removeProperty('overflow-y');
+        }
+        if (savedHtmlOverflowX) {
+          document.documentElement.style.overflowX = savedHtmlOverflowX;
+        } else if (!savedHtmlOverflow) {
+          document.documentElement.style.removeProperty('overflow-x');
+        }
+
         if (savedBodyOverscroll) {
           document.body.style.overscrollBehavior = savedBodyOverscroll;
         } else {

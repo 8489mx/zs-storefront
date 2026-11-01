@@ -117,9 +117,9 @@ export const StorefrontShelfSection = React.memo(function StorefrontShelfSection
       className="storefront-section-card"
       style={{
         background: '#ffffff',
-        borderRadius: '36px',
+        borderRadius: '20px',
         border: '1px solid #edf1f7',
-        padding: '26px 24px 22px',
+        padding: '24px 22px 20px',
         boxShadow: '0 10px 30px -6px rgba(15, 23, 42, 0.04), 0 2px 8px -2px rgba(15, 23, 42, 0.02)',
         scrollMarginTop: '96px',
       }}
@@ -224,6 +224,9 @@ export const StorefrontShelfSection = React.memo(function StorefrontShelfSection
               whiteSpace: 'nowrap',
               flexShrink: 0,
               padding: 0,
+              margin: 0,
+              minHeight: 0,
+              height: 'auto',
               fontFamily: 'inherit',
             }}
           >

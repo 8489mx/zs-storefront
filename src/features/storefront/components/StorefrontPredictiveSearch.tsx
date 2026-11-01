@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next';
+import { useStorefrontLang } from '@/i18n';
 import React, { useState, useEffect, useRef } from 'react';
 import { IconSearch } from './StorefrontIcons';
 import { XIcon, TagIcon, PlusIcon, ArrowRightIcon } from '@/shared/components/icons/AppIcons';
@@ -15,6 +15,7 @@ interface StorefrontPredictiveSearchProps {
   onSelectCategory?: (categoryId: number) => void;
   onSelectProduct?: (product: StorefrontProduct) => void;
   onAddToCart?: (product: StorefrontProduct) => void;
+  onOpenCategories?: () => void;
   isScrolled?: boolean;
 }
 
@@ -26,9 +27,12 @@ export const StorefrontPredictiveSearch = React.memo(function StorefrontPredicti
   onSelectCategory,
   onSelectProduct,
   onAddToCart,
+  onOpenCategories,
 }: StorefrontPredictiveSearchProps) {
-  const { t } = useTranslation();
-  const placeholderText = storeName ? `البحث في ${storeName}` : t('storefront.storefront_predictive_search.s0', 'البحث في المتجر');
+  const { t, isEn, dir } = useStorefrontLang();
+  const placeholderText = storeName
+    ? (isEn ? `Search in ${storeName}` : `البحث في ${storeName}`)
+    : t('storefront.storefront_predictive_search.s0', 'البحث في المتجر');
   const [isOpen, setIsOpen] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [suggestions, setSuggestions] = useState<{
@@ -136,12 +140,19 @@ export const StorefrontPredictiveSearch = React.memo(function StorefrontPredicti
             justify-content: center;
             color: var(--storefront-primary-color, #2d68c4);
             flex-shrink: 0;
-            pointer-events: none;
-            opacity: 0.9;
+            pointer-events: auto;
+            opacity: 0.92;
+            background: transparent !important;
+            border: none !important;
+            padding: 4px !important;
+            min-height: 0 !important;
+            border-radius: 6px !important;
+            cursor: pointer;
           }
         }
       `}</style>
       <div
+        dir={dir}
         className="storefront-search-box"
         style={{
           width: '100%',
@@ -159,7 +170,7 @@ export const StorefrontPredictiveSearch = React.memo(function StorefrontPredicti
           position: 'relative',
         }}
       >
-        {/* Centered Search Icon + "البحث في Z" exactly in the middle when idle (Desktop only) */}
+        {/* Centered Search Icon + Placeholder in the middle when idle (Desktop only) */}
         {!searchTerm && !isFocused && (
           <div
             className="sf-search-idle-overlay"
@@ -242,25 +253,32 @@ export const StorefrontPredictiveSearch = React.memo(function StorefrontPredicti
               display: 'flex',
               alignItems: 'center',
             }}
-            title={t('storefront.storefront_predictive_search.s1', "مسح البحث")}
+            title={isEn ? 'Clear search' : t('storefront.storefront_predictive_search.s1', "مسح البحث")}
           >
             <XIcon size={15} />
           </button>
         ) : (
-          <span className="sf-mobile-search-sliders" aria-hidden="true">
+          <button
+            type="button"
+            className="sf-mobile-search-sliders"
+            onClick={() => onOpenCategories?.()}
+            title={isEn ? 'Filter & Browse Categories' : 'تصفية وتصفح الأقسام'}
+            aria-label={isEn ? 'Filter & Browse Categories' : 'تصفية وتصفح الأقسام'}
+          >
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <line x1="4" y1="7" x2="20" y2="7" />
               <line x1="4" y1="17" x2="20" y2="17" />
               <circle cx="9" cy="7" r="2.5" fill="#ffffff" />
               <circle cx="15" cy="17" r="2.5" fill="#ffffff" />
             </svg>
-          </span>
+          </button>
         )}
       </div>
 
       {/* Instant Dropdown Results */}
       {isOpen && (
         <div
+          dir={dir}
           className="storefront-predictive-dropdown"
           style={{
             position: 'absolute',

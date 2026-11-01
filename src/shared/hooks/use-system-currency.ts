@@ -1,6 +1,8 @@
+import { useTranslation } from 'react-i18next';
 import { getCurrencySymbol, getCurrencyDecimals, getGlobalSystemCurrency, CurrencyCode } from '@/lib/currencies';
 
 export function useSystemCurrency(overrideCurrency?: string | null) {
+  useTranslation();
   const rawCode =
     overrideCurrency ||
     getGlobalSystemCurrency() ||

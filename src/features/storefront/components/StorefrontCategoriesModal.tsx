@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next';
+import { useStorefrontLang } from '@/i18n';
 import { useState, useMemo, useEffect } from 'react';
 import { StorefrontCategory } from '../types/storefront.types';
 import { getAutoProductPhoto, generatePremiumProductSvg } from '../lib/storefront-photo-matcher';
@@ -14,8 +14,10 @@ interface StorefrontCategoriesModalProps {
   onSelectCategory: (id: number | 'all') => void;
 }
 
-function parseCategory(name: string): { group: string; label: string } {
-  if (!name) return { group: 'أقسام عامة', label: 'عام' };
+function parseCategory(name: string, isEn = false): { group: string; label: string } {
+  const defaultGroup = isEn ? 'General Categories' : 'أقسام عامة';
+  const defaultLabel = isEn ? 'General' : 'عام';
+  if (!name) return { group: defaultGroup, label: defaultLabel };
   const trimmed = name.trim();
   if (trimmed.includes(' - ')) {
     const parts = trimmed.split(' - ').map((s) => s.trim()).filter(Boolean);
@@ -29,12 +31,12 @@ function parseCategory(name: string): { group: string; label: string } {
       return { group: parts[0], label: parts.slice(1).join(' / ') };
     }
   }
-  return { group: 'أقسام عامة', label: trimmed };
+  return { group: defaultGroup, label: trimmed };
 }
 
 function getFamilyIcon(groupName: string, size = 16) {
   const g = groupName.toLowerCase();
-  if (g.includes('صوت') || g.includes('سماع') || g.includes('إكسسوار') || g.includes('اكسسوار') || g.includes('شواحن') || g.includes('كابل')) {
+  if (g.includes('صوت') || g.includes('سماع') || g.includes('إكسسوار') || g.includes('اكسسوار') || g.includes('شواحن') || g.includes('كابل') || g.includes('audio') || g.includes('headphone')) {
     return (
       <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
@@ -49,7 +51,7 @@ function getFamilyIcon(groupName: string, size = 16) {
       </svg>
     );
   }
-  if (g.includes('اقتصادي') || g.includes('توفير') || g.includes('مخفّض')) {
+  if (g.includes('اقتصادي') || g.includes('توفير') || g.includes('مخفّض') || g.includes('deal')) {
     return (
       <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
@@ -76,7 +78,7 @@ export function StorefrontCategoriesModal({
   selectedCategoryId,
   onSelectCategory,
 }: StorefrontCategoriesModalProps) {
-  const { t } = useTranslation();
+  const { t, isEn, dir } = useStorefrontLang();
   const [modalSearch, setModalSearch] = useState('');
   const [activeGroup, setActiveGroup] = useState<string>('');
 
@@ -96,7 +98,7 @@ export function StorefrontCategoriesModal({
   const groupedFamilies = useMemo(() => {
     const map = new Map<string, StorefrontCategory[]>();
     for (const cat of categories) {
-      const parsed = parseCategory(cat.name);
+      const parsed = parseCategory(cat.name, isEn);
       const grp = parsed.group;
       if (!map.has(grp)) {
         map.set(grp, []);
@@ -111,11 +113,11 @@ export function StorefrontCategoriesModal({
         totalCount,
       };
     });
-  }, [categories, categoryCounts]);
+  }, [categories, categoryCounts, isEn]);
 
   // Initialize or keep active group valid
   useEffect(() => {
-    if (groupedFamilies.length > 0 && !activeGroup) {
+    if (groupedFamilies.length > 0 && (!activeGroup || !groupedFamilies.some((f) => f.groupName === activeGroup))) {
       setActiveGroup(groupedFamilies[0].groupName);
     }
   }, [groupedFamilies, activeGroup]);
@@ -144,6 +146,9 @@ export function StorefrontCategoriesModal({
   };
 
   const formatCountLabel = (count: number) => {
+    if (isEn) {
+      return `${count} ${count === 1 ? 'item' : 'items'}`;
+    }
     const unit =
       count === 1
         ? t('storefront.storefront_categories_modal.s15', 'صنف')
@@ -164,7 +169,7 @@ export function StorefrontCategoriesModal({
       shellClassName="storefront-cat-modal-shell"
       ariaLabel={t('storefront.storefront_categories_modal.s0', 'جميع أقسام وتصنيفات المتجر')}
     >
-      <div className="full-bleed storefront-cat-modal-root">
+      <div className="full-bleed storefront-cat-modal-root" dir={dir} style={{ direction: dir }}>
         {/* Top Header Bar: Luxury Rounded & Integrated */}
         <div className="storefront-cat-modal-header">
           {/* Title Area */}
@@ -174,13 +179,15 @@ export function StorefrontCategoriesModal({
                 {t('storefront.storefront_categories_modal.s1', 'تصفح أقسام المتجر')}
               </h2>
               <span style={{ fontSize: '11px', color: '#64748b', fontWeight: 500 }}>
-                {categories.length === 1
-                  ? t('storefront.storefront_categories_modal.s2_single', 'قسم وتصنيف معتمد')
-                  : categories.length === 2
-                    ? t('storefront.storefront_categories_modal.s2_dual', 'قسمان وتصنيفان معتمدان')
-                    : categories.length <= 10
-                      ? `${categories.length} ${t('storefront.storefront_categories_modal.s2_few', 'أقسام وتصنيفات معتمدة')}`
-                      : `${categories.length} ${t('storefront.storefront_categories_modal.s2_many', 'قسماً وتصنيفاً معتمداً')}`}
+                {isEn
+                  ? `${categories.length} ${categories.length === 1 ? 'verified category' : 'verified categories'}`
+                  : categories.length === 1
+                    ? t('storefront.storefront_categories_modal.s2_single', 'قسم وتصنيف معتمد')
+                    : categories.length === 2
+                      ? t('storefront.storefront_categories_modal.s2_dual', 'قسمان وتصنيفان معتمدان')
+                      : categories.length <= 10
+                        ? `${categories.length} ${t('storefront.storefront_categories_modal.s2_few', 'أقسام وتصنيفات معتمدة')}`
+                        : `${categories.length} ${t('storefront.storefront_categories_modal.s2_many', 'قسماً وتصنيفاً معتمداً')}`}
               </span>
             </div>
           </div>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useStorefrontLang } from '@/i18n';
 import { StorefrontInfo, StorefrontProduct } from '../types/storefront.types';
 import { PackageIcon } from '@/shared/components/icons/AppIcons';
 import { IconShoppingCart, IconSearch, IconClose } from './StorefrontIcons';
@@ -18,14 +18,30 @@ interface StorefrontHeaderProps {
   onSelectCategory?: (categoryId: number) => void;
   onSelectProduct?: (product: StorefrontProduct) => void;
   onAddToCart?: (product: StorefrontProduct) => void;
+  onOpenCategories?: () => void;
 }
 
-export function resolveStorefrontBrand(info: { title?: string; businessName?: string; address?: string }) {
+export function resolveStorefrontBrand(
+  info: { title?: string; businessName?: string; address?: string },
+  isEn = false
+) {
   const business = String(info.businessName || '').trim().replace(/^Z-\s*/i, '');
   const rawTitle = String(info.title || '').trim().replace(/^Z-\s*/i, '');
   const rawAddress = String(info.address || '').trim();
 
-  const title = rawTitle || business || 'متجرنا الإلكتروني';
+  let title = rawTitle || business || (isEn ? 'Our Online Store' : 'متجرنا الإلكتروني');
+
+  if (isEn) {
+    const brandMapEn: Record<string, string> = {
+      'متجر زين وول للتجارة والتسوق': 'Zain Wall Store',
+      'متجر زين وول الإلكتروني': 'Zain Wall Store',
+      'زين وول': 'Zain Wall Store',
+      'متجرنا الإلكتروني': 'Our Online Store',
+    };
+    if (brandMapEn[title]) {
+      title = brandMapEn[title];
+    }
+  }
 
   if (rawAddress) {
     return {
@@ -38,7 +54,7 @@ export function resolveStorefrontBrand(info: { title?: string; businessName?: st
     const remainder = rawTitle.slice(business.length).trim().replace(/^[-–—:]\s*/, '');
     if (remainder.length >= 3) {
       return {
-        title: business,
+        title: isEn && title !== rawTitle ? title : business,
         address: remainder,
       };
     }
@@ -127,7 +143,6 @@ function stripWhiteBackgroundFromImage(src: string): Promise<{ url: string; fall
           trySeed(w - 1, y);
         }
 
-        // If the image already has a transparent background (no opaque white border), keep original crisp asset
         if (opaqueWhiteBorderCount === 0) {
           processedLogoCache.set(src, src);
           resolve({ url: src, fallbackMultiply: false });
@@ -169,7 +184,6 @@ function stripWhiteBackgroundFromImage(src: string): Promise<{ url: string; fall
           }
         }
 
-        // Clear all flood-filled white background pixels & softly feather anti-aliased boundary pixels
         for (let p = 0; p < totalPixels; p++) {
           const idx = p * 4;
           if (visited[p]) {
@@ -297,12 +311,33 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
   onSelectCategory,
   onSelectProduct,
   onAddToCart,
+  onOpenCategories,
 }: StorefrontHeaderProps) {
-  const { t } = useTranslation();
+  const { t, isEn, setLang } = useStorefrontLang();
   const headerRef = React.useRef<HTMLElement | null>(null);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [langMenuOpen, setLangMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(() => getInitialStorefrontScrollTop() > 18);
   const isScrolledRef = React.useRef(getInitialStorefrontScrollTop() > 18);
+
+  useEffect(() => {
+    if (!langMenuOpen) return;
+    const handleOutsideClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (target && !target.closest('.sf-lang-dropdown-root')) {
+        setLangMenuOpen(false);
+      }
+    };
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setLangMenuOpen(false);
+    };
+    document.addEventListener('mousedown', handleOutsideClick);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [langMenuOpen]);
 
   useEffect(() => {
     let rafId = 0;
@@ -320,7 +355,6 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
 
     const updateScrollState = () => {
       const y = getScrollTop();
-      // Hysteresis prevents rapid toggling jitter near the scroll threshold
       const nextScrolled = isScrolledRef.current ? y > 8 : y > 18;
       if (nextScrolled !== isScrolledRef.current) {
         isScrolledRef.current = nextScrolled;
@@ -365,16 +399,175 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
     });
   };
 
-  const brand = resolveStorefrontBrand(info);
+  const brand = resolveStorefrontBrand(info, isEn);
   const storeCurr = info?.currency || 'EGP';
-  const currSymbol = getCurrencySymbol(storeCurr);
+  const currSymbol = isEn && storeCurr === 'EGP' ? 'EGP' : getCurrencySymbol(storeCurr);
   const showMobileSearchRow = mobileSearchOpen || Boolean(searchTerm.trim());
+
+  const renderLangDropdown = (isMobileSlot = false) => (
+    <div
+      className={`sf-lang-dropdown-root ${isMobileSlot ? 'sf-lang-mobile-slot' : 'sf-lang-desktop-slot'}`}
+      style={{
+        position: 'relative',
+        flexShrink: 0,
+      }}
+    >
+      <button
+        type="button"
+        onClick={() => setLangMenuOpen((prev) => !prev)}
+        className="sf-lang-trigger-btn"
+        title={isEn ? 'Change Language' : 'تغيير اللغة'}
+        aria-label={isEn ? 'Change Language' : 'تغيير اللغة'}
+        aria-expanded={langMenuOpen}
+        dir="ltr"
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '4px',
+          width: isMobileSlot ? '58px' : '58px',
+          height: isMobileSlot ? '34px' : '36px',
+          minHeight: isMobileSlot ? '34px' : '36px',
+          padding: '0 8px',
+          borderRadius: isMobileSlot ? '10px' : '12px',
+          background: langMenuOpen ? '#f0f4f9' : '#ffffff',
+          border: langMenuOpen ? '1px solid var(--storefront-primary-color, #2d68c4)' : '1px solid #dadce0',
+          color: '#1f1f1f',
+          fontSize: '11.5px',
+          fontWeight: 700,
+          cursor: 'pointer',
+          boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
+          transition: 'background-color 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease',
+          boxSizing: 'border-box',
+          userSelect: 'none',
+          flexShrink: 0,
+        }}
+      >
+        <svg
+          width="13"
+          height="13"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="var(--storefront-primary-color, #2d68c4)"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          style={{ flexShrink: 0 }}
+        >
+          <circle cx="12" cy="12" r="10" />
+          <line x1="2" y1="12" x2="22" y2="12" />
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+        </svg>
+        <span style={{ letterSpacing: '0.2px', lineHeight: 1 }}>{isEn ? 'EN' : 'AR'}</span>
+        <svg
+          width="10"
+          height="10"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#64748b"
+          strokeWidth="2.4"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          style={{
+            flexShrink: 0,
+            transform: langMenuOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+            transition: 'transform 0.18s ease',
+          }}
+        >
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </button>
+
+      {langMenuOpen && (
+        <div
+          className="sf-lang-dropdown-menu"
+          dir="ltr"
+          style={{
+            position: 'absolute',
+            top: 'calc(100% + 6px)',
+            left: 0,
+            width: '100%',
+            minWidth: '58px',
+            background: '#ffffff',
+            borderRadius: '11px',
+            border: '1px solid #e2e8f0',
+            boxShadow: '0 10px 24px -4px rgba(15, 23, 42, 0.14), 0 4px 8px -2px rgba(15, 23, 42, 0.06)',
+            padding: '4px',
+            zIndex: 350,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '2px',
+            boxSizing: 'border-box',
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => {
+              setLang('ar');
+              setLangMenuOpen(false);
+            }}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '100%',
+              height: '28px',
+              padding: '0 6px',
+              borderRadius: '7px',
+              border: 'none',
+              background: !isEn ? 'var(--storefront-primary-color, #2d68c4)' : 'transparent',
+              color: !isEn ? '#ffffff' : '#1e293b',
+              fontSize: '11.5px',
+              fontWeight: 800,
+              letterSpacing: '0.3px',
+              cursor: 'pointer',
+              transition: 'background-color 0.14s ease, color 0.14s ease',
+              textAlign: 'center',
+              fontFamily: 'inherit',
+            }}
+          >
+            AR
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setLang('en');
+              setLangMenuOpen(false);
+            }}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '100%',
+              height: '28px',
+              padding: '0 6px',
+              borderRadius: '7px',
+              border: 'none',
+              background: isEn ? 'var(--storefront-primary-color, #2d68c4)' : 'transparent',
+              color: isEn ? '#ffffff' : '#1e293b',
+              fontSize: '11.5px',
+              fontWeight: 800,
+              letterSpacing: '0.3px',
+              cursor: 'pointer',
+              transition: 'background-color 0.14s ease, color 0.14s ease',
+              textAlign: 'center',
+              fontFamily: 'inherit',
+            }}
+          >
+            EN
+          </button>
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <>
       {/* Storefront Header — Sticky on Desktop & Floating Search Bar on Mobile */}
       <header
         ref={headerRef}
+        dir="rtl"
         className={`storefront-sticky-header${isScrolled ? ' is-scrolled' : ''}`}
         style={{
           position: 'sticky',
@@ -401,10 +594,21 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
           .storefront-brand-btn:hover .storefront-brand-avatar { transform: scale3d(1.05, 1.05, 1); }
           .storefront-brand-btn:hover .storefront-brand-title { color: var(--storefront-primary-color, #2d68c4); }
           .storefront-nav-bottom-row {
-            display: contents;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-width: 0;
+          }
+          .sf-lang-mobile-slot {
+            display: none !important;
           }
           .storefront-mobile-search-trigger {
             display: none !important;
+          }
+          .sf-lang-trigger-btn:hover {
+            background: #f8fafc !important;
+            border-color: #94a3b8 !important;
           }
           .storefront-navbar {
             pointer-events: auto;
@@ -413,7 +617,7 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
             margin: 0 auto;
             padding: 8px 18px;
             display: grid;
-            grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+            grid-template-columns: minmax(0, 1fr) minmax(240px, 380px) minmax(0, 1fr);
             align-items: center;
             gap: 14px;
             box-sizing: border-box;
@@ -430,7 +634,7 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
               padding: 6px 16px !important;
             }
             .storefront-sticky-header.is-scrolled .storefront-navbar {
-              max-width: 820px !important;
+              max-width: 860px !important;
               padding: 5px 14px !important;
               gap: 10px !important;
               background: rgba(255, 255, 255, 0.98) !important;
@@ -457,6 +661,10 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
               padding: 0 12px !important;
               font-size: 12px !important;
               border-radius: 10px !important;
+            }
+            .storefront-sticky-header.is-scrolled .sf-lang-trigger-btn {
+              height: 33px !important;
+              min-height: 33px !important;
             }
           }
           @media (max-width: 768px) {
@@ -505,14 +713,20 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
             }
             .storefront-nav-bottom-row,
             .storefront-nav-bottom-row.is-mobile-search-open {
-              display: block !important;
+              display: flex !important;
+              align-items: center !important;
+              gap: 8px !important;
               width: 100% !important;
+            }
+            .sf-lang-mobile-slot {
+              display: block !important;
             }
             .storefront-search-wrapper {
               width: 100% !important;
               max-width: 100% !important;
               margin: 0 !important;
-              flex: none !important;
+              flex: 1 1 auto !important;
+              min-width: 0 !important;
             }
             .storefront-search-box {
               padding: 0 12px !important;
@@ -545,15 +759,16 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
           }
         `}</style>
 
-        {/* Main Navbar */}
+        {/* Main Navbar — Fixed dir="rtl" so header items and language button never jump sides */}
         <div
+          dir="rtl"
           className="storefront-navbar storefront-header-shell"
           style={{
-            maxWidth: isScrolled ? '820px' : 'var(--storefront-container, 1440px)',
+            maxWidth: isScrolled ? '860px' : 'var(--storefront-container, 1440px)',
             transition: 'all 0.25s cubic-bezier(0.22, 1, 0.36, 1)',
           }}
         >
-          {/* Brand & Store Name (Clickable to go home / reset) — Right side in RTL */}
+          {/* Brand & Store Name (Clickable to go home / reset) */}
           <div
             onClick={onGoHome}
             role={onGoHome ? 'button' : undefined}
@@ -564,7 +779,7 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
                 onGoHome();
               }
             }}
-            title={onGoHome ? t('storefront.storefront_header.s0', 'العودة للصفحة الرئيسية') : undefined}
+            title={onGoHome ? (isEn ? 'Back to Home' : 'العودة للصفحة الرئيسية') : undefined}
             className="storefront-brand-btn"
             style={{
               justifySelf: 'start',
@@ -608,7 +823,7 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
                   transition: 'transform 0.2s cubic-bezier(0.22, 1, 0.36, 1)',
                 }}
               >
-                {((brand.title || '').trim().replace(/^ال/, '').trim().charAt(0) || (brand.title || '').trim().charAt(0) || t('storefront.storefront_header.s1', 'م'))}
+                {((brand.title || '').trim().replace(/^ال/, '').trim().charAt(0) || (brand.title || '').trim().charAt(0) || (isEn ? 'S' : 'م'))}
               </div>
             )}
             <span
@@ -629,7 +844,7 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
             </span>
           </div>
 
-          {/* Unified Search Bar — Inline on Desktop, Toggleable via Search Icon on Mobile */}
+          {/* Unified Search Bar — Centered on Desktop, Flex Row with Lang Dropdown on Mobile */}
           <div className={`storefront-nav-bottom-row${showMobileSearchRow ? ' is-mobile-search-open' : ''}`}>
             <StorefrontPredictiveSearch
               slug={info.slug}
@@ -639,18 +854,24 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
               onSelectCategory={onSelectCategory}
               onSelectProduct={onSelectProduct}
               onAddToCart={onAddToCart}
+              onOpenCategories={onOpenCategories}
             />
+            {renderLangDropdown(true)}
           </div>
 
-          {/* Quick Actions (Search Icon on Mobile, Orders & Cart) — Left side in RTL */}
-          <div className="storefront-actions" style={{ justifySelf: 'end', display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
+          {/* Quick Actions (Orders, Cart & Fixed-Position Language Dropdown) */}
+          <div
+            dir="rtl"
+            className="storefront-actions"
+            style={{ justifySelf: 'end', display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}
+          >
             {/* Mobile Search Icon Button */}
             <button
               className="storefront-mobile-search-trigger"
               type="button"
               onClick={handleToggleMobileSearch}
-              title={t('storefront.storefront_header.search', 'بحث')}
-              aria-label={t('storefront.storefront_header.search', 'بحث')}
+              title={isEn ? 'Search' : t('storefront.storefront_header.search', 'بحث')}
+              aria-label={isEn ? 'Search' : t('storefront.storefront_header.search', 'بحث')}
               style={{
                 display: 'none',
                 alignItems: 'center',
@@ -676,7 +897,7 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
                 className="storefront-action-btn"
                 type="button"
                 onClick={onOpenOrders}
-                title={t('storefront.storefront_header.s5', 'متابعة وتتبع طلباتي')}
+                title={isEn ? 'Track My Orders' : 'متابعة وتتبع طلباتي'}
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
@@ -700,7 +921,7 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
               >
                 <PackageIcon size={14} style={{ flexShrink: 0 }} />
                 <span className="storefront-action-label" style={{ fontSize: '11.5px', fontWeight: 600 }}>
-                  {t('storefront.storefront_header.s6', 'طلباتي')}
+                  {isEn ? 'My Orders' : 'طلباتي'}
                 </span>
               </button>
             )}
@@ -759,12 +980,15 @@ export const StorefrontHeader = React.memo(function StorefrontHeader({
                   ? cartTotal.toFixed(3)
                   : (storeCurr === 'EGP' && cartTotal % 1 === 0 ? cartTotal.toFixed(0) : cartTotal.toFixed(2));
                 return (
-                  <span className="storefront-action-label" style={{ borderRight: '1px solid rgba(255,255,255,0.25)', paddingRight: '5px', marginRight: '2px', fontSize: '11px', fontWeight: 600 }}>
+                  <span className="storefront-action-label" style={{ borderInlineStart: '1px solid rgba(255,255,255,0.25)', paddingInlineStart: '5px', marginInlineStart: '2px', fontSize: '11px', fontWeight: 600 }}>
                     {formattedTotal} {currSymbol}
                   </span>
                 );
               })()}
             </button>
+
+            {/* Compact Language Switcher Dropdown (Always fixed at far-left of header) */}
+            {renderLangDropdown(false)}
           </div>
         </div>
       </header>
