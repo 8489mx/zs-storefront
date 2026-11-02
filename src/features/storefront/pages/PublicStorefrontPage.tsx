@@ -65,11 +65,7 @@ export function PublicStorefrontPage() {
     setQuickViewProduct(null);
     const targetUrl = paramCategoryId ? `${storeBasePath}/c/${paramCategoryId}` : storeHomePath;
     if (window.location.pathname !== targetUrl) {
-      if (window.history.state && window.history.state.productId) {
-        window.history.back();
-      } else {
-        window.history.replaceState(null, '', targetUrl);
-      }
+      window.history.replaceState(null, '', targetUrl);
     }
   }, [paramCategoryId, storeBasePath, storeHomePath]);
 
@@ -656,36 +652,6 @@ export function PublicStorefrontPage() {
         />
       )}
 
-      {/* Sub-Header Utility Navigation Bar — shown when searching or filtering by category/deals/favorites */}
-      {!isHomepageMultiRow && (
-        <StorefrontSubNav
-          categories={categories}
-          selectedCategoryId={selectedCategory}
-          onSelectCategory={handleSelectCategory}
-          onOpenCategoriesModal={handleOpenCategories}
-          onlyDeals={onlyDeals}
-          onToggleDeals={handleSubNavToggleDeals}
-          inStockOnly={inStockOnly}
-          onToggleInStock={handleToggleInStock}
-          dealsCount={dealsProducts.length}
-          onlyFavorites={onlyFavorites}
-          onToggleFavorites={handleToggleFavorites}
-          favoritesCount={favoriteIds.size}
-          onClearFilters={handleCustomGoHome}
-        />
-      )}
-
-      {/* Horizontal Category Showcase - Kept visible on Home AND Category views for instant 1-tap switching */}
-      {!searchTerm && !onlyDeals && !onlyFavorites && (
-        <StorefrontCategoryShowcase
-          categories={categories}
-          selectedCategoryId={selectedCategory}
-          onSelectCategory={handleSelectCategory}
-          onOpenCategoriesModal={handleOpenCategories}
-          categoryCounts={categoryCounts}
-        />
-      )}
-
       {/* Main Content Area */}
       <main
         className="storefront-main-content"
@@ -694,9 +660,37 @@ export function PublicStorefrontPage() {
           maxWidth: 'var(--storefront-container, 1440px)',
           width: '100%',
           margin: '0 auto',
-          padding: '20px 20px 0',
+          padding: '16px 20px 0',
         }}
       >
+        {/* Sub-Header Utility Navigation Bar — Nested inside main container matching the grid below */}
+        {!isHomepageMultiRow && (
+          <StorefrontSubNav
+            categories={categories}
+            selectedCategoryId={selectedCategory}
+            onSelectCategory={handleSelectCategory}
+            onOpenCategoriesModal={handleOpenCategories}
+            onlyDeals={onlyDeals}
+            onToggleDeals={handleSubNavToggleDeals}
+            inStockOnly={inStockOnly}
+            onToggleInStock={handleToggleInStock}
+            dealsCount={dealsProducts.length}
+            onlyFavorites={onlyFavorites}
+            onToggleFavorites={handleToggleFavorites}
+            favoritesCount={favoriteIds.size}
+            onClearFilters={handleCustomGoHome}
+          />
+        )}
+        {/* Horizontal Category Showcase - Aligned seamlessly inside main container matching the grid below */}
+        {!searchTerm && !onlyDeals && !onlyFavorites && (
+          <StorefrontCategoryShowcase
+            categories={categories}
+            selectedCategoryId={selectedCategory}
+            onSelectCategory={handleSelectCategory}
+            onOpenCategoriesModal={handleOpenCategories}
+            categoryCounts={categoryCounts}
+          />
+        )}
         {isHomepageMultiRow ? (
           <StorefrontMultiRowHome
             dealsProducts={dealsProducts}
